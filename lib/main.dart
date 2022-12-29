@@ -1,4 +1,8 @@
-import 'package:coursez/screen/home.dart';
+
+import 'package:coursez/screen/loginPage.dart';
+
+
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,7 +20,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Piam Love Eye Page'),
+
+      home: const loginPage(),
+
+
+
     );
   }
 }
