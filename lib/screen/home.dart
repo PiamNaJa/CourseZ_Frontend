@@ -24,7 +24,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const <Widget>[
-            Bt(text: "Peerawat", width: 200, color: primaryDisable),
+            Bt(text: "Peerawat", color: primaryDisable),
             IconBt(text: "Peerawat", width: 200, color: primaryColor),
             RadioBt(text: "Pww", width: 200, color: secondaryColor, fontcolor: primaryColor)
 

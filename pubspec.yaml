@@ -95,19 +95,6 @@ flutter:
           weight: 600
         - asset: assets/fonts/Athiti-Bold.ttf
           weight: 700  
-  #
-
-  fonts:
-    - family: Athiti
-      fonts:
-        - asset: assets/fonts/Athiti-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Athiti-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Athiti-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Athiti-Bold.ttf
-          weight: 700  
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
