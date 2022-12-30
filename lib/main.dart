@@ -1,5 +1,5 @@
 
-import 'package:coursez/screen/loginPage.dart';
+import 'package:coursez/screen/expandPage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,7 +16,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LoginPage(),
+      debugShowCheckedModeBanner: false,
+      home: const ExpandPage(),
     );
   }
 }
