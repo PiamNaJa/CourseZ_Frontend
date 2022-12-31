@@ -1,3 +1,4 @@
+import 'package:coursez/screen/loginPage.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
@@ -69,6 +70,7 @@ class _ExpandPageState extends State<ExpandPage> {
               return GestureDetector(
                 //onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> const LoginPage())),
                 child: Container(
+                  color: Colors.transparent, //ไม่ใส่แล้วกดช่องว่างไม่ได้
                   margin: const EdgeInsets.only(bottom: 10, left: 20, top: 10),
                   child: Row(
                     children: [
