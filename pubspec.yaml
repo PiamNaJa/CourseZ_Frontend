@@ -39,10 +39,13 @@ dependencies:
   cupertino_icons: ^1.0.2
   update: ^0.3.1
   flutter_launcher_icons: "^0.11.0"
+  form_field_validator: ^1.1.0
+  jwt_decoder: ^2.0.1
+  http: ^0.13.5
 
 flutter_icons:
   android: true
-  image_path: 'imageIcon/CourseZ_logo.jpg'
+  image_path: 'assets/images/CourseZ_logo.jpg'
 
 dev_dependencies:
   flutter_test:
@@ -97,17 +100,6 @@ flutter:
           weight: 700  
   #
 
-  fonts:
-    - family: Athiti
-      fonts:
-        - asset: assets/fonts/Athiti-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Athiti-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Athiti-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Athiti-Bold.ttf
-          weight: 700  
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

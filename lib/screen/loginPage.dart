@@ -1,9 +1,12 @@
+import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/widget/button/button.dart';
 import 'package:coursez/widget/text/title16px.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/widget/text/heading2_20px.dart';
 import 'package:coursez/widget/textField/Textformfield.dart';
+import 'package:coursez/screen/Registerpage.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 class loginPage extends StatefulWidget {
   const loginPage({super.key});
@@ -13,6 +16,41 @@ class loginPage extends StatefulWidget {
 }
 
 class _loginPageState extends State<loginPage> {
+  final formKey = GlobalKey<FormState>();
+  late bool isEmailEmpty;
+  late bool isPasswordEmpty;
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
+  AuthController? authController;
+
+  @override
+  void initState() {
+    isEmailEmpty = true;
+    isPasswordEmpty = true;
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+    authController = AuthController();
+    emailController.addListener(() {
+      setState(() {
+        isEmailEmpty = emailController.text.isEmpty;
+      });
+    });
+    passwordController.addListener(() {
+      setState(() {
+        isPasswordEmpty = passwordController.text.isEmpty;
+      });
+    });
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +66,7 @@ class _loginPageState extends State<loginPage> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(30),
+          padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -42,23 +80,78 @@ class _loginPageState extends State<loginPage> {
                 color: primaryColor,
               ),
               const Heading20px(text: 'โปรดเข้าสู่ระบบเพื่อใช้งาน'),
-              const Textformfield(
-                icon: Icon(Icons.email),
-                hintText: 'p@example.com',
-                labelText: 'อีเมลหรือเบอร์โทรศัพท์',
-              ),
-              const Textformfield(
-                  icon: Icon(Icons.password),
-                  hintText: 'รหัสผ่าน',
-                  labelText: 'รหัสผ่าน'),
-              const Bt(text: 'เข้าสู่ระบบ', color: primaryColor),
+              Form(
+                  key: formKey,
+                  child: Column(children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: TextFormField(
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            icon: Icon(Icons.email),
+                            hintText: 'p@example.com',
+                            labelText: 'อีเมล',
+                          ),
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          validator:
+                              RequiredValidator(errorText: 'อีเมลไม่ถูกต้อง')),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: TextFormField(
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            icon: Icon(Icons.password),
+                            hintText: 'รหัสผ่าน',
+                            labelText: 'รหัสผ่าน',
+                          ),
+                          controller: passwordController,
+                          keyboardType: TextInputType.visiblePassword,
+                          obscureText: true,
+                          validator: RequiredValidator(
+                              errorText: 'รหัสผ่านไม่ถูกต้อง')),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: !isEmailEmpty && !isPasswordEmpty
+                              ? () async {
+                                  await authController?.loginUser(
+                                    emailController.text, passwordController.text);
+                                  debugPrint("Call API");
+                                }
+                              : null,
+                          style: ElevatedButton.styleFrom(
+                            disabledBackgroundColor: primaryLighterColor,
+                            backgroundColor: primaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          child: const Title16px(
+                            text: 'เข้าสู่ระบบ',
+                            color: whiteColor,
+                          ),
+                        ),
+                      ),
+                    )
+                    // Bt(text: 'เข้าสู่ระบบ', color: primaryColor),
+                  ])),
               TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return const Registerpage();
+                    }));
+                  },
                   child: const Title16px(
                     text: 'ลงทะเบียน',
                     color: primaryColor,
-                  )
-              )
+                  ))
             ],
           ),
         ),
