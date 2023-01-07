@@ -1,10 +1,10 @@
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/utils/color.dart';
-import 'package:coursez/widget/button/button.dart';
-import 'package:coursez/widget/text/title16px.dart';
+import 'package:coursez/widgets/button/button.dart';
+import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/material.dart';
-import 'package:coursez/widget/text/heading2_20px.dart';
-import 'package:coursez/widget/textField/Textformfield.dart';
+import 'package:coursez/widgets/text/heading2_20px.dart';
+import 'package:coursez/widgets/textField/Textformfield.dart';
 import 'package:coursez/screen/Registerpage.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
@@ -121,8 +121,8 @@ class _loginPageState extends State<loginPage> {
                           onPressed: !isEmailEmpty && !isPasswordEmpty
                               ? () async {
                                   await authController?.loginUser(
-                                    emailController.text, passwordController.text);
-                                  debugPrint("Call API");
+                                      emailController.text,
+                                      passwordController.text);
                                 }
                               : null,
                           style: ElevatedButton.styleFrom(
