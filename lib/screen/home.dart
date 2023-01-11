@@ -1,10 +1,12 @@
 import 'package:coursez/widgets/listView/listViewForTutor.dart';
 import 'package:coursez/utils/color.dart';
+import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/widgets/listView/listViewForCourse.dart';
 import 'package:coursez/widgets/carousel/carouselLevel.dart';
 import '../widgets/dropdown/dropdown.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -20,57 +22,55 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 90,
-          elevation: 0.0,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: <Color>[
-                  primaryDarkColor,
-                  secondaryColor,
-                ],
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: <Color>[
+                      primaryDarkColor,
+                      secondaryColor,
+                    ],
+                  ),
+                ),
               ),
+              collapsedHeight: 60,
+              expandedHeight: 60,
+              floating: false,
+              centerTitle: true,
+              title: const Heading24px(text: 'ยินดีต้อนรับสู่ CourseZ'),
             ),
-          ),
-          //set title center
-          centerTitle: true,
-          title: const Text(
-            'ยินดีต้อนรับสู่ CourseZ',
-            style: TextStyle(
-                fontFamily: 'Athiti',
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: blackColor),
-          ),
-        ),
+          ];
+        },
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                      width: 170,
+                      width: 220,
                       height: 50,
                       child: TextField(
                         style: const TextStyle(fontFamily: 'Athiti'),
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           contentPadding: EdgeInsets.zero,
                           prefixIcon: Icon(
                             Icons.search,
-                            // color: greyColor,
+                            color: _prefixIconColor,
                           ),
-                          hintText: 'search',
-                          border: OutlineInputBorder(
+                          hintText: 'ค้นหา',
+                          border: const OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(25.0)),
                           ),
-                          focusedBorder: OutlineInputBorder(
+                          focusedBorder: const OutlineInputBorder(
                             borderSide: BorderSide(color: primaryColor),
                             borderRadius: BorderRadius.all(
                               Radius.circular(25.0),
@@ -78,16 +78,21 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                         onSubmitted: (value) {},
-                        // onChanged: (value) {
-                        //   setState(() {
-                        //     _prefixIconColor = primaryColor;
-                        //   });
-                        // },
-                        // onEditingComplete: (() {
-                        //   setState(() {
-                        //     _prefixIconColor = greyColor;
-                        //   });
-                        // }),
+                        onTap: () {
+                          setState(() {
+                            _prefixIconColor = primaryColor;
+                          });
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            _prefixIconColor = primaryColor;
+                          });
+                        },
+                        onEditingComplete: (() {
+                          setState(() {
+                            _prefixIconColor = greyColor;
+                          });
+                        }),
                       ),
                     ),
                     const SizedBox(
@@ -125,35 +130,29 @@ class _MyHomePageState extends State<MyHomePage> {
                       const SizedBox(
                         height: 12,
                       ),
-                      const listViewForCourse(
-                        rating: 4.5,
-                      ),
+                      const listViewForCourse(rating: 4.5),
                     ],
                   ),
                 ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: const Heading20px(text: 'วิชา'),
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                Container(
-                    // padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                    width: double.infinity,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: whiteColor,
-                      // border: Border.all(color: greyColor),
-                      // borderRadius: BorderRadius.circular(10),
-                      // boxShadow: const [
-                      //   BoxShadow(color: blackColor, blurRadius: 1)
-                      // ]
-                    ),
-                    child: const carouselLevel()),
-                const SizedBox(
-                  height: 20,
-                ),
+                Column(children: [
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: const Heading20px(text: 'วิชา'),
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Container(
+                      width: double.infinity,
+                      height: 291,
+                      decoration: const BoxDecoration(
+                        color: whiteColor,
+                      ),
+                      child: const carouselLevel()),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ]),
                 Container(
                   alignment: Alignment.centerLeft,
                   child: const Heading20px(text: 'ติวเตอร์ยอดนิยม'),
@@ -161,10 +160,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 const SizedBox(
                   height: 12,
                 ),
-                const listViewForTutor(rating: 4)
+                const listViewForTutor(rating: 4),
+                const SizedBox(
+                  height: 200,
+                ),
               ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

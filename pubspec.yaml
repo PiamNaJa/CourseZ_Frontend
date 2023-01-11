@@ -45,6 +45,10 @@ dependencies:
   sqflite:
   flutter_rating_bar: ^4.0.1
   carousel_slider: ^4.2.1
+  skeletons: ^0.0.3
+  dots_indicator: ^2.1.0
+  flutter_secure_storage: ^7.0.1
+  get: ^4.6.5
 
 flutter_icons:
   android: true
@@ -78,6 +82,8 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/images/CourseZ_logo.jpg
+    - assets/images/math1.png
+    - assets/images/math2.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

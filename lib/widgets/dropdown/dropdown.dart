@@ -25,12 +25,12 @@ class _dropdownState extends State<dropdown> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: DropdownButton(
+          alignment: AlignmentDirectional.center,
           dropdownColor: primaryLighterColor,
           style: const TextStyle(color: Colors.black),
           icon: const Icon(Icons.arrow_drop_down),
           iconSize: 36,
           elevation: 16,
-          isExpanded: true,
           borderRadius: BorderRadius.circular(25),
           value: widget.selectedItem,
           onChanged: (item) {

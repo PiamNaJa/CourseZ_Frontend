@@ -1,10 +1,8 @@
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/utils/color.dart';
-import 'package:coursez/widgets/button/button.dart';
 import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
-import 'package:coursez/widgets/textField/Textformfield.dart';
 import 'package:coursez/screen/Registerpage.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
@@ -60,7 +58,7 @@ class _loginPageState extends State<loginPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: primaryColor),
           onPressed: () {
-            // Navigator.pop(context);
+            Navigator.pop(context);
           },
         ),
       ),
@@ -85,32 +83,52 @@ class _loginPageState extends State<loginPage> {
                   child: Column(children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
-                      child: TextFormField(
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            icon: Icon(Icons.email),
-                            hintText: 'p@example.com',
-                            labelText: 'อีเมล',
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            alignment: Alignment.centerLeft,
+                            child: const Heading20px(text: 'อีเมล'),
                           ),
-                          controller: emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          validator:
-                              RequiredValidator(errorText: 'อีเมลไม่ถูกต้อง')),
+                          TextFormField(
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(40))),
+                                hintText: 'p@example.com',
+                              ),
+                              controller: emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              validator: RequiredValidator(
+                                  errorText: 'อีเมลไม่ถูกต้อง')),
+                        ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
-                      child: TextFormField(
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            icon: Icon(Icons.password),
-                            hintText: 'รหัสผ่าน',
-                            labelText: 'รหัสผ่าน',
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            alignment: Alignment.centerLeft,
+                            child: const Heading20px(text: 'รหัสผ่าน'),
                           ),
-                          controller: passwordController,
-                          keyboardType: TextInputType.visiblePassword,
-                          obscureText: true,
-                          validator: RequiredValidator(
-                              errorText: 'รหัสผ่านไม่ถูกต้อง')),
+                          TextFormField(
+                              cursorColor: primaryColor,
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(40))),
+                                  hintText: 'รหัสผ่าน',
+                                  suffixIcon:
+                                      Icon(Icons.visibility_off_outlined)),
+                              controller: passwordController,
+                              keyboardType: TextInputType.visiblePassword,
+                              obscureText: true,
+                              validator: RequiredValidator(
+                                  errorText: 'รหัสผ่านไม่ถูกต้อง')),
+                        ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
