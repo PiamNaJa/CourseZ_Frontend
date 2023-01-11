@@ -1,19 +1,21 @@
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/utils/color.dart';
-import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:coursez/screen/Registerpage.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:coursez/widgets/button/button.dart';
+import 'package:coursez/widgets/text/title16px.dart';
+import 'package:coursez/widgets/textField/Textformfield.dart';
 
-class loginPage extends StatefulWidget {
-  const loginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<loginPage> createState() => _loginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _loginPageState extends State<loginPage> {
+class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
   late bool isEmailEmpty;
   late bool isPasswordEmpty;
