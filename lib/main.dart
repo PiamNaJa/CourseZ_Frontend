@@ -1,5 +1,6 @@
-
-import 'package:coursez/screen/loginPage.dart';
+import 'package:coursez/screen/Loginpage.dart';
+import 'package:coursez/screen/home.dart';
+import 'package:coursez/screen/Registerpage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,7 +17,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LoginPage(),
+      debugShowCheckedModeBanner: false,
+      home: const MyHomePage(),
+      routes: {
+        '/login': (context) => const loginPage(),
+        '/home': (context) => const MyHomePage(),
+        '/register': ((context) => const Registerpage())
+      },
     );
   }
 }
