@@ -49,6 +49,10 @@ dependencies:
   dots_indicator: ^2.1.0
   flutter_secure_storage: ^7.0.1
   get: ^4.6.5
+  image_picker: ^0.8.3
+  firebase_storage: ^11.0.10
+  firebase_auth: ^4.2.5
+  firebase_core: ^2.4.1
 
 flutter_icons:
   android: true
@@ -81,6 +85,7 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   assets:
+    - assets/images/
     - assets/images/CourseZ_logo.jpg
     - assets/images/math1.png
     - assets/images/math2.png
