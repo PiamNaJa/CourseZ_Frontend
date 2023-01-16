@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-
 
 class Textformfield extends StatefulWidget {
   final Icon icon;
@@ -21,8 +18,7 @@ class Textformfield extends StatefulWidget {
       required this.labelText,
       required this.keyboardType,
       required this.obscure,
-      required this.controller
-    });
+      required this.controller});
 
   @override
   State<Textformfield> createState() => _TextformfieldState();
@@ -32,8 +28,7 @@ class _TextformfieldState extends State<Textformfield> {
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener((){
-    });
+    widget.controller.addListener(() {});
   }
 
   @override
@@ -59,7 +54,6 @@ class _TextformfieldState extends State<Textformfield> {
           obscureText: widget.obscure,
           validator:
               RequiredValidator(errorText: '${widget.labelText}ไม่ถูกต้อง')),
-
     );
   }
 }
