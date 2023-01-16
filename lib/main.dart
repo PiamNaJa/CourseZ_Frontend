@@ -1,4 +1,3 @@
-import 'package:coursez/screen/expandPage.dart';
 import 'package:coursez/screen/Loginpage.dart';
 import 'package:coursez/screen/home.dart';
 import 'package:coursez/screen/Registerpage.dart';
@@ -19,9 +18,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(),
+      initialRoute: '/home',
       routes: {
-        '/login': (context) => const loginPage(),
+        '/login': (context) => const LoginPage(),
         '/home': (context) => const MyHomePage(),
         '/register': ((context) => const Registerpage())
       },

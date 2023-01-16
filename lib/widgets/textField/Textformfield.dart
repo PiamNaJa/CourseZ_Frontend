@@ -23,13 +23,6 @@ class Textformfield extends StatefulWidget {
       required this.obscure,
       required this.controller
     });
-    
-  const Textformfield({
-    super.key,
-    required this.icon,
-    required this.hintText,
-    required this.labelText,
-  });
 
   @override
   State<Textformfield> createState() => _TextformfieldState();
@@ -66,15 +59,6 @@ class _TextformfieldState extends State<Textformfield> {
           obscureText: widget.obscure,
           validator:
               RequiredValidator(errorText: '${widget.labelText}ไม่ถูกต้อง')),
-
-        decoration: InputDecoration(
-          border: const OutlineInputBorder(),
-          icon: widget.icon,
-          hintText: widget.hintText,
-          labelText: widget.labelText,
-          // errorText: 'กรุณากรอกให้ครบ',
-        ),
-      ),
 
     );
   }
