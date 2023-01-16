@@ -20,8 +20,7 @@ class Textformfield extends StatefulWidget {
       required this.labelText,
       required this.keyboardType,
       required this.obscure,
-      required this.controller
-    });
+      required this.controller});
 
   @override
   State<Textformfield> createState() => _TextformfieldState();
@@ -57,7 +56,6 @@ class _TextformfieldState extends State<Textformfield> {
           obscureText: widget.obscure,
           validator:
               RequiredValidator(errorText: '${widget.labelText}ไม่ถูกต้อง')),
-
     );
   }
 }
