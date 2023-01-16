@@ -1,4 +1,5 @@
 import 'package:coursez/screen/Loginpage.dart';
+import 'package:coursez/screen/coursePage.dart';
 import 'package:coursez/screen/home.dart';
 import 'package:coursez/screen/Registerpage.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/home',
+      // initialRoute: '/home',
+      home: const CoursePage(),
       routes: {
         '/login': (context) => const LoginPage(),
         '/home': (context) => const MyHomePage(),
