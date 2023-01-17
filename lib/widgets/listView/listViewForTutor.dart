@@ -1,83 +1,71 @@
-import 'package:coursez/utils/color.dart';
+import 'package:coursez/model/user.dart';
+import 'package:coursez/utils/fetchData.dart';
 import 'package:coursez/widgets/text/body10px.dart';
 import 'package:coursez/widgets/text/title12px.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:coursez/widgets/rating/rating.dart';
 import 'package:flutter/material.dart';
 
-class cardItem {
-  final String urlImage;
-  final String teacher;
-  final String subject;
-  final double rating;
-
-  cardItem(
-      {required this.urlImage,
-      required this.teacher,
-      required this.rating,
-      required this.subject});
-}
+import '../../utils/color.dart';
 
 class listViewForTutor extends StatefulWidget {
   final double rating;
-
-  const listViewForTutor({super.key, required this.rating});
+  final int level;
+  const listViewForTutor(
+      {super.key, required this.rating, required this.level});
 
   @override
   State<listViewForTutor> createState() => _listViewForTutorState();
 }
 
 class _listViewForTutorState extends State<listViewForTutor> {
-  List<cardItem> items = [
-    cardItem(
-        urlImage:
-            'https://uploads-ssl.webflow.com/5f7449cd4e922c61c95ec19e/60b0a23480010d96fd37c974_SeaTalk_IMG_Teacher_01-3.jpg',
-        teacher: 'ครูไอซ์ (ปรีชา เพทายวิราพันธ์)',
-        subject: 'วิทยาศาสตร์',
-        rating: 4.8),
-    cardItem(
-        urlImage:
-            'https://uploads-ssl.webflow.com/5f7449cd4e922c61c95ec19e/60b0a23480010d96fd37c974_SeaTalk_IMG_Teacher_01-3.jpg',
-        teacher: 'ครูไอซ์ (ปรีชา เพทายวิราพันธ์)',
-        subject: 'วิทยาศาสตร์',
-        rating: 4.8),
-    cardItem(
-        urlImage:
-            'https://uploads-ssl.webflow.com/5f7449cd4e922c61c95ec19e/60b0a23480010d96fd37c974_SeaTalk_IMG_Teacher_01-3.jpg',
-        teacher: 'ครูไอซ์ (ปรีชา เพทายวิราพันธ์)',
-        subject: 'วิทยาศาสตร์',
-        rating: 4.8),
-    cardItem(
-        urlImage:
-            'https://uploads-ssl.webflow.com/5f7449cd4e922c61c95ec19e/60b0a23480010d96fd37c974_SeaTalk_IMG_Teacher_01-3.jpg',
-        teacher: 'ครูไอซ์ (ปรีชา เพทายวิราพันธ์)',
-        subject: 'วิทยาศาสตร์',
-        rating: 4.8),
-  ];
+  final List<User> _tutor = [];
+  // List<User> _tutorLevel = [];
+  bool _isError = false;
+  @override
+  void initState() {
+    super.initState();
+    fecthData('user/teacher').then((value) {
+      debugPrint(value.toString());
+      setState(() {
+        debugPrint('test');
+        if (value['err'] == null) {
+          value['data'].map((e) => _tutor.add(User.fromJson(e))).toList();
+          debugPrint(_tutor.toString());
+        } else {
+          debugPrint(value['err'].toString());
+          _isError = true;
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: SizedBox(
-        height: 170,
-        child: ListView.separated(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: items.length,
-            separatorBuilder: (context, _) => const SizedBox(
-                  width: 15,
-                ),
-            itemBuilder: (context, index) =>
-                buildCard(items[index], widget.rating)),
-      ),
-    );
+    return _tutor.isEmpty
+        ? const CircularProgressIndicator(
+            color: primaryColor,
+          )
+        : SingleChildScrollView(
+            child: SizedBox(
+              height: 170,
+              child: ListView.separated(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 5,
+                  separatorBuilder: (context, _) => const SizedBox(
+                        width: 15,
+                      ),
+                  itemBuilder: (context, index) =>
+                      buildCard(_tutor[index], widget.rating)),
+            ),
+          );
   }
 }
 
-Widget buildCard(cardItem item, double rating) {
+Widget buildCard(User item, double rating) {
   return LayoutBuilder(
       builder: (BuildContext context, Constraints constraints) {
     return GestureDetector(
@@ -90,7 +78,7 @@ Widget buildCard(cardItem item, double rating) {
             Expanded(
               child: ClipOval(
                 child: Image.network(
-                  item.urlImage,
+                  item.picture,
                   fit: BoxFit.fitHeight,
                 ),
               ),
@@ -101,11 +89,7 @@ Widget buildCard(cardItem item, double rating) {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Title12px(
-                    text: item.teacher,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Body10px(
-                    text: item.subject,
+                    text: '${item.nickName} (${item.fullName})',
                     overflow: TextOverflow.ellipsis,
                   ),
                   ratingStar(rating: rating)

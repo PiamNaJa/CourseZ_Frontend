@@ -5,13 +5,13 @@ import 'package:flutter/rendering.dart';
 import 'package:coursez/widgets/rating/rating.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/model/course.dart';
-
 import '../../utils/fetchData.dart';
 
 class listViewForCourse extends StatefulWidget {
   final double rating;
-
-  const listViewForCourse({super.key, required this.rating});
+  final int level;
+  const listViewForCourse(
+      {super.key, required this.rating, required this.level});
 
   @override
   State<listViewForCourse> createState() => _listViewForCourseState();
@@ -19,6 +19,7 @@ class listViewForCourse extends StatefulWidget {
 
 class _listViewForCourseState extends State<listViewForCourse> {
   final List<Course> _course = [];
+  List<Course> _courseLevel = [];
   bool _isError = false;
   @override
   void initState() {
@@ -27,6 +28,7 @@ class _listViewForCourseState extends State<listViewForCourse> {
       setState(() {
         if (value['err'] == null) {
           value['data'].map((e) => _course.add(Course.fromJson(e))).toList();
+          debugPrint(widget.level.toString());
         } else {
           _isError = true;
         }
@@ -36,7 +38,17 @@ class _listViewForCourseState extends State<listViewForCourse> {
 
   @override
   Widget build(BuildContext context) {
-    return _course.isEmpty
+    setState(() {
+      if (widget.level != 0) {
+        _courseLevel = _course
+            .where((element) => element.subject?.classLevel == widget.level)
+            .toList();
+      } else {
+        _courseLevel = _course;
+      }
+    });
+
+    return _courseLevel.isEmpty
         ? const CircularProgressIndicator(
             color: primaryColor,
           )
@@ -46,12 +58,12 @@ class _listViewForCourseState extends State<listViewForCourse> {
               child: ListView.separated(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  itemCount: _course.length,
+                  itemCount: 5,
                   separatorBuilder: (context, _) => const SizedBox(
                         width: 20,
                       ),
                   itemBuilder: (context, index) =>
-                      buildCard(_course[index], widget.rating)),
+                      buildCard(_courseLevel[index], widget.rating)),
             ),
           );
   }
@@ -87,7 +99,7 @@ Widget buildCard(Course item, double rating) {
                   child: Image.network(
                     item.picture,
                     width: 140,
-                    fit: BoxFit.fitWidth,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),

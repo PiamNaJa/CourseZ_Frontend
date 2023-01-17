@@ -3,7 +3,6 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
-
 class Textformfield extends StatefulWidget {
   final Icon icon;
   final String hintText;
@@ -32,8 +31,7 @@ class _TextformfieldState extends State<Textformfield> {
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener((){
-    });
+    widget.controller.addListener(() {});
   }
 
   @override

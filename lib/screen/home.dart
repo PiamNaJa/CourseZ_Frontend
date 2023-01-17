@@ -1,3 +1,4 @@
+import 'package:coursez/widgets/button/textButton.dart';
 import 'package:coursez/widgets/listView/listViewForTutor.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/widgets/text/heading1_24px.dart';
@@ -6,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:coursez/widgets/listView/listViewForCourse.dart';
 import 'package:coursez/widgets/carousel/carouselLevel.dart';
 import '../widgets/dropdown/dropdown.dart';
-import 'package:dots_indicator/dots_indicator.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -17,10 +17,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Color _prefixIconColor = greyColor;
-  final List<String> items = ['Item1', 'Item2', 'Item3'];
 
   @override
   Widget build(BuildContext context) {
+    final SelectLevel = dropdown();
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -55,7 +55,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                      width: 220,
+                      width: MediaQuery.of(context).size.width > 400
+                          ? MediaQuery.of(context).size.width * 0.7
+                          : MediaQuery.of(context).size.width * 0.4,
                       height: 50,
                       child: TextField(
                         style: const TextStyle(fontFamily: 'Athiti'),
@@ -100,20 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     Expanded(
                       child: SizedBox(
-                        height: 50,
-                        child: dropdown(
-                          items: const [
-                            'ระดับชั้นทั้งหมด',
-                            'ม.1',
-                            'ม.2',
-                            'ม.3',
-                            'ม.4',
-                            'ม.5',
-                            'ม.6',
-                            'มหาวิทยาลัย',
-                          ],
-                          selectedItem: 'ระดับชั้นทั้งหมด',
-                        ),
+                        child: SelectLevel,
                       ),
                     ),
                     // const listView()
@@ -124,13 +113,22 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Column(
                     children: [
                       Container(
-                        alignment: Alignment.centerLeft,
-                        child: const Heading20px(text: 'คอร์สยอดนิยม'),
+                        child: Row(
+                          children: const [
+                            Heading20px(text: 'คอร์สยอดนิยม'),
+                            Expanded(
+                                child: ButtonText(
+                                    text: 'ดูเพิ่มเติม',
+                                    color: greyColor,
+                                    size: 16,
+                                    position: TextAlign.right)),
+                          ],
+                        ),
                       ),
                       const SizedBox(
                         height: 12,
                       ),
-                      const listViewForCourse(rating: 4.5),
+                      listViewForCourse(rating: 4.5, level: SelectLevel.level),
                     ],
                   ),
                 ),
@@ -160,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 const SizedBox(
                   height: 12,
                 ),
-                const listViewForTutor(rating: 4),
+                listViewForTutor(rating: 4, level: SelectLevel.level),
                 const SizedBox(
                   height: 200,
                 ),
