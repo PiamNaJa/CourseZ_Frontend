@@ -120,7 +120,7 @@ class _carouselLevelState extends State<carouselLevel> {
                                                         CrossAxisAlignment
                                                             .center,
                                                     children: [
-                                                      Image.network(
+                                                Image.network(
                                                         item['subject'][i]
                                                             .subjectPicture,
                                                         width: 70,

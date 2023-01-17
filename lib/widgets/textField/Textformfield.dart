@@ -3,7 +3,6 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
-
 class Textformfield extends StatefulWidget {
   final Icon icon;
   final String hintText;
@@ -21,15 +20,8 @@ class Textformfield extends StatefulWidget {
       required this.labelText,
       required this.keyboardType,
       required this.obscure,
-      required this.controller
-    });
-    
-  const Textformfield({
-    super.key,
-    required this.icon,
-    required this.hintText,
-    required this.labelText,
-  });
+      required this.controller});
+
 
   @override
   State<Textformfield> createState() => _TextformfieldState();
@@ -39,8 +31,7 @@ class _TextformfieldState extends State<Textformfield> {
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener((){
-    });
+    widget.controller.addListener(() {});
   }
 
   @override
@@ -54,28 +45,19 @@ class _TextformfieldState extends State<Textformfield> {
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: TextFormField(
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            icon: widget.icon,
-            hintText: widget.hintText,
-            labelText: widget.labelText,
-            // errorText: '${widget.labelText}ไม่ถูกต้อง',
-          ),
-          controller: widget.controller,
-          keyboardType: widget.keyboardType,
-          obscureText: widget.obscure,
-          validator:
-              RequiredValidator(errorText: '${widget.labelText}ไม่ถูกต้อง')),
-
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
           icon: widget.icon,
           hintText: widget.hintText,
           labelText: widget.labelText,
-          // errorText: 'กรุณากรอกให้ครบ',
+          // errorText: '${widget.labelText}ไม่ถูกต้อง',
         ),
+        controller: widget.controller,
+        keyboardType: widget.keyboardType,
+        obscureText: widget.obscure,
+        validator:
+            RequiredValidator(errorText: '${widget.labelText}ไม่ถูกต้อง'),
       ),
-
     );
   }
 }

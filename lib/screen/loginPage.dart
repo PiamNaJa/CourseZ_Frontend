@@ -3,10 +3,8 @@ import 'package:coursez/utils/color.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:coursez/screen/Registerpage.dart';
-import 'package:form_field_validator/form_field_validator.dart';
-import 'package:coursez/widgets/button/button.dart';
 import 'package:coursez/widgets/text/title16px.dart';
-import 'package:coursez/widgets/textField/Textformfield.dart';
+import 'package:flash/flash.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -21,7 +19,10 @@ class _LoginPageState extends State<LoginPage> {
   late bool isPasswordEmpty;
   late TextEditingController emailController;
   late TextEditingController passwordController;
-  AuthController? authController;
+  late AuthController authController;
+  int statusCode = 0;
+  bool obsecureText = true;
+  Icon visiblePassword = const Icon(Icons.visibility_off_outlined);
 
   @override
   void initState() {
@@ -101,8 +102,19 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               controller: emailController,
                               keyboardType: TextInputType.emailAddress,
-                              validator: RequiredValidator(
-                                  errorText: 'อีเมลไม่ถูกต้อง')),
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (
+                                format,
+                              ) {
+                                if (RegExp(
+                                        r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+')
+                                    .hasMatch(format!)) {
+                                  return null;
+                                } else {
+                                  return 'รูปแบบอีเมลไม่ถูกต้อง';
+                                }
+                              }),
                         ],
                       ),
                     ),
@@ -116,19 +128,29 @@ class _LoginPageState extends State<LoginPage> {
                             child: const Heading20px(text: 'รหัสผ่าน'),
                           ),
                           TextFormField(
-                              cursorColor: primaryColor,
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(40))),
-                                  hintText: 'รหัสผ่าน',
-                                  suffixIcon:
-                                      Icon(Icons.visibility_off_outlined)),
-                              controller: passwordController,
-                              keyboardType: TextInputType.visiblePassword,
-                              obscureText: true,
-                              validator: RequiredValidator(
-                                  errorText: 'รหัสผ่านไม่ถูกต้อง')),
+                            cursorColor: primaryColor,
+                            decoration: InputDecoration(
+                                border: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(40))),
+                                hintText: 'รหัสผ่าน',
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      obsecureText = !obsecureText;
+                                      visiblePassword = obsecureText
+                                          ? const Icon(
+                                              Icons.visibility_off_outlined)
+                                          : const Icon(
+                                              Icons.visibility_outlined);
+                                    });
+                                  },
+                                  icon: visiblePassword,
+                                )),
+                            controller: passwordController,
+                            keyboardType: TextInputType.visiblePassword,
+                            obscureText: obsecureText,
+                          )
                         ],
                       ),
                     ),
@@ -140,9 +162,34 @@ class _LoginPageState extends State<LoginPage> {
                         child: ElevatedButton(
                           onPressed: !isEmailEmpty && !isPasswordEmpty
                               ? () async {
-                                  await authController?.loginUser(
+                                  await authController.loginUser(
                                       emailController.text,
                                       passwordController.text);
+                                  setState(() {
+                                    statusCode = authController.statusCode;
+                                  });
+                                  if (statusCode == 200) {
+                                    Navigator.popAndPushNamed(context, '/home');
+                                  } else {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                                'เข้าสู่ระบบไม่สำเร็จ'),
+                                            content: const Text(
+                                                'อีเมลหรือรหัสผ่านไม่ถูกต้อง'),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    passwordController.clear();
+                                                  },
+                                                  child: const Text('ตกลง'))
+                                            ],
+                                          );
+                                        });
+                                  }
                                 }
                               : null,
                           style: ElevatedButton.styleFrom(
@@ -163,14 +210,20 @@ class _LoginPageState extends State<LoginPage> {
                   ])),
               TextButton(
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return const Registerpage();
-                    }));
+                    Navigator.pushNamed(context, '/register');
                   },
-                  child: const Title16px(
-                    text: 'ลงทะเบียน',
-                    color: primaryColor,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Title16px(
+                        text: 'ยังไม่มีบัญชีผู้ใช้? ',
+                        color: greyColor,
+                      ),
+                      Title16px(
+                        text: 'ลงทะเบียน',
+                        color: primaryColor,
+                      )
+                    ],
                   ))
             ],
           ),

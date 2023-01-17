@@ -1,11 +1,13 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthController {
+  int statusCode = 0;
   final storage = const FlutterSecureStorage(
       aOptions: AndroidOptions(
     encryptedSharedPreferences: true,
@@ -20,18 +22,7 @@ class AuthController {
     if (response.statusCode == 200) {
       var loginArr = json.decode(response.body);
       var decode = JwtDecoder.decode(loginArr['token']);
-      //save token
-      // storage.write(key: 'token', value: loginArr['token']);
-      // await storage.write(key: 'token ', value: loginArr['token']);
-      //get token
-      // var token = await getToken('token');
-      // debugPrint(token.toString());
-      // DateTime expirationDate = JwtDecoder.getExpirationDate(loginArr['token']);
-      // debugPrint(expirationDate.toString());
-      // debugPrint(loginArr.toString());
-      // debugPrint(JwtDecoder.isExpired(loginArr['token']).toString());
-      //decode token
-      debugPrint(decode.toString());
+      getData(decode['user_id'].toString());
     } else {
       debugPrint('code: ${response.statusCode.toString()}');
       debugPrint('Login Error');
@@ -39,11 +30,21 @@ class AuthController {
     }
   }
 
-  // static Future storeToken(dynamic token) async {
-  //   await const FlutterSecureStorage().write(key: 'token', value: token);
-  // }
+  Future getData(String id) async {
+    String url = 'http://10.0.2.2:5000/api/user/$id';
 
-  // static Future<String?> getToken(String token) async {
-  //   return await const FlutterSecureStorage().read(key: token);
-  // }
+    var response = await http
+        .get(Uri.parse(url), headers: {"Content-Type": "application/json"});
+
+    if (response.statusCode == 200) {
+      statusCode = response.statusCode;
+      var data = json.decode(response.body);
+      debugPrint(data.toString());
+    } else {
+      statusCode = response.statusCode;
+      debugPrint('code: ${response.statusCode.toString()}');
+      debugPrint('Error getting data');
+      debugPrint(response.body);
+    }
+  }
 }
