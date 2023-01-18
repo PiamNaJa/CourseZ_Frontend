@@ -30,7 +30,7 @@ class _listViewForTutorState extends State<listViewForTutor> {
     fecthData('user/teacher').then((value) {
       debugPrint(value.toString());
       setState(() {
-        debugPrint('test');
+        debugPrint(value['err']);
         if (value['err'] == null) {
           value['data'].map((e) => _tutor.add(User.fromJson(e))).toList();
           debugPrint(_tutor.toString());

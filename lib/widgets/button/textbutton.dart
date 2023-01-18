@@ -8,6 +8,7 @@ class ButtonText extends StatelessWidget {
   final double size;
   final TextAlign position;
   final TextOverflow overflow;
+  final String route;
 
   const ButtonText(
       {super.key,
@@ -15,13 +16,14 @@ class ButtonText extends StatelessWidget {
       required this.color,
       required this.size,
       required this.position,
+      required this.route,
       this.overflow = TextOverflow.ellipsis});
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
         onPressed: () {
-          // Navigator.pushNamed(context, '/expandPage');
+          Navigator.pushNamed(context, route);
         },
         child: Text(text,
             style: TextStyle(

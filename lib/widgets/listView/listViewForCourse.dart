@@ -24,7 +24,7 @@ class _listViewForCourseState extends State<listViewForCourse> {
   @override
   void initState() {
     super.initState();
-    fecthData('course').then((value) {
+    fecthData('course/Teacher').then((value) {
       setState(() {
         if (value['err'] == null) {
           value['data'].map((e) => _course.add(Course.fromJson(e))).toList();
