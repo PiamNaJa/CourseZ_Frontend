@@ -112,18 +112,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                   child: Column(
                     children: [
-                      Container(
-                        child: Row(
-                          children: const [
-                            Heading20px(text: 'คอร์สยอดนิยม'),
-                            Expanded(
-                                child: ButtonText(
-                                    text: 'ดูเพิ่มเติม',
-                                    color: greyColor,
-                                    size: 16,
-                                    position: TextAlign.right)),
-                          ],
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Heading20px(text: 'คอร์สยอดนิยม'),
+                          ButtonText(
+                              text: 'ดูเพิ่มเติม >',
+                              color: greyColor,
+                              size: 16,
+                              position: TextAlign.right,
+                              route: ''),
+                        ],
                       ),
                       const SizedBox(
                         height: 12,
