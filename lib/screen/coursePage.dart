@@ -16,6 +16,7 @@ class CoursePage extends StatefulWidget {
 }
 
 class _CoursePageState extends State<CoursePage> {
+  final Icon fav = const Icon(Icons.favorite_border);
   late Map<String, dynamic> _courseData = {};
 
   @override
@@ -107,87 +108,105 @@ class _CoursePageState extends State<CoursePage> {
           title: Heading24px(text: _courseData['course_name']!),
         ),
         body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  color: primaryLighterColor,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          LayoutBuilder(builder: (context, constraints) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Image.network(
-                                  _courseData['picture'] as String,
-                                  width: constraints.maxWidth * 0.5,
-                                  fit: BoxFit.fill,
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.heart_broken),
-                                  iconSize: 35,
-                                )
-                              ],
-                            );
-                          }),
-                          Heading30px(text: _courseData['course_name']!),
-                          Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                color: primaryLighterColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        LayoutBuilder(builder: (context, constraints) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Body16px(
-                                  text: 'โดย ${_courseData["course_name"]}'),
-                              const ratingStar(rating: 5),
+                              Image.network(
+                                _courseData['picture'] as String,
+                                width: constraints.maxWidth * 0.5,
+                                fit: BoxFit.fill,
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  // setState(() {
+                                  //   if (fav ==
+                                  //       const Icon(Icons.favorite_border)) {
+                                  //     fav == const Icon(Icons.favorite_sharp);
+                                  //     debugPrint('fav');
+                                  //   } else {
+                                  //     fav ==
+                                  //         const Icon(Icons.favorite_border);
+                                  //     debugPrint('not fav');
+                                  //   }
+                                  // });
+                                },
+                                icon: fav,
+                                iconSize: 35,
+                              )
                             ],
-                          ),
-                          Body16px(text: _courseData["description"]!),
-                        ]),
-                  ),
+                          );
+                        }),
+                        Heading30px(text: _courseData['course_name']!),
+                        Row(
+                          children: [
+                            Body16px(text: 'โดย ${_courseData["course_name"]}'),
+                            const ratingStar(rating: 5),
+                          ],
+                        ),
+                        Body16px(text: _courseData["description"]!),
+                      ]),
                 ),
-                //Line
-                const SizedBox(
-                  height: 15,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ),
+              //Line
+              const SizedBox(
+                height: 15,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                child: Column(
                   children: [
-                    const Heading30px(text: "บทเรียน"),
-                    Bt(
-                      text: "ซื้อทั้งหมด",
-                      color: primaryColor,
-                      onPressed: () {},
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Heading30px(text: "บทเรียน"),
+                        Bt(
+                          text: "ซื้อทั้งหมด",
+                          color: primaryColor,
+                          onPressed: () {},
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Center(
+                      child: LayoutBuilder(builder: (context, constraints) {
+                        return Wrap(
+                            spacing: constraints.maxWidth * 0.06,
+                            runSpacing: 12,
+                            children: List.generate(
+                              _courseData['videos'].length,
+                              ((index) {
+                                return VideoCard(
+                                  image: _courseData['videos'][index]
+                                      ['picture'],
+                                  name: _courseData['videos'][index]
+                                      ['video_name'],
+                                  width: 100,
+                                  height: 100,
+                                  price: _courseData['videos'][index]['price'],
+                                  onPressed: () {},
+                                );
+                              }),
+                            ));
+                      }),
                     )
                   ],
                 ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Center(
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    return Wrap(
-                        spacing: constraints.maxWidth * 0.06,
-                        runSpacing: 12,
-                        children: List.generate(
-                          _courseData['videos'].length,
-                          ((index) {
-                            return VideoCard(
-                              image: _courseData['videos'][index]['picture'],
-                              name: _courseData['videos'][index]['video_name'],
-                              width: 170,
-                              height: 120,
-                              onPressed: () {},
-                            );
-                          }),
-                        ));
-                  }),
-                )
-              ],
-            ),
+              )
+            ],
           ),
         ));
   }
