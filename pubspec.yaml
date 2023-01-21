@@ -52,7 +52,7 @@ dependencies:
 
 flutter_icons:
   android: true
-  image_path: 'assets/images/CourseZ_logo.jpg'
+  image_path: 'assets/images/CourseZ_logo.png'
 
 dev_dependencies:
   flutter_test:
@@ -81,7 +81,7 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   assets:
-    - assets/images/CourseZ_logo.jpg
+    - assets/images/CourseZ_logo.png
     - assets/images/math1.png
     - assets/images/math2.png
 
