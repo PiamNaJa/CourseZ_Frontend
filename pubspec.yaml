@@ -49,6 +49,7 @@ dependencies:
   dots_indicator: ^2.1.0
   flutter_secure_storage: ^7.0.1
   get: ^4.6.5
+  video_player:
 
 flutter_icons:
   android: true
