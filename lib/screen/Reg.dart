@@ -1,11 +1,15 @@
 import 'dart:io';
-
+import 'package:coursez/model/user.dart';
+import 'package:coursez/screen/Register2.dart';
+import 'package:coursez/screen/home.dart';
+import 'package:uuid/uuid.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:coursez/Screen/Register2.dart';
-import 'package:coursez/model/profile.dart';
 import 'package:image_picker/image_picker.dart';
+import '../model/user.dart';
+
+var uuid = const Uuid();
 
 enum ProductTypeEnum { Donwloadable, Deliverable }
 
@@ -17,7 +21,16 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  Profile profile = Profile(email: '', password: '');
+  User user = User(
+      userId: '',
+      email: '',
+      password: '',
+      fullName: '',
+      nickName: '',
+      birthDay: '',
+      role: '',
+      picture: '',
+      point: 0);
   ProductTypeEnum? _productTypeEnum;
   File? image;
   Future pickImage() async {
@@ -32,7 +45,23 @@ class _RegisterPageState extends State<RegisterPage> {
     } on PlatformException catch (e) {
       print("Fail to pick image : $e");
     }
+    Reference ref =
+        FirebaseStorage.instance.ref().child("/Images/" + uuid.v4());
+    await ref.putFile(File(image!.path));
+    ref.getDownloadURL().then((value) {
+      print(value);
+    });
   }
+
+  final GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  validator() {
+    if (formkey.currentState != null && formkey.currentState!.validate()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  //final formkey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -41,216 +70,219 @@ class _RegisterPageState extends State<RegisterPage> {
             padding: const EdgeInsets.fromLTRB(22, 22, 22, 22),
             child: SingleChildScrollView(
               child: Column(
+                  key: formkey,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       "โปรดกรอกข้อมูลให้ครบถ้วน",
                       style:
                           TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 12,
                     ),
-                    Text(
+                    const Text(
                       "ชื่อจริง-นามสกุล",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     SizedBox(
-                      height: 50,
                       child: TextFormField(
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.fromLTRB(20, 0, 0, 20),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(width: 1),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(width: 1),
-                          ),
+                        onChanged: (String? fullName) {
+                          user.fullName = fullName!;
+                        },
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
                           hintText: "ชื่อจริง-นามสกุล",
                           hintStyle: TextStyle(fontSize: 20),
                         ),
+                        validator: (String? value) {
+                          if (value!.isEmpty || value.trim().isEmpty) {
+                            return "Field is required";
+                          }
+                          return null;
+                        },
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 12,
                     ),
-                    Text(
+                    const Text(
                       "ชื่อเล่น",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     SizedBox(
-                      height: 50,
                       child: TextFormField(
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.fromLTRB(20, 0, 0, 20),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(width: 1),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(width: 1),
-                          ),
+                        onChanged: (String? nickName) {
+                          user.nickName = nickName!;
+                        },
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
                           hintText: "ชื่อเล่น",
                           hintStyle: TextStyle(fontSize: 20),
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 12,
                     ),
-                    Text(
+                    const Text(
                       "อีเมล",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     SizedBox(
-                      height: 50,
                       child: TextFormField(
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.fromLTRB(20, 0, 0, 20),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(width: 1),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(width: 1),
-                          ),
+                        keyboardType: TextInputType.emailAddress,
+                        onChanged: (String? email) {
+                          user.email = email!;
+                        },
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
                           hintText: "P@example.com",
                           hintStyle: TextStyle(fontSize: 20),
                         ),
+                        validator: (String? value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return "Field is required";
+                          }
+                          if (!RegExp(
+                                  "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]")
+                              .hasMatch(value)) {
+                            return "Please Enter valid email";
+                          }
+                          return null;
+                        },
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 12,
                     ),
-                    Text(
+                    const Text(
                       "รหัสผ่าน",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     SizedBox(
-                      height: 50,
                       child: TextFormField(
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.fromLTRB(20, 0, 0, 20),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(width: 1),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(width: 1),
-                          ),
+                        obscureText: true,
+                        onChanged: (String? password) {
+                          user.password = password!;
+                        },
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
                           hintText: "รหัสผ่าน",
                           hintStyle: TextStyle(fontSize: 20),
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 12,
                     ),
-                    Text(
+                    const Text(
                       "วันเกิด",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     SizedBox(
-                      height: 50,
                       child: TextFormField(
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.fromLTRB(20, 0, 0, 20),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(width: 1),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(width: 1),
-                          ),
+                        onChanged: (String? birthDay) {
+                          user.birthDay = birthDay!;
+                        },
+                        keyboardType: TextInputType.datetime,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
                           hintText: "วว/ดด/ปปปป(พุทธศักราช)",
                           hintStyle: TextStyle(fontSize: 20),
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 12,
                     ),
-                    Text(
+                    const Text(
                       "ท่านคือใคร",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
                       children: [
                         Expanded(
                           child: RadioListTile<ProductTypeEnum>(
-                              contentPadding: EdgeInsets.all(0.0),
+                              contentPadding: const EdgeInsets.all(0.0),
                               value: ProductTypeEnum.Deliverable,
                               groupValue: _productTypeEnum,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30)),
-                              activeColor: Color.fromRGBO(0, 216, 133, 1),
-                              title: Text("นักเรียน"),
+                              activeColor: const Color.fromRGBO(0, 216, 133, 1),
+                              title: const Text("นักเรียน"),
                               onChanged: (val) {
                                 setState(() {
                                   _productTypeEnum = val;
+                                  user.role = "นักเรียน";
                                 });
                               }),
                         ),
                         Expanded(
                           child: RadioListTile<ProductTypeEnum>(
-                              contentPadding: EdgeInsets.all(0.0),
+                              contentPadding: const EdgeInsets.all(0.0),
                               value: ProductTypeEnum.Donwloadable,
                               groupValue: _productTypeEnum,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30)),
-                              activeColor: Color.fromRGBO(0, 216, 133, 1),
-                              title: Text("ติวเตอร์"),
+                              activeColor: const Color.fromRGBO(0, 216, 133, 1),
+                              title: const Text("ติวเตอร์"),
                               onChanged: (val) {
                                 setState(() {
                                   _productTypeEnum = val;
+                                  user.role = "ติวเตอร์";
                                 });
                               }),
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 12,
                     ),
-                    Text(
+                    const Text(
                       "รูปประจำตัว",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     image != null
                         ? Image.file(image!)
-                        : Text("No image selected"),
+                        : const Text("No image selected"),
                     ElevatedButton.icon(
-                      style: ButtonStyle(
+                      style: const ButtonStyle(
                           backgroundColor: MaterialStatePropertyAll<Color>(
                               Color.fromARGB(255, 218, 217, 217))),
                       icon: const Icon(
@@ -260,31 +292,36 @@ class _RegisterPageState extends State<RegisterPage> {
                       onPressed: () {
                         pickImage();
                       },
-                      label: Text(
+                      label: const Text(
                         "แนบรูปภาพ",
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 16,
                             color: Colors.black,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 12,
                     ),
                     SizedBox(
                       height: 40,
                       width: double.infinity,
                       child: ElevatedButton(
-                          style: ButtonStyle(
+                          style: const ButtonStyle(
                               backgroundColor: MaterialStatePropertyAll<Color>(
                                   Color.fromRGBO(0, 216, 133, 1))),
                           onPressed: () {
+                            debugPrint(
+                                "email = ${user.email} password = ${user.password} name = ${user.fullName} nickname = ${user.nickName} date = ${user.birthDay} role = ${user.role}");
+                            formkey.currentState?.save();
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return RegisterPage2();
+                              return user.role == "ติวเตอร์"
+                                  ? const RegisterPage2()
+                                  : const MyHomePage();
                             }));
                           },
-                          child: Text(
+                          child: const Text(
                             "ลงทะเบียน",
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),

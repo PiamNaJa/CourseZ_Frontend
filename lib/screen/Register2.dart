@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:coursez/Screen/Regpeople.dart';
-import 'package:coursez/Screen/Regteacher.dart';
+import 'Regteacher.dart';
+import 'Regpeople.dart';
 
 class RegisterPage2 extends StatefulWidget {
   const RegisterPage2({super.key});
@@ -29,28 +29,31 @@ class _RegisterPage2State extends State<RegisterPage2> {
         child: Container(
           child: Column(
             children: [
-              Container(
+              SizedBox(
                 width: 1200.0,
                 height: 120.0,
                 child: Image.asset("assets/images/Kunkru.png"),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 12,
               ),
-              Text(
+              const Text(
                 "ท่านเป็นครู/อาจารย์ หรือ บุคคลทั่วไป",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
+                    style: const ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll<Color>(
+                            Color.fromRGBO(0, 216, 133, 1))),
                     onPressed: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return RegisterTeacher();
+                        return const RegisterTeacher();
                       }));
                     },
-                    child: Text(
+                    child: const Text(
                       "ครู/อาจารย์",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -59,13 +62,16 @@ class _RegisterPage2State extends State<RegisterPage2> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
+                    style: const ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll<Color>(
+                            Color.fromRGBO(0, 216, 133, 1))),
                     onPressed: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return RegisterPeople();
+                        return const RegisterPeople();
                       }));
                     },
-                    child: Text(
+                    child: const Text(
                       "บุคคลทั่วไป",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

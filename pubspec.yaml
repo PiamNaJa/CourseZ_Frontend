@@ -47,6 +47,12 @@ dependencies:
   carousel_slider: ^4.2.1
   dots_indicator: ^2.1.0
   get: ^4.6.5
+  image_picker: ^0.8.3
+  firebase_storage: ^11.0.10
+  firebase_auth: ^4.2.5
+  firebase_core: ^2.4.1
+  uuid: ^3.0.7
+  url_launcher: ^6.1.8
 
 flutter_icons:
   android: true

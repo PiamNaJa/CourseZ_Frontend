@@ -1,9 +1,13 @@
 import 'dart:io';
-
+import 'package:coursez/model/experience.dart';
+import 'package:uuid/uuid.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+var uuid = const Uuid();
 
 class RegisterPeople extends StatefulWidget {
   const RegisterPeople({super.key});
@@ -13,6 +17,7 @@ class RegisterPeople extends StatefulWidget {
 }
 
 class _RegisterPeopleState extends State<RegisterPeople> {
+  Experience experience = Experience(title: '', evidence: '');
   File? image;
 
   void pickImage() async {
@@ -30,12 +35,17 @@ class _RegisterPeopleState extends State<RegisterPeople> {
       print("Fail to pick image : $e");
     }
 
-    Reference ref = FirebaseStorage.instance.ref().child("Images");
+    Reference ref =
+        FirebaseStorage.instance.ref().child("/Images/" + uuid.v4());
     await ref.putFile(File(image!.path));
     ref.getDownloadURL().then((value) {
       print(value);
     });
   }
+
+  final Uri url = Uri.parse("https://testyourself.psychtests.com/testid/4176");
+
+  final formkey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -57,68 +67,65 @@ class _RegisterPeopleState extends State<RegisterPeople> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Image.asset(width: 1200, height: 120, "assets/images/Kunkru.png"),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            Text(
+            const Text(
               "ประสบการณ์ของท่าน",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             SizedBox(
               height: 12,
               child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       border: Border(bottom: BorderSide(color: Colors.grey)))),
             ),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
-            Text(
+            const Text(
               "1.ประสบการณ์ที่ผ่านมา",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
             SizedBox(
-              height: 50,
               child: TextFormField(
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.fromLTRB(20, 0, 0, 20),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(width: 1),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(width: 1),
-                  ),
+                onChanged: (String? title) {
+                  experience.title = title!;
+                },
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
                   hintText: "วุฒิการศึกษา/เคยเป็นวิทยากรที่ไหน/เข้าร่วมกิจกรรม",
                   hintStyle: TextStyle(fontSize: 14),
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
-            Text(
+            const Text(
               "1.หลักฐาน",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            Text(
+            const Text(
               "-ใบประกาศณียบัตร",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            Text(
+            const Text(
               "-ภาพกิจกรรมที่ท่านได้เข้าร่วม",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
-            image != null ? Image.file(image!) : Text("No image selected"),
+            image != null
+                ? Image.file(image!)
+                : const Text("No image selected"),
             ElevatedButton.icon(
-              style: ButtonStyle(
+              style: const ButtonStyle(
                   backgroundColor: MaterialStatePropertyAll<Color>(
                       Color.fromARGB(255, 218, 217, 217))),
               icon: const Icon(
@@ -128,9 +135,9 @@ class _RegisterPeopleState extends State<RegisterPeople> {
               onPressed: () {
                 pickImage();
               },
-              label: Text(
+              label: const Text(
                 "แนบรูปภาพ",
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
                     fontWeight: FontWeight.bold),
@@ -139,37 +146,42 @@ class _RegisterPeopleState extends State<RegisterPeople> {
             SizedBox(
               height: 12,
               child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       border: Border(bottom: BorderSide(color: Colors.grey)))),
             ),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
-            Text(
+            const Text(
               "ท่านต้องผ่านการทดสอบจิตวิทยาที่นี่",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             SizedBox(
               width: 150,
               child: ElevatedButton(
-                  style: ButtonStyle(
+                  style: const ButtonStyle(
                       backgroundColor: MaterialStatePropertyAll<Color>(
                           Color.fromARGB(255, 120, 122, 122))),
-                  onPressed: () {},
-                  child: Text(
+                  onPressed: () {
+                    launchUrl(url);
+                  },
+                  child: const Text(
                     "ทำแบบสอบถาม",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   )),
             ),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
-            Text(
+            const Text(
               "ส่งผลทดสอบจิตวิทยา",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
+            image != null
+                ? Image.file(image!)
+                : const Text("No image selected"),
             ElevatedButton.icon(
-              style: ButtonStyle(
+              style: const ButtonStyle(
                   backgroundColor: MaterialStatePropertyAll<Color>(
                       Color.fromARGB(255, 218, 217, 217))),
               icon: const Icon(
@@ -179,23 +191,26 @@ class _RegisterPeopleState extends State<RegisterPeople> {
               onPressed: () {
                 pickImage();
               },
-              label: Text(
+              label: const Text(
                 "แนบรูปภาพ",
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
                     fontWeight: FontWeight.bold),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
-            Text(
+            const Text(
               "บัตรประชาชน",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
+            image != null
+                ? Image.file(image!)
+                : const Text("No image selected"),
             ElevatedButton.icon(
-              style: ButtonStyle(
+              style: const ButtonStyle(
                   backgroundColor: MaterialStatePropertyAll<Color>(
                       Color.fromARGB(255, 218, 217, 217))),
               icon: const Icon(
@@ -205,26 +220,28 @@ class _RegisterPeopleState extends State<RegisterPeople> {
               onPressed: () {
                 pickImage();
               },
-              label: Text(
+              label: const Text(
                 "แนบรูปภาพ",
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
                     fontWeight: FontWeight.bold),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
             SizedBox(
               height: 40,
               width: double.infinity,
               child: ElevatedButton(
-                  style: ButtonStyle(
+                  style: const ButtonStyle(
                       backgroundColor: MaterialStatePropertyAll<Color>(
                           Color.fromRGBO(0, 216, 133, 1))),
-                  onPressed: () {},
-                  child: Text(
+                  onPressed: () {
+                    formkey.currentState?.save();
+                  },
+                  child: const Text(
                     "ลงทะเบียน",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   )),
