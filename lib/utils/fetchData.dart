@@ -1,16 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-
-Future<Map<String, dynamic>> fecthData(String route) async {
-  http.Response response = await http.get(Uri.parse('http://10.0.2.2:5000/api/$route/'));
-  Map<String, dynamic> res = {"data" : null, "err" : null};
+Future<dynamic> fecthData(String route, {String authorization = ''}) async {
+  http.Response response = await http.get(
+      Uri.parse('http://10.0.2.2:5000/api/$route/'),
+      headers: {'Authorization': authorization});
   if (response.statusCode == 200) {
-    var decodedData = await jsonDecode(utf8.decode(response.bodyBytes));
-    res["data"] = decodedData;
+    return jsonDecode(utf8.decode(response.bodyBytes));
   } else {
-    res["err"] = response.statusCode;
+    throw Exception('Failed to load data');
   }
-  return res;
 }

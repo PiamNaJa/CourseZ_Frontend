@@ -1,58 +1,24 @@
 import 'package:coursez/utils/color.dart';
+import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/widgets/text/body10px.dart';
 import 'package:coursez/widgets/text/title12px.dart';
 import 'package:flutter/rendering.dart';
 import 'package:coursez/widgets/rating/rating.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/model/course.dart';
-import '../../utils/fetchData.dart';
 
-class listViewForCourse extends StatefulWidget {
+class ListViewCourse extends StatelessWidget {
+  const ListViewCourse({super.key, required this.rating, required this.level});
   final double rating;
   final int level;
-  const listViewForCourse(
-      {super.key, required this.rating, required this.level});
-
-  @override
-  State<listViewForCourse> createState() => _listViewForCourseState();
-}
-
-class _listViewForCourseState extends State<listViewForCourse> {
-  final List<Course> _course = [];
-  List<Course> _courseLevel = [];
-  bool _isError = false;
-  @override
-  void initState() {
-    super.initState();
-    fecthData('course/Teacher').then((value) {
-      setState(() {
-        if (value['err'] == null) {
-          value['data'].map((e) => _course.add(Course.fromJson(e))).toList();
-          debugPrint(widget.level.toString());
-        } else {
-          _isError = true;
-        }
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      if (widget.level != 0) {
-        _courseLevel = _course
-            .where((element) => element.subject?.classLevel == widget.level)
-            .toList();
-      } else {
-        _courseLevel = _course;
-      }
-    });
-
-    return _courseLevel.isEmpty
-        ? const CircularProgressIndicator(
-            color: primaryColor,
-          )
-        : SingleChildScrollView(
+    CourseViewModel courseViewModel = CourseViewModel();
+    return FutureBuilder(
+      future: courseViewModel.loadCourse(level),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          return SingleChildScrollView(
             child: SizedBox(
               height: 160,
               child: ListView.separated(
@@ -63,9 +29,16 @@ class _listViewForCourseState extends State<listViewForCourse> {
                         width: 20,
                       ),
                   itemBuilder: (context, index) =>
-                      buildCard(_courseLevel[index], widget.rating)),
+                      buildCard(snapshot.data[index], rating)),
             ),
           );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
   }
 }
 
