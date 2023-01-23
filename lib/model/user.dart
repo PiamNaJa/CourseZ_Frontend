@@ -3,7 +3,7 @@ import 'history.dart';
 import 'userTeacher.dart';
 
 class User {
-  String userId;
+  int? userId;
   String email;
   String? password;
   String fullName;
@@ -16,7 +16,7 @@ class User {
   UserTeacher? userTeacher;
 
   User({
-    required this.userId,
+    this.userId,
     required this.email,
     required this.fullName,
     required this.nickName,
