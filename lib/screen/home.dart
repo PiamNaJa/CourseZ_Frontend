@@ -1,10 +1,10 @@
 import 'package:coursez/widgets/button/textButton.dart';
+import 'package:coursez/widgets/listView/listViewForCourse.dart';
 import 'package:coursez/widgets/listView/listViewForTutor.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:flutter/material.dart';
-import 'package:coursez/widgets/listView/listViewForCourse.dart';
 import 'package:coursez/widgets/carousel/carouselLevel.dart';
 import '../widgets/dropdown/dropdown.dart';
 
@@ -127,29 +127,21 @@ class _MyHomePageState extends State<MyHomePage> {
                       const SizedBox(
                         height: 12,
                       ),
-                      listViewForCourse(rating: 4.5, level: SelectLevel.level),
+                      ListViewCourse(rating: 4.5, level: SelectLevel.level),
                     ],
                   ),
                 ),
-                Column(children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: const Heading20px(text: 'วิชา'),
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  Container(
-                      width: double.infinity,
-                      height: 291,
-                      decoration: const BoxDecoration(
-                        color: whiteColor,
-                      ),
-                      child: const carouselLevel()),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ]),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: const Heading20px(text: 'วิชา'),
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                const CarouselLevel(),
+                const SizedBox(
+                  height: 20,
+                ),
                 Container(
                   alignment: Alignment.centerLeft,
                   child: const Heading20px(text: 'ติวเตอร์ยอดนิยม'),

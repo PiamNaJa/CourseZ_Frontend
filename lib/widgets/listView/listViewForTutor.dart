@@ -1,10 +1,7 @@
 import 'package:coursez/model/user.dart';
 import 'package:coursez/utils/fetchData.dart';
-import 'package:coursez/widgets/text/body10px.dart';
 import 'package:coursez/widgets/text/title12px.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:coursez/widgets/rating/rating.dart';
 import 'package:flutter/material.dart';
 
@@ -24,26 +21,31 @@ class _listViewForTutorState extends State<listViewForTutor> {
   final List<User> _tutor = [];
   // List<User> _tutorLevel = [];
   bool _isError = false;
-  @override
-  void initState() {
-    super.initState();
-    fecthData('user/teacher').then((value) {
-      debugPrint(value.toString());
-      setState(() {
-        debugPrint(value['err']);
-        if (value['err'] == null) {
-          value['data'].map((e) => _tutor.add(User.fromJson(e))).toList();
-          debugPrint(_tutor.toString());
-        } else {
-          debugPrint(value['err'].toString());
-          _isError = true;
-        }
-      });
-    });
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   fecthData('user/teacher').then((value) {
+  //     setState(() {
+  //       if (value['err'] == null) {
+  //         //map data and add data to _tutor list
+  //         var _p = value['data'].map((e) => User.fromJson(e));
+  //       } else {
+  //         debugPrint(value['err'].toString());
+  //         _isError = true;
+  //       }
+  //     });
+  //   });
+  // }
+
+  Future<List<User>> loadUser(int level) async {
+    final t = await fecthData('user/teacher');
+    final List<User> tutor = t.map((e) => User.fromJson(e)).toList();
+    debugPrint(tutor.toString());
+    return tutor;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return _tutor.isEmpty
         ? const CircularProgressIndicator(
             color: primaryColor,
