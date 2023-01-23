@@ -22,7 +22,6 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   User user = User(
-      userId: '',
       email: '',
       password: '',
       fullName: '',
@@ -248,7 +247,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               onChanged: (val) {
                                 setState(() {
                                   _productTypeEnum = val;
-                                  user.role = "นักเรียน";
+                                  user.role = "Student";
                                 });
                               }),
                         ),
@@ -264,7 +263,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               onChanged: (val) {
                                 setState(() {
                                   _productTypeEnum = val;
-                                  user.role = "ติวเตอร์";
+                                  user.role = "Tutor";
                                 });
                               }),
                         ),
@@ -311,8 +310,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               backgroundColor: MaterialStatePropertyAll<Color>(
                                   Color.fromRGBO(0, 216, 133, 1))),
                           onPressed: () {
-                            debugPrint(
-                                "email = ${user.email} password = ${user.password} name = ${user.fullName} nickname = ${user.nickName} date = ${user.birthDay} role = ${user.role}");
                             formkey.currentState?.save();
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
