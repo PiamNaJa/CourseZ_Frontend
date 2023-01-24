@@ -49,16 +49,13 @@ class _CarouselLevelState extends State<CarouselLevel> {
                 padding: MediaQuery.of(context).size.width > 600
                     ? const EdgeInsets.symmetric(horizontal: 10)
                     : const EdgeInsets.symmetric(horizontal: 5),
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
                 child: Container(
                   decoration: BoxDecoration(
                       color: whiteColor,
                       border: Border.all(color: greyColor),
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: const [
-                        BoxShadow(color: blackColor, blurRadius: 1)
+                        BoxShadow(color: greyColor, blurRadius: 1)
                       ]),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,

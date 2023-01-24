@@ -1,3 +1,4 @@
+import 'package:coursez/controllers/level_controller.dart';
 import 'package:coursez/widgets/button/textButton.dart';
 import 'package:coursez/widgets/listView/listViewForCourse.dart';
 import 'package:coursez/widgets/listView/listViewForTutor.dart';
@@ -6,6 +7,7 @@ import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/widgets/carousel/carouselLevel.dart';
+import 'package:get/get.dart';
 import '../widgets/dropdown/dropdown.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -16,11 +18,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Color _prefixIconColor = greyColor;
+  final Color _prefixIconColor = greyColor;
 
   @override
   Widget build(BuildContext context) {
-    final SelectLevel = dropdown();
+    LevelController levelController = Get.put(LevelController());
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -55,9 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                      width: MediaQuery.of(context).size.width > 400
-                          ? MediaQuery.of(context).size.width * 0.7
-                          : MediaQuery.of(context).size.width * 0.4,
+                      width: MediaQuery.of(context).size.width * 0.5,
                       height: 50,
                       child: TextField(
                         style: const TextStyle(fontFamily: 'Athiti'),
@@ -79,32 +79,15 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           ),
                         ),
-                        onSubmitted: (value) {},
                         onTap: () {
-                          setState(() {
-                            _prefixIconColor = primaryColor;
-                          });
+                          Navigator.pushNamed(context, '/search');
                         },
-                        onChanged: (value) {
-                          setState(() {
-                            _prefixIconColor = primaryColor;
-                          });
-                        },
-                        onEditingComplete: (() {
-                          setState(() {
-                            _prefixIconColor = greyColor;
-                          });
-                        }),
                       ),
                     ),
-                    const SizedBox(
-                      width: 10,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.05,
                     ),
-                    Expanded(
-                      child: SizedBox(
-                        child: SelectLevel,
-                      ),
-                    ),
+                    const Dropdown() ,
                     // const listView()
                   ],
                 ),
@@ -127,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       const SizedBox(
                         height: 12,
                       ),
-                      ListViewCourse(rating: 4.5, level: SelectLevel.level),
+                      Obx(()=> ListViewCourse(rating: 4.5, level: levelController.level)),
                     ],
                   ),
                 ),
@@ -149,10 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 const SizedBox(
                   height: 12,
                 ),
-                listViewForTutor(rating: 4, level: SelectLevel.level),
-                const SizedBox(
-                  height: 200,
-                ),
+                Obx(()=> ListViewTutor(rating: 4, level: levelController.level)) ,
               ],
             ),
           ),

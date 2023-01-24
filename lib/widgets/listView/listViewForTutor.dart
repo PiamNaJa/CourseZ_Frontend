@@ -1,5 +1,6 @@
 import 'package:coursez/model/user.dart';
 import 'package:coursez/utils/fetchData.dart';
+import 'package:coursez/view_model/tutor_view_model.dart';
 import 'package:coursez/widgets/text/title12px.dart';
 import 'package:flutter/rendering.dart';
 import 'package:coursez/widgets/rating/rating.dart';
@@ -7,50 +8,19 @@ import 'package:flutter/material.dart';
 
 import '../../utils/color.dart';
 
-class listViewForTutor extends StatefulWidget {
+class ListViewTutor extends StatelessWidget {
+  const ListViewTutor({super.key, required this.rating, required this.level});
   final double rating;
   final int level;
-  const listViewForTutor(
-      {super.key, required this.rating, required this.level});
 
   @override
-  State<listViewForTutor> createState() => _listViewForTutorState();
-}
-
-class _listViewForTutorState extends State<listViewForTutor> {
-  final List<User> _tutor = [];
-  // List<User> _tutorLevel = [];
-  bool _isError = false;
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   fecthData('user/teacher').then((value) {
-  //     setState(() {
-  //       if (value['err'] == null) {
-  //         //map data and add data to _tutor list
-  //         var _p = value['data'].map((e) => User.fromJson(e));
-  //       } else {
-  //         debugPrint(value['err'].toString());
-  //         _isError = true;
-  //       }
-  //     });
-  //   });
-  // }
-
-  Future<List<User>> loadUser(int level) async {
-    final t = await fecthData('user/teacher');
-    final List<User> tutor = t.map((e) => User.fromJson(e)).toList();
-    debugPrint(tutor.toString());
-    return tutor;
-  }
-
-  @override
-  Widget build(BuildContext context){
-    return _tutor.isEmpty
-        ? const CircularProgressIndicator(
-            color: primaryColor,
-          )
-        : SingleChildScrollView(
+  Widget build(BuildContext context) {
+    TutorViewModel tutorViewModel = TutorViewModel();
+    return FutureBuilder(
+      future: tutorViewModel.loadTutor(level),
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        if(snapshot.hasData){
+          return SingleChildScrollView(
             child: SizedBox(
               height: 170,
               child: ListView.separated(
@@ -61,9 +31,16 @@ class _listViewForTutorState extends State<listViewForTutor> {
                         width: 15,
                       ),
                   itemBuilder: (context, index) =>
-                      buildCard(_tutor[index], widget.rating)),
+                      buildCard(snapshot.data[index], rating)),
             ),
           );
+        }else{
+          return const CircularProgressIndicator(
+            color: primaryColor,
+          );
+        }
+      }
+    );
   }
 }
 
@@ -104,3 +81,4 @@ Widget buildCard(User item, double rating) {
     );
   });
 }
+
