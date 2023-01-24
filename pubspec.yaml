@@ -45,10 +45,9 @@ dependencies:
   sqflite:
   flutter_rating_bar: ^4.0.1
   carousel_slider: ^4.2.1
-  skeletons: ^0.0.3
   dots_indicator: ^2.1.0
-  flutter_secure_storage: ^7.0.1
   get: ^4.6.5
+  get_storage: ^2.0.3
 
 flutter_icons:
   android: true
