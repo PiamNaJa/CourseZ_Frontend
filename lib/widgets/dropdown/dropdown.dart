@@ -1,39 +1,30 @@
+import 'package:coursez/controllers/level_controller.dart';
 import 'package:coursez/utils/color.dart';
-import 'package:coursez/utils/constant.dart';
 import 'package:coursez/widgets/text/body14px.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class dropdown extends StatefulWidget {
-  late String? selectedValue;
-  late int level;
-  dropdown({super.key, this.selectedValue, this.level = 0});
+class Dropdown extends StatefulWidget {
+  const Dropdown({super.key});
 
   @override
-  State<dropdown> createState() => _dropdownState();
+  State<Dropdown> createState() => _DropdownState();
 }
 
-class _dropdownState extends State<dropdown> {
-  final List<String> _classLevel = [
-    'ระดับชั้นทั้งหมด',
-    'ม.1',
-    'ม.2',
-    'ม.3',
-    'ม.4',
-    'ม.5',
-    'ม.6',
-    'มหาวิทยาลัย'
-  ];
-
-  bool _isError = false;
-
-  @override
-  void initState() {
-    super.initState();
-    widget.selectedValue = _classLevel[0];
-  }
-
+class _DropdownState extends State<Dropdown> {
   @override
   Widget build(BuildContext context) {
+    final List<String> classLevel = [
+      'ระดับชั้นทั้งหมด',
+      'ม.1',
+      'ม.2',
+      'ม.3',
+      'ม.4',
+      'ม.5',
+      'ม.6',
+      'มหาวิทยาลัย'
+    ];
+    LevelController levelController = Get.find();
     return Container(
       height: 50,
       decoration: BoxDecoration(
@@ -46,22 +37,18 @@ class _dropdownState extends State<dropdown> {
         child: DropdownButton(
           underline: const SizedBox(),
           alignment: AlignmentDirectional.center,
-          dropdownColor: primaryLighterColor,
           style: const TextStyle(color: Colors.black),
-          icon: const Icon(Icons.arrow_drop_down),
+          icon: const Icon(Icons.arrow_drop_down_rounded),
           iconSize: 36,
           elevation: 16,
           borderRadius: BorderRadius.circular(25),
-          value: widget.selectedValue,
+          value: classLevel[levelController.level],
           onChanged: (item) {
             setState(() {
-              widget.selectedValue = item!;
-              widget.level = _classLevel.indexOf(item);
-              debugPrint('--------------------');
-              debugPrint(widget.level.toString());
+              levelController.level = classLevel.indexOf(item!);
             });
           },
-          items: _classLevel.map<DropdownMenuItem<String>>((item) {
+          items: classLevel.map<DropdownMenuItem<String>>((item) {
             return DropdownMenuItem<String>(
               value: item,
               child: Body14px(text: item),

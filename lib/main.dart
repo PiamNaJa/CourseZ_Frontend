@@ -3,6 +3,7 @@ import 'package:coursez/screen/expandPage.dart';
 import 'package:coursez/screen/home.dart';
 import 'package:coursez/screen/Registerpage.dart';
 import 'package:coursez/screen/loginPage.dart';
+import 'package:coursez/screen/searchPage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -24,7 +25,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginPage(),
         '/home': (context) => const MyHomePage(),
-        '/register': ((context) => const Registerpage())
+        '/register': ((context) => const Registerpage()),
+        '/search': (context) => const SearchPage(),
       },
     );
   }

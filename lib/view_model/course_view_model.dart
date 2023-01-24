@@ -7,9 +7,10 @@ class CourseViewModel {
     final course = c.map((e) => Course.fromJson(e)).toList();
     List<Course> courseLevel = [];
     if (level != 0) {
-      courseLevel = course
+      final cl = course
           .where((element) => element.subject?.classLevel == level)
           .toList();
+      cl.forEach((e) => courseLevel.add(e));
     } else {
       course.forEach((e) => courseLevel.add(e));
     }
