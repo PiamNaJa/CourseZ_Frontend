@@ -54,7 +54,6 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Column(
               children: [
                 Row(
-                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.5,
@@ -85,9 +84,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.05,
+                      width: MediaQuery.of(context).size.width * 0.03,
                     ),
-                    const Dropdown() ,
+                    const Dropdown(),
                     // const listView()
                   ],
                 ),
@@ -110,7 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       const SizedBox(
                         height: 12,
                       ),
-                      Obx(()=> ListViewCourse(rating: 4.5, level: levelController.level)),
+                      Obx(() => ListViewCourse(
+                          rating: 4.5, level: levelController.level)),
                     ],
                   ),
                 ),
@@ -132,7 +132,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 const SizedBox(
                   height: 12,
                 ),
-                Obx(()=> ListViewTutor(rating: 4, level: levelController.level)) ,
+                Obx(() =>
+                    ListViewTutor(rating: 4, level: levelController.level)),
               ],
             ),
           ),
