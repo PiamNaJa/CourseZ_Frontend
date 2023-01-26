@@ -23,7 +23,7 @@ class ButtonText extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
         onPressed: () {
-          Navigator.pushNamed(context, route);
+          // Navigator.pushNamed(context, route);
         },
         child: Text(text,
             style: TextStyle(
