@@ -1,7 +1,3 @@
-import 'package:coursez/screen/Loginpage.dart';
-import 'package:coursez/screen/firstPage.dart';
-import 'package:coursez/screen/home.dart';
-import 'package:coursez/screen/Registerpage.dart';
 import 'package:coursez/utils/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

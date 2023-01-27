@@ -9,7 +9,7 @@ class Routes {
     GetPage(name: '/login', page: () => const LoginPage()),
     GetPage(name: '/home', page: () => const MyHomePage()),
     GetPage(name: '/register', page: () => const Registerpage()),
-    GetPage(name: '/first', page: () => FirstPage()),
+    GetPage(name: '/first', page: () => const FirstPage()),
   ];
   static List<GetPage> get getRoutes => _getRoutes;
 }

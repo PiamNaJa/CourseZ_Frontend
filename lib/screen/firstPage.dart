@@ -33,7 +33,6 @@ class _FirstPageState extends State<FirstPage> {
           GButton(icon: Icons.person, text: "Profile")
         ],
         activeColor: primaryColor,
-        tabBackgroundColor: secondaryLighterColor,
         gap: 4,
         onTabChange: (value) {
           setState(() {
