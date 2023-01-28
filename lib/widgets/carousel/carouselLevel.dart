@@ -22,14 +22,12 @@ class _CarouselLevelState extends State<CarouselLevel> {
   int currentLevel = 0;
   @override
   void initState() {
-    // TODO: implement initState
     buttonCarouselController = CarouselController();
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     levelController.dispose();
   }
