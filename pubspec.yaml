@@ -48,7 +48,6 @@ dependencies:
   dots_indicator: ^2.1.0
   get: ^4.6.5
   get_storage: ^2.0.3
-  google_nav_bar: ^5.0.6
 
 flutter_icons:
   android: true

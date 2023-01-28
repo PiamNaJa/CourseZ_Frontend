@@ -3,7 +3,6 @@ import 'package:coursez/screen/home.dart';
 import 'package:coursez/screen/loginPage.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
@@ -23,23 +22,24 @@ class _FirstPageState extends State<FirstPage> {
         index: currentIndex,
         children: page,
       )),
-      bottomNavigationBar: GNav(
-        tabs: const [
-          GButton(
-            icon: Icons.home,
-            text: "Home",
-          ),
-          GButton(icon: Icons.newspaper, text: "Post"),
-          GButton(icon: Icons.person, text: "Profile")
-        ],
-        activeColor: primaryColor,
-        gap: 4,
-        onTabChange: (value) {
-          setState(() {
-            currentIndex = value;
-          });
-        },
-        selectedIndex: currentIndex,
+      bottomNavigationBar: Container(
+        child: BottomNavigationBar(
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Home",
+            ),
+            BottomNavigationBarItem(icon: Icon(Icons.newspaper), label: "Post"),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile")
+          ],
+          selectedItemColor: primaryColor,
+          onTap: (value) {
+            setState(() {
+              currentIndex = value;
+            });
+          },
+          currentIndex: currentIndex,
+        ),
       ),
     );
   }
