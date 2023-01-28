@@ -4,13 +4,13 @@ import 'userTeacher.dart';
 
 class User {
   final int userId;
-  final String email;
+  final String? email;
   final String fullName;
   final String nickName;
-  final String birthDay;
-  final String role;
+  final String? birthDay;
+  final String? role;
   final String picture;
-  final int point;
+  final int? point;
   final List<History>? history;
   final UserTeacher? userTeacher;
 
