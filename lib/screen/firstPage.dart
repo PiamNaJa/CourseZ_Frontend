@@ -3,6 +3,7 @@ import 'package:coursez/screen/home.dart';
 import 'package:coursez/screen/loginPage.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:flutter/material.dart';
+import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
@@ -13,33 +14,39 @@ class FirstPage extends StatefulWidget {
 
 class _FirstPageState extends State<FirstPage> {
   final page = [const MyHomePage(), const Registerpage(), const LoginPage()];
+  final PageController _pageController = PageController();
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: IndexedStack(
-        index: currentIndex,
+          child: PageView(
+        controller: _pageController,
         children: page,
+        onPageChanged: (value) => setState(() {
+          currentIndex = value;
+        }),
       )),
-      bottomNavigationBar: Container(
-        child: BottomNavigationBar(
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: "Home",
-            ),
-            BottomNavigationBarItem(icon: Icon(Icons.newspaper), label: "Post"),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile")
-          ],
-          selectedItemColor: primaryColor,
-          onTap: (value) {
-            setState(() {
-              currentIndex = value;
-            });
-          },
-          currentIndex: currentIndex,
-        ),
+      bottomNavigationBar: CustomNavigationBar(
+        iconSize: 32,
+        borderRadius: const Radius.circular(20),
+        items: [
+          CustomNavigationBarItem(
+            icon: const Icon(Icons.home),
+          ),
+          CustomNavigationBarItem(icon: const Icon(Icons.newspaper)),
+          CustomNavigationBarItem(icon: const Icon(Icons.person))
+        ],
+        selectedColor: primaryColor,
+        onTap: (value) {
+          setState(() {
+            currentIndex = value;
+            _pageController.animateToPage(currentIndex,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.decelerate);
+          });
+        },
+        currentIndex: currentIndex,
       ),
     );
   }
