@@ -34,28 +34,29 @@ class _CarouselLevelState extends State<CarouselLevel> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() =>
-      FutureBuilder(
-          future: levelViewModel.loadLevel(levelController.level),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              return buildLevel(snapshot.data);
-            } else if (snapshot.hasError) {
-              return const Center(
-                  child: CircularProgressIndicator(
-                color: Colors.red,
-              ));
-            } else {
-              return const Center(
-                  child: CircularProgressIndicator(
-                color: primaryColor,
-              ));
-            }
-          })
-    );
+    return Obx(() => FutureBuilder(
+        future: levelViewModel.loadLevel(levelController.level),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return buildLevel(snapshot.data);
+          } else if (snapshot.hasError) {
+            return const Center(
+                child: CircularProgressIndicator(
+              color: Colors.red,
+            ));
+          } else {
+            return const Center(
+                child: CircularProgressIndicator(
+              color: primaryColor,
+            ));
+          }
+        }));
   }
 
   Widget buildLevel(List<Map<String, dynamic>> level) {
+    if (levelController.level != 0) {
+      currentLevel = 0;
+    }
     return Wrap(
       alignment: WrapAlignment.center,
       children: [
@@ -151,7 +152,6 @@ class _CarouselLevelState extends State<CarouselLevel> {
               setState(() {
                 currentLevel = index;
                 debugPrint('level: $currentLevel');
-                
               });
             },
             enableInfiniteScroll: false,
@@ -170,7 +170,9 @@ class _CarouselLevelState extends State<CarouselLevel> {
                 activeSize: const Size(18.0, 9.0),
                 activeShape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0)),
-              )),
+              ))
+        else
+          Container()
       ],
     );
   }
