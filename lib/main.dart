@@ -2,9 +2,14 @@ import 'package:coursez/screen/Reg.dart';
 import 'package:coursez/screen/home.dart';
 import 'package:coursez/screen/loginPage.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 }
 
 class MyApp extends StatelessWidget {

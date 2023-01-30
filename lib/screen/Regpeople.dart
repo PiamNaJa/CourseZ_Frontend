@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:coursez/model/experience.dart';
+import 'package:coursez/screen/home.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -121,27 +122,35 @@ class _RegisterPeopleState extends State<RegisterPeople> {
             const SizedBox(
               height: 12,
             ),
-            image != null
-                ? Image.file(image!)
-                : const Text("No image selected"),
-            ElevatedButton.icon(
-              style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll<Color>(
-                      Color.fromARGB(255, 218, 217, 217))),
-              icon: const Icon(
-                Icons.add_photo_alternate_outlined,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                pickImage();
-              },
-              label: const Text(
-                "แนบรูปภาพ",
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
-              ),
+            Center(
+              child: image != null
+                  ? Image.file(image!)
+                  : Container(
+                      height: 200,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          pickImage();
+                        },
+                        child: Icon(
+                          size: 100,
+                          Icons.add_photo_alternate_outlined,
+                          color: Colors.grey,
+                        ),
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            )),
+                            side: MaterialStateProperty.all<BorderSide>(
+                                BorderSide(color: Colors.grey, width: 1)),
+                            backgroundColor: MaterialStatePropertyAll<Color>(
+                                Color.fromARGB(255, 250, 250, 250))),
+                      ),
+                    ),
+            ),
+            const SizedBox(
+              height: 12,
             ),
             SizedBox(
               height: 12,
@@ -177,27 +186,35 @@ class _RegisterPeopleState extends State<RegisterPeople> {
               "ส่งผลทดสอบจิตวิทยา",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            image != null
-                ? Image.file(image!)
-                : const Text("No image selected"),
-            ElevatedButton.icon(
-              style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll<Color>(
-                      Color.fromARGB(255, 218, 217, 217))),
-              icon: const Icon(
-                Icons.add_photo_alternate_outlined,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                pickImage();
-              },
-              label: const Text(
-                "แนบรูปภาพ",
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
-              ),
+            const SizedBox(
+              height: 12,
+            ),
+            Center(
+              child: image != null
+                  ? Image.file(image!)
+                  : Container(
+                      height: 200,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          pickImage();
+                        },
+                        child: Icon(
+                          size: 100,
+                          Icons.add_photo_alternate_outlined,
+                          color: Colors.grey,
+                        ),
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            )),
+                            side: MaterialStateProperty.all<BorderSide>(
+                                BorderSide(color: Colors.grey, width: 1)),
+                            backgroundColor: MaterialStatePropertyAll<Color>(
+                                Color.fromARGB(255, 250, 250, 250))),
+                      ),
+                    ),
             ),
             const SizedBox(
               height: 12,
@@ -206,30 +223,38 @@ class _RegisterPeopleState extends State<RegisterPeople> {
               "บัตรประชาชน",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            image != null
-                ? Image.file(image!)
-                : const Text("No image selected"),
-            ElevatedButton.icon(
-              style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll<Color>(
-                      Color.fromARGB(255, 218, 217, 217))),
-              icon: const Icon(
-                Icons.add_photo_alternate_outlined,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                pickImage();
-              },
-              label: const Text(
-                "แนบรูปภาพ",
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
             const SizedBox(
               height: 12,
+            ),
+            Center(
+              child: image != null
+                  ? Image.file(image!)
+                  : Container(
+                      height: 200,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          pickImage();
+                        },
+                        child: Icon(
+                          size: 100,
+                          Icons.add_photo_alternate_outlined,
+                          color: Colors.grey,
+                        ),
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            )),
+                            side: MaterialStateProperty.all<BorderSide>(
+                                BorderSide(color: Colors.grey, width: 1)),
+                            backgroundColor: MaterialStatePropertyAll<Color>(
+                                Color.fromARGB(255, 250, 250, 250))),
+                      ),
+                    ),
+            ),
+            const SizedBox(
+              height: 20,
             ),
             SizedBox(
               height: 40,
@@ -239,6 +264,10 @@ class _RegisterPeopleState extends State<RegisterPeople> {
                       backgroundColor: MaterialStatePropertyAll<Color>(
                           Color.fromRGBO(0, 216, 133, 1))),
                   onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return const MyHomePage();
+                    }));
                     formkey.currentState?.save();
                   },
                   child: const Text(
