@@ -5,6 +5,9 @@ import 'package:get/get.dart';
 import 'package:coursez/controllers/auth_controller.dart';
 void main() {
   runApp(const MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -53,6 +53,7 @@ dependencies:
   firebase_core: ^2.4.1
   uuid: ^3.0.7
   url_launcher: ^6.1.8
+  dotted_border: ^2.0.0+3
 
 flutter_icons:
   android: true
