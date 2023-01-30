@@ -44,6 +44,8 @@ class _FirstPageState extends State<FirstPage> {
             iconSize: 30,
             selectedFontSize: 0,
             unselectedFontSize: 0,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
             items: const [
               BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
               BottomNavigationBarItem(
