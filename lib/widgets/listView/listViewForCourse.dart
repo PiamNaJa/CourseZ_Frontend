@@ -1,13 +1,14 @@
+import 'dart:ui';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/widgets/text/body10px.dart';
-import 'package:coursez/widgets/text/heading1_30px.dart';
 import 'package:coursez/widgets/text/title12px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/rendering.dart';
 import 'package:coursez/widgets/rating/rating.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/model/course.dart';
+import 'package:get/get.dart';
 
 class ListViewCourse extends StatelessWidget {
   const ListViewCourse({super.key, required this.rating, required this.level});
@@ -34,7 +35,7 @@ class ListViewCourse extends StatelessWidget {
                           Icons.sentiment_dissatisfied_outlined,
                           color: greyColor,
                           size: 50,
-                        )
+                        ),
                       ],
                     )
                   : ListView.separated(
@@ -60,10 +61,13 @@ class ListViewCourse extends StatelessWidget {
 }
 
 Widget buildCard(Course item, double rating) {
+  final CourseViewModel courseViewModel = CourseViewModel();
   return LayoutBuilder(
       builder: (BuildContext context, Constraints constraints) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Get.toNamed('/coursedetail', arguments: courseViewModel.loadCourseById(item.courseId));
+      },
       child: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(

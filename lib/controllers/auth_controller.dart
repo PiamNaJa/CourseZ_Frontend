@@ -1,50 +1,32 @@
-import 'dart:collection';
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../repository/auth_repository.dart';
+import 'package:get_storage/get_storage.dart';
 
-class AuthController {
-  int statusCode = 0;
-  final storage = const FlutterSecureStorage(
-      aOptions: AndroidOptions(
-    encryptedSharedPreferences: true,
-  ));
-  Future loginUser(String email, String password) async {
-    const url = 'http://10.0.2.2:5000/api/user/login';
-    Map data = {'email': email, 'password': password};
+class AuthViewModel {
+  final AuthRepository _authRepository = AuthRepository();
+  final GetStorage _userStorage = GetStorage('user');
 
-    var response = await http.post(Uri.parse(url),
-        headers: {"Content-Type": "application/json"}, body: json.encode(data));
-
-    if (response.statusCode == 200) {
-      var loginArr = json.decode(response.body);
-      var decode = JwtDecoder.decode(loginArr['token']);
-      getData(decode['user_id'].toString());
-    } else {
-      debugPrint('code: ${response.statusCode.toString()}');
-      debugPrint('Login Error');
-      debugPrint(response.body);
-    }
-  }
-
-  Future getData(String id) async {
-    String url = 'http://10.0.2.2:5000/api/user/$id';
-
-    var response = await http
-        .get(Uri.parse(url), headers: {"Content-Type": "application/json"});
-
-    if (response.statusCode == 200) {
+  void login(String email, String password, BuildContext context) {
+    int statusCode = 0;
+    _authRepository.loginUser(email, password).then((response) {
       statusCode = response.statusCode;
-      var data = json.decode(response.body);
-      debugPrint(data.toString());
-    } else {
-      statusCode = response.statusCode;
-      debugPrint('code: ${response.statusCode.toString()}');
-      debugPrint('Error getting data');
-      debugPrint(response.body);
-    }
+      if (statusCode == 200) {
+        var data = json.decode(response.body);
+        _userStorage.write('token', data['token']);
+        _userStorage.write('refreshToken', data['refreshToken']);
+        Navigator.pushNamed(context, '/home');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Wrong email or password'),
+              backgroundColor: Colors.red,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+        );
+      }
+    });
   }
+  // Future<void> register(String email, String password) async {
+  //   await _authRepository.register(email, password);
+  // }
 }

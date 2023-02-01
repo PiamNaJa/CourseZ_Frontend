@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coursez/controllers/level_controller.dart';
 import 'package:coursez/utils/color.dart';
+import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/view_model/level_view_model.dart';
 import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
@@ -18,18 +19,13 @@ class CarouselLevel extends StatefulWidget {
 class _CarouselLevelState extends State<CarouselLevel> {
   LevelController levelController = Get.find<LevelController>();
   LevelViewModel levelViewModel = LevelViewModel();
+  CourseViewModel courseViewModel = CourseViewModel();
   late CarouselController buttonCarouselController;
   int currentLevel = 0;
   @override
   void initState() {
     buttonCarouselController = CarouselController();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    levelController.dispose();
   }
 
   @override
@@ -97,22 +93,34 @@ class _CarouselLevelState extends State<CarouselLevel> {
                             vertical: MediaQuery.of(context).size.height * 0.04,
                             horizontal:
                                 MediaQuery.of(context).size.width * 0.01),
-                        child: InkWell(
-                          child: Column(
-                            children: [
-                              Wrap(
-                                crossAxisAlignment: WrapCrossAlignment.end,
-                                direction: Axis.horizontal,
-                                spacing:
-                                    MediaQuery.of(context).size.width * 0.02,
-                                runSpacing: 20,
-                                children: [
-                                  for (int i = 0;
-                                      i < item['subject'].length;
-                                      i++)
-                                    Column(
-                                      children: [
-                                        Column(
+                        child: Column(
+                          children: [
+                            Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.end,
+                              direction: Axis.horizontal,
+                              spacing: MediaQuery.of(context).size.width * 0.02,
+                              runSpacing: 20,
+                              children: [
+                                for (int i = 0; i < item['subject'].length; i++)
+                                  Column(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          Get.toNamed('/coursesubject',
+                                              arguments: courseViewModel
+                                                  .loadCourseBySubject(
+                                                      item['subject'][i]
+                                                          .subjectId),
+                                              parameters: {
+                                                'subjectTitle': item['subject']
+                                                        [i]
+                                                    .subjectTitle,
+                                                'subjectId': item['subject'][i]
+                                                    .classLevel
+                                                    .toString(),
+                                              });
+                                        },
+                                        child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
@@ -129,15 +137,12 @@ class _CarouselLevelState extends State<CarouselLevel> {
                                                     .subjectTitle),
                                           ],
                                         ),
-                                      ],
-                                    ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          onTap: () {
-                            // Navigator.of(context).pushNamed('/login');
-                          },
+                                      ),
+                                    ],
+                                  ),
+                              ],
+                            ),
+                          ],
                         )),
 
                     // display a list of subject items

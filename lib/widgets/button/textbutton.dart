@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
 
 class ButtonText extends StatelessWidget {
   final String text;
@@ -9,6 +9,7 @@ class ButtonText extends StatelessWidget {
   final TextAlign position;
   final TextOverflow overflow;
   final String route;
+  final dynamic data;
 
   const ButtonText(
       {super.key,
@@ -17,13 +18,14 @@ class ButtonText extends StatelessWidget {
       required this.size,
       required this.position,
       required this.route,
+      required this.data,
       this.overflow = TextOverflow.ellipsis});
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
         onPressed: () {
-          // Navigator.pushNamed(context, route);
+          Get.toNamed(route, arguments: data);
         },
         child: Text(text,
             style: TextStyle(

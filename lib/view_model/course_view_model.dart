@@ -16,4 +16,21 @@ class CourseViewModel {
     }
     return courseLevel;
   }
+
+  Future<List<Course>> loadCourseBySubject(int subjectId) async {
+    final c = await fecthData('course');
+    final course = c.map((e) => Course.fromJson(e)).toList();
+    List<Course> courseSubject = [];
+    final cs = course
+        .where((element) => element.subject?.subjectId == subjectId)
+        .toList();
+    cs.forEach((e) => courseSubject.add(e));
+    return courseSubject;
+  }
+
+  Future<Course> loadCourseById(int courseId) async {
+    final c = await fecthData('course/$courseId');
+    final course = Course.fromJson(c);
+    return course;
+  }
 }

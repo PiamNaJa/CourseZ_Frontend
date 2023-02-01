@@ -1,9 +1,17 @@
-import 'package:coursez/screen/loginPage.dart';
+import 'package:coursez/components/courseList.dart';
+
 import 'package:coursez/utils/color.dart';
-import 'package:coursez/widgets/text/heading1_24px.dart';
+import 'package:coursez/widgets/appbar/app_bar.dart';
+import 'package:coursez/widgets/rating/rating.dart';
+
 import 'package:coursez/widgets/text/heading2_20px.dart';
+
+import 'package:coursez/widgets/text/title14px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../model/course.dart';
 
 class ExpandPage extends StatefulWidget {
   const ExpandPage({super.key});
@@ -13,95 +21,121 @@ class ExpandPage extends StatefulWidget {
 }
 
 class _ExpandPageState extends State<ExpandPage> {
-  //Simple List with text and image network
-  List<String> image = [
-    'https://www.w3schools.com/w3images/lights.jpg',
-    'https://www.w3schools.com/w3images/nature.jpg',
-    'https://www.w3schools.com/w3images/mountains.jpg',
-    'https://www.w3schools.com/w3images/forest.jpg',
-    'https://www.w3schools.com/w3images/nature.jpg',
-    'https://www.w3schools.com/w3images/lights.jpg',
-    'https://www.w3schools.com/w3images/nature.jpg',
-    'https://www.w3schools.com/w3images/mountains.jpg',
-    'https://www.w3schools.com/w3images/forest.jpg',
-    'https://www.w3schools.com/w3images/nature.jpg',
-    'https://www.w3schools.com/w3images/lights.jpg',
-    'https://www.w3schools.com/w3images/nature.jpg',
-    'https://www.w3schools.com/w3images/mountains.jpg',
-    'https://www.w3schools.com/w3images/forest.jpg',
-    'https://www.w3schools.com/w3images/nature.jpg'
-  ];
-  List<String> title = [
-    'Lights',
-    'Nature',
-    'Mountains',
-    'Forest',
-    'Nature',
-    'Lights',
-    'Nature',
-    'Mountains',
-    'Forest',
-    'Nature',
-    'Lights',
-    'Nature',
-    'Mountains',
-    'Forest',
-    'Nature'
-  ];
+  Future<List<dynamic>> data = Get.arguments;
+  late String title;
+  late dynamic model;
+  @override
+  void initState() {
+    if (data is Future<List<Course>>) {
+      title = 'คอร์สเรียนยอดนิยม';
+      model = CourseList;
+    } else {
+      title = 'ติวเตอร์ยอดนิยม';
+      model = _tutor;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        title: const Heading24px(text: 'Subject List'),
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: primaryColor),
-          onPressed: () {
-            // Navigator.pop(context);
-          },
+        backgroundColor: whiteColor.withOpacity(0.95),
+        appBar: CustomAppBar(
+          title: title,
         ),
-      ),
-      body: Column(children: [
-        Expanded(
-          child: ListView.builder(
-            itemCount: image.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                //onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> const LoginPage())),
-                child: Container(
-                  color: Colors.transparent, //ไม่ใส่แล้วกดช่องว่างไม่ได้
-                  margin: const EdgeInsets.only(bottom: 10, left: 20, top: 10),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 100,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(13),
-                          image: DecorationImage(
-                            image: NetworkImage(image[index]),
-                            fit: BoxFit.fill,
-                          ),
+        body: FutureBuilder(
+            future: data,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                return (snapshot.data.length == 0)
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Title16px(
+                                text:
+                                    'ขออภัยครับ/ ค่ะ ไม่มีคอร์สเรียนในระดับนี้',
+                                color: greyColor),
+                            Icon(
+                              Icons.sentiment_dissatisfied_outlined,
+                              color: greyColor,
+                              size: 50,
+                            )
+                          ],
                         ),
-                      ),
-                      const SizedBox(width: 15),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Heading20px(text: title[index]),
-                          const SizedBox(height: 5),
-                          const Title16px(text: 'Subtitle', color: secondaryColor,),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ],)
-    );
+                      )
+                    : ListView.builder(
+                        itemCount: (snapshot.data.length > 10)
+                            ? 10
+                            : snapshot.data.length,
+                        itemBuilder: (context, index) => (model == CourseList)
+                            ? CourseList(item: snapshot.data[index])
+                            : model(snapshot.data[index]),
+                      );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            }));
   }
+}
+
+Widget _tutor(dynamic item) {
+  return GestureDetector(
+    onTap: () {},
+    child: Container(
+        height: MediaQuery.of(Get.context!).size.height * 0.15,
+        decoration: BoxDecoration(
+            color: whiteColor,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ]),
+        margin: EdgeInsets.only(
+            top: 10,
+            left: MediaQuery.of(Get.context!).size.width * 0.05,
+            right: MediaQuery.of(Get.context!).size.width * 0.05),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.network(
+                  item['picture'],
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Expanded(
+                  child: Container(
+                // width: double.infinity,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Heading20px(text: item['fullname']),
+                    Title14px(text: item['nickname']),
+                    ratingStar(rating: item['rating'].toDouble())
+                  ],
+                ),
+              )),
+              const Icon(
+                Icons.navigate_next_rounded,
+                color: primaryColor,
+              )
+            ],
+          ),
+        )),
+  );
 }

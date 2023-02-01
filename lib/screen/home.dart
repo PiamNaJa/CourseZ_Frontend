@@ -1,5 +1,7 @@
 import 'package:coursez/controllers/level_controller.dart';
-import 'package:coursez/widgets/button/textButton.dart';
+import 'package:coursez/view_model/course_view_model.dart';
+import 'package:coursez/view_model/tutor_view_model.dart';
+import 'package:coursez/widgets/button/textbutton.dart';
 import 'package:coursez/widgets/listView/listViewForCourse.dart';
 import 'package:coursez/widgets/listView/listViewForTutor.dart';
 import 'package:coursez/utils/color.dart';
@@ -19,10 +21,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final Color _prefixIconColor = greyColor;
-
+  CourseViewModel courseViewModel = CourseViewModel();
+  TutorViewModel tutorViewModel = TutorViewModel();
+  LevelController levelController = Get.put(LevelController());
   @override
   Widget build(BuildContext context) {
-    LevelController levelController = Get.put(LevelController());
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -96,14 +99,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Heading20px(text: 'คอร์สยอดนิยม'),
-                          ButtonText(
+                        children: [
+                          const Heading20px(text: 'คอร์สเรียนยอดนิยม'),
+                          Obx(
+                            () => ButtonText(
                               text: 'ดูเพิ่มเติม >',
                               color: greyColor,
                               size: 16,
                               position: TextAlign.right,
-                              route: ''),
+                              data: courseViewModel
+                                  .loadCourse(levelController.level),
+                              route: '/expand',
+                            ),
+                          )
                         ],
                       ),
                       const SizedBox(
@@ -127,13 +135,31 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 Container(
                   alignment: Alignment.centerLeft,
-                  child: const Heading20px(text: 'ติวเตอร์ยอดนิยม'),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Heading20px(text: 'ติวเตอร์ยอดนิยม'),
+                      Obx(
+                        () => ButtonText(
+                          text: 'ดูเพิ่มเติม >',
+                          color: greyColor,
+                          size: 16,
+                          position: TextAlign.right,
+                          data: tutorViewModel.loadTutor(levelController.level),
+                          route: '/expand',
+                        ),
+                      )
+                    ],
+                  ),
                 ),
                 const SizedBox(
                   height: 12,
                 ),
                 Obx(() =>
                     ListViewTutor(rating: 4, level: levelController.level)),
+                const SizedBox(
+                  height: 20,
+                )
               ],
             ),
           ),

@@ -1,9 +1,4 @@
-import 'package:coursez/screen/expandPage.dart';
-
-import 'package:coursez/screen/home.dart';
-import 'package:coursez/screen/Registerpage.dart';
-import 'package:coursez/screen/loginPage.dart';
-import 'package:coursez/screen/searchPage.dart';
+import 'package:coursez/utils/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -22,13 +17,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/home',
-      routes: {
-        '/login': (context) => const LoginPage(),
-        '/home': (context) => const MyHomePage(),
-        '/register': ((context) => const Registerpage()),
-        '/search': (context) => const SearchPage(),
-      },
+      getPages: Routes.getRoutes,
+      initialRoute: '/first',
     );
   }
 }

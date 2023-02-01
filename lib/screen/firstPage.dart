@@ -1,3 +1,4 @@
+import 'package:coursez/screen/ProfilePage.dart';
 import 'package:coursez/screen/Registerpage.dart';
 import 'package:coursez/screen/home.dart';
 import 'package:coursez/screen/loginPage.dart';
@@ -12,9 +13,21 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
-  final page = [const MyHomePage(), const Registerpage(), const LoginPage()];
+  final page = [
+    const MyHomePage(),
+    const Registerpage(),
+    const LoginPage(),
+    const ProfilePage()
+  ];
   final PageController _pageController = PageController();
   int currentIndex = 0;
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
