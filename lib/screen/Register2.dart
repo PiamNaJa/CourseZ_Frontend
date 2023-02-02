@@ -39,7 +39,10 @@ class _RegisterPage2State extends State<RegisterPage2> {
               ),
               const Text(
                 "ท่านเป็นครู/อาจารย์ หรือ บุคคลทั่วไป",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontFamily: 'Athiti',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 width: double.infinity,
@@ -55,8 +58,10 @@ class _RegisterPage2State extends State<RegisterPage2> {
                     },
                     child: const Text(
                       "ครู/อาจารย์",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontFamily: 'Athiti',
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
                     )),
               ),
               SizedBox(
@@ -73,8 +78,10 @@ class _RegisterPage2State extends State<RegisterPage2> {
                     },
                     child: const Text(
                       "บุคคลทั่วไป",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontFamily: 'Athiti',
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
                     )),
               ),
             ],
