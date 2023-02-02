@@ -1,3 +1,4 @@
+import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/controllers/level_controller.dart';
 import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/view_model/tutor_view_model.dart';
@@ -24,6 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
   CourseViewModel courseViewModel = CourseViewModel();
   TutorViewModel tutorViewModel = TutorViewModel();
   LevelController levelController = Get.put(LevelController());
+  AuthController _authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +49,9 @@ class _MyHomePageState extends State<MyHomePage> {
               expandedHeight: 60,
               floating: false,
               centerTitle: true,
-              title: const Heading24px(text: 'ยินดีต้อนรับสู่ CourseZ'),
+              title: (_authController.isLogin)
+                  ? Heading24px(text: 'สวัสดีคุณ ${_authController.userid}')
+                  : const Heading24px(text: 'ยินดีต้อนรับสู่ CourseZ'),
             ),
           ];
         },

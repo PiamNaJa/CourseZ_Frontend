@@ -34,4 +34,17 @@ class AuthRepository {
   //     throw Exception('No Internet Connection');
   //   }
   // }
+
+  Future getNewToken(String token) async {
+    try {
+      const url = 'http://10.0.2.2:5000/api/user/newtoken';
+      Map data = {'token': token};
+      var response = await http.post(Uri.parse(url),
+          headers: {"Content-Type": "application/json"},
+          body: json.encode(data));
+      return response;
+    } on SocketException {
+      throw Exception('No Internet Connection');
+    }
+  }
 }

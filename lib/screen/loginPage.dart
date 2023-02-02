@@ -117,18 +117,22 @@ class _LoginPageState extends State<LoginPage> {
                                   child: const Heading20px(text: 'อีเมล'),
                                 ),
                                 TextFormField(
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(40))),
-                                      hintText: 'p@example.com',
-                                    ),
-                                    controller: emailController,
-                                    keyboardType: TextInputType.emailAddress,
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    validator: RequiredValidator(
-                                        errorText: 'อีเมลไม่ถูกต้อง')),
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(40))),
+                                    hintText: 'p@example.com',
+                                  ),
+                                  controller: emailController,
+                                  keyboardType: TextInputType.emailAddress,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  validator: ((value) =>
+                                      RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+')
+                                              .hasMatch(value!)
+                                          ? null
+                                          : 'รูปแบบอีเมลไม่ถูกต้อง'),
+                                ),
                               ],
                             ),
                           ),
@@ -142,21 +146,20 @@ class _LoginPageState extends State<LoginPage> {
                                   child: const Heading20px(text: 'รหัสผ่าน'),
                                 ),
                                 TextFormField(
-                                    cursorColor: primaryColor,
-                                    decoration: const InputDecoration(
-                                        border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(40))),
-                                        hintText: 'รหัสผ่าน',
-                                        suffixIcon: Icon(
-                                            Icons.visibility_off_outlined)),
-                                    controller: passwordController,
-                                    keyboardType: TextInputType.visiblePassword,
-                                    obscureText: true,
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    validator: RequiredValidator(
-                                        errorText: 'รหัสผ่านไม่ถูกต้อง')),
+                                  cursorColor: primaryColor,
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(40))),
+                                      hintText: 'รหัสผ่าน',
+                                      suffixIcon:
+                                          Icon(Icons.visibility_off_outlined)),
+                                  controller: passwordController,
+                                  keyboardType: TextInputType.visiblePassword,
+                                  obscureText: true,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                ),
                               ],
                             ),
                           ),
