@@ -21,27 +21,30 @@ class VideoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      return InkWell(
-        onTap: onPressed,
-        child: SizedBox(
-          width: width,
-          height: height,
-          child: Column(
-            children: [
-              Stack(
-                alignment: AlignmentDirectional.center,
-                children: [
-                  ClipOval(
-                      child: Image.network(
-                    image,
-                    width: 70,
-                    height: 70,
-                    fit: BoxFit.cover,
-                  )),
-
-                  (price > 0)
-                      ? Positioned(
-                          child: ClipOval(
+    return InkWell(
+      onTap: onPressed,
+      child: SizedBox(
+        width: width,
+        height: height,
+        child: Column(
+          children: [
+            Stack(
+              alignment: AlignmentDirectional.center,
+              children: [
+                ClipOval(
+                    child: Image.network(
+                  image,
+                  width: 70,
+                  height: 70,
+                  fit: BoxFit.cover,
+                )),
+                (price > 0)
+                    ? Positioned(
+                        child: InkWell(
+                        onTap: () {
+                          debugPrint('lock');
+                        },
+                        child: ClipOval(
                           child: Container(
                             width: 70,
                             height: 70,
@@ -58,14 +61,15 @@ class VideoCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                        ))
-                      : Container(),
-                ],
-              ),
-              Title12px(text: name)
-            ],
-          ),
+                        ),
+                      ))
+                    : Container(),
+              ],
+            ),
+            Title12px(text: name)
+          ],
         ),
-      );
+      ),
+    );
   }
 }
