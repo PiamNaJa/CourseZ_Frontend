@@ -1,5 +1,6 @@
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/widgets/Icon/border_icon.dart';
+import 'package:coursez/widgets/alert/alert.dart';
 import 'package:coursez/widgets/button/button.dart';
 import 'package:coursez/widgets/rating/rating.dart';
 import 'package:coursez/widgets/text/body12px.dart';
@@ -104,6 +105,7 @@ class _CoursePageState extends State<CoursePage> {
     final Size size = MediaQuery.of(context).size;
     late double padding = 15;
     final sidePadding = EdgeInsets.symmetric(horizontal: padding);
+    late bool isLogin = false;
     return Scaffold(
         body: SafeArea(
             child: SizedBox(
@@ -210,7 +212,18 @@ class _CoursePageState extends State<CoursePage> {
                           Bt(
                             text: "ซื้อทั้งหมด",
                             color: primaryColor,
-                            onPressed: () {},
+                            onPressed: () {
+                              if (!isLogin) {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return const AlertLogin(
+                                        body: 'กรุณาเข้าสู่ระบบเพื่อซื้อวีดิโอ',
+                                        action: 'เข้าสู่ระบบ',
+                                      );
+                                    });
+                              }
+                            },
                           )
                         ],
                       ),
@@ -234,7 +247,22 @@ class _CoursePageState extends State<CoursePage> {
                                     height: 100,
                                     price: _courseData['videos'][index]
                                         ['price'],
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      if (!isLogin &&
+                                          _courseData['videos'][index]
+                                                  ['price'] !=
+                                              0) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return const AlertLogin(
+                                                body:
+                                                    'กรุณาเข้าสู่ระบบเพื่อซื้อวีดิโอ',
+                                                action: 'เข้าสู่ระบบ',
+                                              );
+                                            });
+                                      }
+                                    },
                                   );
                                 }),
                               ));
