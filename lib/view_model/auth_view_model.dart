@@ -31,21 +31,21 @@ class AuthViewModel {
     });
   }
 
-  static Future<void> checkToken(String token) async {
-    final data = JwtDecoder.decode(token);
-    _authController.userid = data['user_id'];
-    final exp = data['exp'];
-    if (exp < DateTime.now().toUtc().millisecondsSinceEpoch) {
-      final String refreshToken = await getRefreshToken();
-      AuthRepository().getNewToken(refreshToken).then((response) async {
-        final data = json.decode(response.body);
-        final prefs = await SharedPreferences.getInstance();
-        prefs.setString('token', data['token']);
-        prefs.setString('refreshToken', data['refreshToken']);
-        token = data['token'];
-      });
-    }
-  }
+  // static Future<void> checkToken(String token) async {
+  //   final data = JwtDecoder.decode(token);
+  //   _authController.userid = data['user_id'];
+  //   final exp = data['exp'];
+  //   if (exp < DateTime.now().toUtc().millisecondsSinceEpoch) {
+  //     final String refreshToken = await getRefreshToken();
+  //     AuthRepository().getNewToken(refreshToken).then((response) async {
+  //       final data = json.decode(response.body);
+  //       final prefs = await SharedPreferences.getInstance();
+  //       prefs.setString('token', data['token']);
+  //       prefs.setString('refreshToken', data['refreshToken']);
+  //       token = data['token'];
+  //     });
+  //   }
+  // }
 
   static Future<String> getRefreshToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -56,7 +56,9 @@ class AuthViewModel {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     if (token != null) {
-      checkToken(token);
+      final data = JwtDecoder.decode(token);
+      _authController.userid = data['user_id'];
+      // await checkToken(token);
       _authController.isLogin = true;
       return true;
     } else {

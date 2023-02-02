@@ -19,7 +19,6 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       getPages: Routes.getRoutes,
-      initialBinding: BindingsBuilder.put(() => AuthController()),
       initialRoute: '/first',
     );
   }

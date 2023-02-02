@@ -26,6 +26,13 @@ class _FirstPageState extends State<FirstPage> {
   int currentIndex = 0;
 
   @override
+  initState() {
+    super.initState();
+    Get.put(AuthController());
+    AuthViewModel.checkAuth().then((value) => debugPrint(value.toString()));
+  }
+
+  @override
   void dispose() {
     // TODO: implement dispose
     _pageController.dispose();

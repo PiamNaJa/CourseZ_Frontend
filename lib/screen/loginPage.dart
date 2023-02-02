@@ -3,7 +3,6 @@ import 'package:coursez/view_model/auth_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:coursez/screen/Registerpage.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 import 'package:coursez/widgets/text/title16px.dart';
 
 class LoginPage extends StatefulWidget {

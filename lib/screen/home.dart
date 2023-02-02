@@ -25,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
   CourseViewModel courseViewModel = CourseViewModel();
   TutorViewModel tutorViewModel = TutorViewModel();
   LevelController levelController = Get.put(LevelController());
-  AuthController _authController = Get.find<AuthController>();
+  final AuthController _authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
