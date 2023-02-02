@@ -1,77 +1,84 @@
+import 'dart:ui';
 import 'package:coursez/utils/color.dart';
+import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/widgets/text/body10px.dart';
 import 'package:coursez/widgets/text/title12px.dart';
+import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/rendering.dart';
 import 'package:coursez/widgets/rating/rating.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/model/course.dart';
+import 'package:get/get.dart';
 
-import '../../utils/fetchData.dart';
-
-class listViewForCourse extends StatefulWidget {
+class ListViewCourse extends StatelessWidget {
+  const ListViewCourse({super.key, required this.rating, required this.level});
   final double rating;
-
-  const listViewForCourse({super.key, required this.rating});
-
-  @override
-  State<listViewForCourse> createState() => _listViewForCourseState();
-}
-
-class _listViewForCourseState extends State<listViewForCourse> {
-  final List<Course> _course = [];
-  bool _isError = false;
-  @override
-  void initState() {
-    super.initState();
-    fecthData('course').then((value) {
-      setState(() {
-        if (value['err'] == null) {
-          value['data'].map((e) => _course.add(Course.fromJson(e))).toList();
-        } else {
-          _isError = true;
-        }
-      });
-    });
-  }
-
+  final int level;
   @override
   Widget build(BuildContext context) {
-    return _course.isEmpty
-        ? const CircularProgressIndicator(
-            color: primaryColor,
-          )
-        : SingleChildScrollView(
+    CourseViewModel courseViewModel = CourseViewModel();
+    return FutureBuilder(
+      future: courseViewModel.loadCourse(level),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          return SingleChildScrollView(
             child: SizedBox(
-              height: 160,
-              child: ListView.separated(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _course.length,
-                  separatorBuilder: (context, _) => const SizedBox(
-                        width: 20,
-                      ),
-                  itemBuilder: (context, index) =>
-                      buildCard(_course[index], widget.rating)),
+              height: 170,
+              child: (snapshot.data.length == 0)
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Title16px(
+                            text: 'ขออภัยครับ/ ค่ะ ไม่มีคอร์สเรียนในระดับนี้',
+                            color: greyColor),
+                        Icon(
+                          Icons.sentiment_dissatisfied_outlined,
+                          color: greyColor,
+                          size: 50,
+                        ),
+                      ],
+                    )
+                  : ListView.separated(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount:
+                          (snapshot.data.length > 5) ? 5 : snapshot.data.length,
+                      separatorBuilder: (context, _) => const SizedBox(
+                            width: 20,
+                          ),
+                      itemBuilder: (context, index) =>
+                          buildCard(snapshot.data[index], rating)),
             ),
           );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
   }
 }
 
 Widget buildCard(Course item, double rating) {
+  final CourseViewModel courseViewModel = CourseViewModel();
   return LayoutBuilder(
       builder: (BuildContext context, Constraints constraints) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Get.toNamed('/coursedetail', arguments: courseViewModel.loadCourseById(item.courseId));
+      },
       child: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
               color: whiteColor,
-              border: Border.all(color: greyColor, width: 1),
+              border: Border.all(color: greyColor, width: 0.6),
               borderRadius: BorderRadius.circular(10),
               boxShadow: const [
                 BoxShadow(
                   color: greyColor,
-                  blurRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, 1),
                 )
               ]),
           width: 140,
@@ -87,7 +94,7 @@ Widget buildCard(Course item, double rating) {
                   child: Image.network(
                     item.picture,
                     width: 140,
-                    fit: BoxFit.fitWidth,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),

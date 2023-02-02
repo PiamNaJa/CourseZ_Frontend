@@ -1,12 +1,17 @@
+import 'package:coursez/controllers/auth_controller.dart';
+import 'package:coursez/controllers/level_controller.dart';
+import 'package:coursez/view_model/course_view_model.dart';
+import 'package:coursez/view_model/tutor_view_model.dart';
+import 'package:coursez/widgets/button/textbutton.dart';
+import 'package:coursez/widgets/listView/listViewForCourse.dart';
 import 'package:coursez/widgets/listView/listViewForTutor.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:flutter/material.dart';
-import 'package:coursez/widgets/listView/listViewForCourse.dart';
 import 'package:coursez/widgets/carousel/carouselLevel.dart';
+import 'package:get/get.dart';
 import '../widgets/dropdown/dropdown.dart';
-import 'package:dots_indicator/dots_indicator.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -16,9 +21,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Color _prefixIconColor = greyColor;
-  final List<String> items = ['Item1', 'Item2', 'Item3'];
-
+  final Color _prefixIconColor = greyColor;
+  CourseViewModel courseViewModel = CourseViewModel();
+  TutorViewModel tutorViewModel = TutorViewModel();
+  LevelController levelController = Get.put(LevelController());
+  final AuthController _authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +49,9 @@ class _MyHomePageState extends State<MyHomePage> {
               expandedHeight: 60,
               floating: false,
               centerTitle: true,
-              title: const Heading24px(text: 'ยินดีต้อนรับสู่ CourseZ'),
+              title: (_authController.isLogin)
+                  ? Heading24px(text: 'สวัสดีคุณ ${_authController.userid}')
+                  : const Heading24px(text: 'ยินดีต้อนรับสู่ CourseZ'),
             ),
           ];
         },
@@ -52,10 +61,9 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Column(
               children: [
                 Row(
-                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                      width: 220,
+                      width: MediaQuery.of(context).size.width * 0.5,
                       height: 50,
                       child: TextField(
                         style: const TextStyle(fontFamily: 'Athiti'),
@@ -77,45 +85,15 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           ),
                         ),
-                        onSubmitted: (value) {},
                         onTap: () {
-                          setState(() {
-                            _prefixIconColor = primaryColor;
-                          });
+                          Navigator.pushNamed(context, '/search');
                         },
-                        onChanged: (value) {
-                          setState(() {
-                            _prefixIconColor = primaryColor;
-                          });
-                        },
-                        onEditingComplete: (() {
-                          setState(() {
-                            _prefixIconColor = greyColor;
-                          });
-                        }),
                       ),
                     ),
-                    const SizedBox(
-                      width: 10,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.03,
                     ),
-                    Expanded(
-                      child: SizedBox(
-                        height: 50,
-                        child: dropdown(
-                          items: const [
-                            'ระดับชั้นทั้งหมด',
-                            'ม.1',
-                            'ม.2',
-                            'ม.3',
-                            'ม.4',
-                            'ม.5',
-                            'ม.6',
-                            'มหาวิทยาลัย',
-                          ],
-                          selectedItem: 'ระดับชั้นทั้งหมด',
-                        ),
-                      ),
-                    ),
+                    const Dropdown(),
                     // const listView()
                   ],
                 ),
@@ -123,47 +101,69 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                   child: Column(
                     children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: const Heading20px(text: 'คอร์สยอดนิยม'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Heading20px(text: 'คอร์สเรียนยอดนิยม'),
+                          Obx(
+                            () => ButtonText(
+                              text: 'ดูเพิ่มเติม >',
+                              color: greyColor,
+                              size: 16,
+                              position: TextAlign.right,
+                              data: courseViewModel
+                                  .loadCourse(levelController.level),
+                              route: '/expand',
+                            ),
+                          )
+                        ],
                       ),
                       const SizedBox(
                         height: 12,
                       ),
-                      const listViewForCourse(rating: 4.5),
+                      Obx(() => ListViewCourse(
+                          rating: 4.5, level: levelController.level)),
                     ],
                   ),
                 ),
-                Column(children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: const Heading20px(text: 'วิชา'),
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  Container(
-                      width: double.infinity,
-                      height: 291,
-                      decoration: const BoxDecoration(
-                        color: whiteColor,
-                      ),
-                      child: const carouselLevel()),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ]),
                 Container(
                   alignment: Alignment.centerLeft,
-                  child: const Heading20px(text: 'ติวเตอร์ยอดนิยม'),
+                  child: const Heading20px(text: 'วิชา'),
                 ),
                 const SizedBox(
                   height: 12,
                 ),
-                const listViewForTutor(rating: 4),
+                const CarouselLevel(),
                 const SizedBox(
-                  height: 200,
+                  height: 20,
                 ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Heading20px(text: 'ติวเตอร์ยอดนิยม'),
+                      Obx(
+                        () => ButtonText(
+                          text: 'ดูเพิ่มเติม >',
+                          color: greyColor,
+                          size: 16,
+                          position: TextAlign.right,
+                          data: tutorViewModel.loadTutor(levelController.level),
+                          route: '/expand',
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                Obx(() =>
+                    ListViewTutor(rating: 4, level: levelController.level)),
+                const SizedBox(
+                  height: 20,
+                )
               ],
             ),
           ),

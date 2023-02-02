@@ -3,14 +3,14 @@ import 'history.dart';
 import 'userTeacher.dart';
 
 class User {
-  final String userId;
-  final String email;
+  final int userId;
+  final String? email;
   final String fullName;
   final String nickName;
-  final TimeOfDay birthDay;
-  final String role;
+  final String? birthDay;
+  final String? role;
   final String picture;
-  final int point;
+  final int? point;
   final List<History>? history;
   final UserTeacher? userTeacher;
 
