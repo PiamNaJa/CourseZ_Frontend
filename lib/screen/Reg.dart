@@ -70,7 +70,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       const Text(
                         "โปรดกรอกข้อมูลให้ครบถ้วน",
                         style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
+                            fontFamily: 'Athiti',
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(
                         height: 12,
@@ -97,8 +99,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                           pickImage();
                                         },
                                         elevation: 2.0,
-                                        fillColor:
-                                            const Color.fromRGBO(0, 216, 133, 1),
+                                        fillColor: const Color.fromRGBO(
+                                            0, 216, 133, 1),
                                         child: const Icon(
                                           color: Colors.white,
                                           Icons.edit,
@@ -130,7 +132,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       const Text(
                         "ชื่อจริง-นามสกุล",
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                            fontFamily: 'Athiti',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(
                         height: 10,
@@ -145,7 +149,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20))),
                             hintText: "ชื่อจริง-นามสกุล",
-                            hintStyle: TextStyle(fontSize: 20),
+                            hintStyle:
+                                TextStyle(fontFamily: 'Athiti', fontSize: 20),
                           ),
                           validator: MultiValidator([
                             RequiredValidator(errorText: "โปรดกรอกชื่อของคุณ"),
@@ -158,7 +163,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       const Text(
                         "ชื่อเล่น",
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                            fontFamily: 'Athiti',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(
                         height: 10,
@@ -173,7 +180,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20))),
                             hintText: "ชื่อเล่น",
-                            hintStyle: TextStyle(fontSize: 20),
+                            hintStyle:
+                                TextStyle(fontFamily: 'Athiti', fontSize: 20),
                           ),
                           validator: MultiValidator([
                             RequiredValidator(
@@ -187,7 +195,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       const Text(
                         "อีเมล",
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                            fontFamily: 'Athiti',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(
                         height: 10,
@@ -203,7 +213,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20))),
                             hintText: "P@example.com",
-                            hintStyle: TextStyle(fontSize: 20),
+                            hintStyle:
+                                TextStyle(fontFamily: 'Athiti', fontSize: 20),
                           ),
                           validator: MultiValidator([
                             RequiredValidator(
@@ -218,7 +229,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       const Text(
                         "รหัสผ่าน",
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                            fontFamily: 'Athiti',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(
                         height: 10,
@@ -234,7 +247,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(20))),
                               hintText: "รหัสผ่าน",
-                              hintStyle: TextStyle(fontSize: 20),
+                              hintStyle:
+                                  TextStyle(fontFamily: 'Athiti', fontSize: 20),
                             ),
                             validator: ((value) {
                               if (value!.isEmpty) {
@@ -250,7 +264,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       const Text(
                         "วันเกิด",
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                            fontFamily: 'Athiti',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(
                         height: 10,
@@ -266,7 +282,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20))),
                             hintText: "วว/ดด/ปปปป(พุทธศักราช)",
-                            hintStyle: TextStyle(fontSize: 20),
+                            hintStyle:
+                                TextStyle(fontFamily: 'Athiti', fontSize: 20),
                           ),
                           validator: MultiValidator([
                             RequiredValidator(
@@ -280,7 +297,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       const Text(
                         "ท่านคือใคร",
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                            fontFamily: 'Athiti',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(
                         height: 10,
@@ -367,7 +386,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: const Text(
                               "ลงทะเบียน",
                               style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
+                                  fontFamily: 'Athiti',
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
                             )),
                       )
                     ]),

@@ -71,7 +71,10 @@ class _RegisterTeacherState extends State<RegisterTeacher> {
             ),
             const Text(
               "ประสบการณ์ของท่าน",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontFamily: 'Athiti',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
             SizedBox(
               height: 12,
@@ -84,7 +87,10 @@ class _RegisterTeacherState extends State<RegisterTeacher> {
             ),
             const Text(
               "1.ประสบการณ์ที่ผ่านมา",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontFamily: 'Athiti',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 12,
@@ -98,7 +104,7 @@ class _RegisterTeacherState extends State<RegisterTeacher> {
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20))),
                   hintText: "วุฒิการศึกษา/เคยเป็นวิทยากรที่ไหน/เข้าร่วมกิจกรรม",
-                  hintStyle: TextStyle(fontSize: 14),
+                  hintStyle: TextStyle(fontFamily: 'Athiti', fontSize: 14),
                 ),
               ),
             ),
@@ -107,15 +113,24 @@ class _RegisterTeacherState extends State<RegisterTeacher> {
             ),
             const Text(
               "1.หลักฐาน",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontFamily: 'Athiti',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
             const Text(
               "-ใบประกาศณียบัตร",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontFamily: 'Athiti',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
             const Text(
               "-ภาพกิจกรรมที่ท่านได้เข้าร่วม",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontFamily: 'Athiti',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 12,
@@ -161,7 +176,10 @@ class _RegisterTeacherState extends State<RegisterTeacher> {
             ),
             const Text(
               "ใบประกอบวิชาชีพครู",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontFamily: 'Athiti',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 12,
@@ -198,7 +216,10 @@ class _RegisterTeacherState extends State<RegisterTeacher> {
             ),
             const Text(
               "เอกสารรับรองผลการศึกษา",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontFamily: 'Athiti',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 12,
@@ -235,7 +256,10 @@ class _RegisterTeacherState extends State<RegisterTeacher> {
             ),
             const Text(
               "บัตรประชาชน",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontFamily: 'Athiti',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 12,
@@ -286,7 +310,10 @@ class _RegisterTeacherState extends State<RegisterTeacher> {
                   },
                   child: const Text(
                     "ลงทะเบียน",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontFamily: 'Athiti',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
                   )),
             ),
           ]),
