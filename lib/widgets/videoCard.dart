@@ -1,4 +1,5 @@
 import 'package:coursez/utils/color.dart';
+import 'package:coursez/widgets/alert/alert.dart';
 import 'package:coursez/widgets/text/body12px.dart';
 import 'package:coursez/widgets/text/title12px.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,14 @@ class VideoCard extends StatelessWidget {
                     ? Positioned(
                         child: InkWell(
                         onTap: () {
-                          debugPrint('lock');
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const AlertLogin(
+                                  body: 'กรุณาเข้าสู่ระบบเพื่อซื้อวีดิโอ',
+                                  action: 'เข้าสู่ระบบ',
+                                );
+                              });
                         },
                         child: ClipOval(
                           child: Container(
