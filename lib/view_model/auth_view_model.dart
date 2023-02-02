@@ -19,7 +19,7 @@ class AuthViewModel {
         prefs.setString('token', data['token']);
         prefs.setString('refreshToken', data['refreshToken']);
         _authController.isLogin = true;
-        Get.offAndToNamed('/first');
+        Get.back();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

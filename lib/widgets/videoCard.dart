@@ -1,8 +1,10 @@
+import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/widgets/alert/alert.dart';
 import 'package:coursez/widgets/text/body12px.dart';
 import 'package:coursez/widgets/text/title12px.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class VideoCard extends StatelessWidget {
   final String image;
@@ -10,20 +12,21 @@ class VideoCard extends StatelessWidget {
   final double width;
   final double height;
   final int price;
-  final VoidCallback onPressed;
-  const VideoCard(
+  final VoidCallback onTap;
+  VideoCard(
       {super.key,
       required this.image,
       required this.name,
       required this.width,
       required this.height,
       required this.price,
-      required this.onPressed});
+      required this.onTap});
+  AuthController authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onPressed,
+      onTap: onTap,
       child: SizedBox(
         width: width,
         height: height,
@@ -41,18 +44,20 @@ class VideoCard extends StatelessWidget {
                 )),
                 (price > 0)
                     ? Positioned(
-                        child: InkWell(
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return const AlertLogin(
-                                  body: 'กรุณาเข้าสู่ระบบเพื่อซื้อวีดิโอ',
-                                  action: 'เข้าสู่ระบบ',
-                                );
-                              });
-                        },
                         child: ClipOval(
+                        child: InkWell(
+                          onTap: () {
+                            if (!authController.isLogin) {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return const AlertLogin(
+                                      body: 'กรุณาเข้าสู่ระบบเพื่อซื้อวีดิโอ',
+                                      action: 'เข้าสู่ระบบ',
+                                    );
+                                  });
+                            }
+                          },
                           child: Container(
                             width: 70,
                             height: 70,
