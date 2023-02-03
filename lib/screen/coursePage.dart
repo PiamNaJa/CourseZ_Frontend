@@ -1,6 +1,6 @@
 import 'package:coursez/controllers/auth_controller.dart';
-import 'package:coursez/model/course.dart';
 import 'package:coursez/utils/color.dart';
+import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/widgets/Icon/border_icon.dart';
 import 'package:coursez/widgets/alert/alert.dart';
 import 'package:coursez/widgets/button/button.dart';
@@ -10,7 +10,6 @@ import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:coursez/widgets/text/title14px.dart';
 import 'package:coursez/widgets/videoCard.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 
 class CoursePage extends StatefulWidget {
@@ -23,7 +22,8 @@ class CoursePage extends StatefulWidget {
 class _CoursePageState extends State<CoursePage> {
   final Icon fav = const Icon(Icons.favorite_border);
   final data = Get.arguments;
-  AuthController authController = Get.find();
+  final AuthController authController = Get.find();
+  final CourseViewModel courseViewModel = CourseViewModel();
 
   @override
   void initState() {
@@ -34,7 +34,6 @@ class _CoursePageState extends State<CoursePage> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    late bool isLogin = false;
     return Scaffold(
         body: SafeArea(
             child: SizedBox(
@@ -52,11 +51,11 @@ class _CoursePageState extends State<CoursePage> {
                 ))));
   }
 
-  Widget detail(dynamic _courseData) {
+  Widget detail(dynamic courseData) {
     final Size size = MediaQuery.of(Get.context!).size;
-    late double padding = 15;
-    final sidePadding = EdgeInsets.symmetric(horizontal: padding);
-
+    const double padding = 15;
+    const sidePadding = EdgeInsets.symmetric(horizontal: padding);
+    final sumVideoPrice = courseViewModel.allVideoPriceInCourse(courseData);
     return Stack(
       children: [
         SingleChildScrollView(
@@ -67,7 +66,7 @@ class _CoursePageState extends State<CoursePage> {
               Stack(
                 children: [
                   Image.network(
-                    _courseData.picture,
+                    courseData.picture,
                     height: size.height * 0.4,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -121,7 +120,7 @@ class _CoursePageState extends State<CoursePage> {
                   )
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: padding,
               ),
               Padding(
@@ -129,10 +128,8 @@ class _CoursePageState extends State<CoursePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [Heading24px(text: _courseData.coursename),const ratingStar(rating: 4.5)],
-                    ),
-                    
+                    Heading24px(text: courseData.coursename),
+                    const ratingStar(rating: 4.5),
                     const Title14px(
                       text: 'ชื่อครู',
                       color: greyColor,
@@ -140,7 +137,7 @@ class _CoursePageState extends State<CoursePage> {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: padding,
               ),
               Padding(
@@ -152,7 +149,7 @@ class _CoursePageState extends State<CoursePage> {
                       text: 'รายละเอียด',
                     ),
                     Text(
-                      _courseData.description,
+                      courseData.description,
                       style: const TextStyle(
                         fontFamily: 'Athiti',
                         fontSize: 12,
@@ -161,7 +158,7 @@ class _CoursePageState extends State<CoursePage> {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: padding,
               ),
               Padding(
@@ -174,25 +171,8 @@ class _CoursePageState extends State<CoursePage> {
                         const Heading20px(text: "บทเรียน"),
                         Row(
                           children: [
-                            Row(
-                                children: List.generate(
-                                    _courseData.videos.length, (index) {
-                              num amount = 0;
-                              amount += _courseData.videos[index].price;
-                              if (_courseData.videos[index] ==
-                                  _courseData.videos.last) {
-                                return Title14px(
-                                    text:
-                                        '${amount.toString()}.-/ ${_courseData.videos.length} วีดิโอ');
-                              } else {
-                                return const SizedBox();
-                              }
-                            })),
-                            const SizedBox(
-                              width: 5,
-                            ),
                             Bt(
-                              text: "ซื้อทั้งหมด",
+                              text: "ซื้อทั้งหมด $sumVideoPrice บาท",
                               color: primaryColor,
                               onPressed: () {
                                 if (!authController.isLogin) {
@@ -221,16 +201,16 @@ class _CoursePageState extends State<CoursePage> {
                             spacing: constraints.maxWidth * 0.02,
                             runSpacing: 12,
                             children: List.generate(
-                              _courseData.videos.length,
+                              courseData.videos.length,
                               ((index) {
                                 return VideoCard(
-                                  image: _courseData.videos[index].picture,
-                                  name: _courseData.videos[index].videoName,
+                                  image: courseData.videos[index].picture,
+                                  name: courseData.videos[index].videoName,
                                   width: constraints.maxWidth * 0.3,
                                   height: constraints.maxWidth * 0.3 + 1,
-                                  price: _courseData.videos[index].price,
+                                  price: courseData.videos[index].price,
                                   onTap: () {
-                                    debugPrint(_courseData.videos[index].videoId
+                                    debugPrint(courseData.videos[index].videoId
                                         .toString());
                                   },
                                 );
@@ -269,7 +249,7 @@ class _CoursePageState extends State<CoursePage> {
 //                           crossAxisAlignment: CrossAxisAlignment.start,
 //                           children: [
 //                             Image.network(
-//                               _courseData['picture'] as String,
+//                               courseData['picture'] as String,
 //                               width: constraints.maxWidth * 0.5,
 //                               fit: BoxFit.fill,
 //                             ),
@@ -292,14 +272,14 @@ class _CoursePageState extends State<CoursePage> {
 //                           ],
 //                         );
 //                       }),
-//                       Heading30px(text: _courseData['course_name']!),
+//                       Heading30px(text: courseData['course_name']!),
 //                       Row(
 //                         children: [
-//                           Body16px(text: 'โดย ${_courseData["course_name"]}'),
+//                           Body16px(text: 'โดย ${courseData["course_name"]}'),
 //                           const ratingStar(rating: 5),
 //                         ],
 //                       ),
-//                       Body16px(text: _courseData["description"]!),
+//                       Body16px(text: courseData["description"]!),
 //                     ]),
 //               ),
 //             ),
@@ -331,15 +311,15 @@ class _CoursePageState extends State<CoursePage> {
 //                           spacing: constraints.maxWidth * 0.06,
 //                           runSpacing: 12,
 //                           children: List.generate(
-//                             _courseData['videos'].length,
+//                             courseData['videos'].length,
 //                             ((index) {
 //                               return VideoCard(
-//                                 image: _courseData['videos'][index]['picture'],
-//                                 name: _courseData['videos'][index]
+//                                 image: courseData['videos'][index]['picture'],
+//                                 name: courseData['videos'][index]
 //                                     ['video_name'],
 //                                 width: 100,
 //                                 height: 100,
-//                                 price: _courseData['videos'][index]['price'],
+//                                 price: courseData['videos'][index]['price'],
 //                                 onPressed: () {},
 //                               );
 //                             }),
