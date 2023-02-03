@@ -4,6 +4,7 @@ import 'package:coursez/utils/color.dart';
 import 'package:coursez/widgets/Icon/border_icon.dart';
 import 'package:coursez/widgets/alert/alert.dart';
 import 'package:coursez/widgets/button/button.dart';
+import 'package:coursez/widgets/rating/rating.dart';
 import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:coursez/widgets/text/title14px.dart';
@@ -128,7 +129,10 @@ class _CoursePageState extends State<CoursePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Heading24px(text: _courseData.coursename),
+                    Row(
+                      children: [Heading24px(text: _courseData.coursename),const ratingStar(rating: 4.5)],
+                    ),
+                    
                     const Title14px(
                       text: 'ชื่อครู',
                       color: greyColor,
