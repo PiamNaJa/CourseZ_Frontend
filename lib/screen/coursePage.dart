@@ -92,7 +92,21 @@ class _CoursePageState extends State<CoursePage> {
                                 )),
                           ),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              if (authController.isLogin) {
+                                setState(() {});
+                              } else {
+                                showDialog(
+                                    context: Get.context!,
+                                    builder: (BuildContext context) {
+                                      return const AlertLogin(
+                                        body:
+                                            'กรุณาเข้าสู่ระบบเพื่อเพิ่มวีดิโอที่ชอบ',
+                                        action: 'เข้าสู่ระบบ',
+                                      );
+                                    });
+                              }
+                            },
                             child: const BorderIcon(
                                 width: 50,
                                 height: 50,
@@ -154,21 +168,43 @@ class _CoursePageState extends State<CoursePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Heading20px(text: "บทเรียน"),
-                        Bt(
-                          text: "ซื้อทั้งหมด",
-                          color: primaryColor,
-                          onPressed: () {
-                            if (!authController.isLogin) {
-                              showDialog(
-                                  context: Get.context!,
-                                  builder: (BuildContext context) {
-                                    return const AlertLogin(
-                                      body: 'กรุณาเข้าสู่ระบบเพื่อซื้อวีดิโอ',
-                                      action: 'เข้าสู่ระบบ',
-                                    );
-                                  });
-                            }
-                          },
+                        Row(
+                          children: [
+                            Row(
+                                children: List.generate(
+                                    _courseData.videos.length, (index) {
+                              num amount = 0;
+                              amount += _courseData.videos[index].price;
+                              if (_courseData.videos[index] ==
+                                  _courseData.videos.last) {
+                                return Title14px(
+                                    text:
+                                        '${amount.toString()}.-/ ${_courseData.videos.length} วีดิโอ');
+                              } else {
+                                return const SizedBox();
+                              }
+                            })),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Bt(
+                              text: "ซื้อทั้งหมด",
+                              color: primaryColor,
+                              onPressed: () {
+                                if (!authController.isLogin) {
+                                  showDialog(
+                                      context: Get.context!,
+                                      builder: (BuildContext context) {
+                                        return const AlertLogin(
+                                          body:
+                                              'กรุณาเข้าสู่ระบบเพื่อซื้อวีดิโอ',
+                                          action: 'เข้าสู่ระบบ',
+                                        );
+                                      });
+                                }
+                              },
+                            ),
+                          ],
                         )
                       ],
                     ),
@@ -178,7 +214,7 @@ class _CoursePageState extends State<CoursePage> {
                     Center(
                       child: LayoutBuilder(builder: (context, constraints) {
                         return Wrap(
-                            spacing: constraints.maxWidth * 0.06,
+                            spacing: constraints.maxWidth * 0.02,
                             runSpacing: 12,
                             children: List.generate(
                               _courseData.videos.length,
@@ -186,8 +222,8 @@ class _CoursePageState extends State<CoursePage> {
                                 return VideoCard(
                                   image: _courseData.videos[index].picture,
                                   name: _courseData.videos[index].videoName,
-                                  width: 100,
-                                  height: 100,
+                                  width: constraints.maxWidth * 0.3,
+                                  height: constraints.maxWidth * 0.3 + 1,
                                   price: _courseData.videos[index].price,
                                   onTap: () {
                                     debugPrint(_courseData.videos[index].videoId
