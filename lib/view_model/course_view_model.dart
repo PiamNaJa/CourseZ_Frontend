@@ -82,4 +82,12 @@ class CourseViewModel {
 
     return course;
   }
+
+  int allVideoPriceInCourse(Course course) {
+    num price = 0;
+    for (var element in course.videos) {
+      price += element.price;
+    }
+    return price.toInt();
+  }
 }
