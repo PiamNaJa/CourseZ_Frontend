@@ -18,4 +18,11 @@ class Experience {
       evidence: json['evidence'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'evidence': evidence,
+    };
+  }
 }

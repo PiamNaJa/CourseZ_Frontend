@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:coursez/model/user.dart';
 import 'package:http/http.dart' as http;
 
 class AuthRepository {
@@ -39,6 +40,45 @@ class AuthRepository {
     try {
       const url = 'http://10.0.2.2:5000/api/user/newtoken';
       Map data = {'token': token};
+      var response = await http.post(Uri.parse(url),
+          headers: {"Content-Type": "application/json"},
+          body: json.encode(data));
+      return response;
+    } on SocketException {
+      throw Exception('No Internet Connection');
+    }
+  }
+
+  Future<http.Response> registerStudent(User user) async {
+    try {
+      const url = 'http://10.0.2.2:5000/api/user/register/student';
+      var response = await http.post(Uri.parse(url),
+          headers: {"Content-Type": "application/json"},
+          body: json.encode(user.toJson()));
+      return response;
+    } on SocketException {
+      throw Exception('No Internet Connection');
+    }
+  }
+
+  Future<http.Response> registerTeacher(User user) async {
+    try {
+      final data = user.toJson();
+      if (user.userTeacher!.experiences == null) {
+        user.userTeacher!.experiences = [];
+      }
+      if (user.role == 'teacher' || user.role == 'Teacher') {
+        data['teacher_license'] = user.userTeacher!.teacherLicense;
+        data['transcript'] = user.userTeacher!.transcipt;
+      } else {
+        data['psychological_test'] = user.userTeacher!.psychologicalTest;
+      }
+      data['id_card'] = user.userTeacher!.idCard;
+      data['experience'] = [];
+      for (var i = 0; i < user.userTeacher!.experiences!.length; i++) {
+        data['experience'].add(user.userTeacher!.experiences![i].toJson());
+      }
+      const url = 'http://10.0.2.2:5000/api/user/register/teacher';
       var response = await http.post(Uri.parse(url),
           headers: {"Content-Type": "application/json"},
           body: json.encode(data));

@@ -8,7 +8,6 @@ class User {
   String? password;
   String fullName;
   String nickName;
-  String birthDay;
   String role;
   String picture;
   int point;
@@ -20,7 +19,6 @@ class User {
     required this.email,
     required this.fullName,
     required this.nickName,
-    required this.birthDay,
     required this.role,
     required this.picture,
     required this.point,
@@ -33,10 +31,9 @@ class User {
     return User(
       userId: json['user_id'],
       email: json['email'],
-      password: json['password'] ?? null,
+      password: json['password'],
       fullName: json['fullname'],
       nickName: json['nickname'],
-      birthDay: json['birthday'],
       role: json['role'],
       picture: json['picture'],
       point: json['point'],
@@ -47,5 +44,15 @@ class User {
           ? UserTeacher.fromJson(json['teacher'])
           : null,
     );
+  }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Email'] = email;
+    data['Password'] = password;
+    data['Fullname'] = fullName;
+    data['Nickname'] = nickName;
+    data['Picture'] = picture;
+    data['Role'] = role;
+    return data;
   }
 }

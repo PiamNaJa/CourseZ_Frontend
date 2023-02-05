@@ -1,17 +1,12 @@
 import 'dart:io';
 import 'package:coursez/model/user.dart';
 import 'package:coursez/screen/Register2.dart';
-import 'package:coursez/screen/home.dart';
-import 'package:coursez/utils/color.dart';
+import 'package:coursez/view_model/auth_view_model.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:uuid/uuid.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import '../model/user.dart';
-
-var uuid = const Uuid();
 
 enum ProductTypeEnum { Donwloadable, Deliverable }
 
@@ -28,7 +23,6 @@ class _RegisterPageState extends State<RegisterPage> {
       password: '',
       fullName: '',
       nickName: '',
-      birthDay: '',
       role: '',
       picture: '',
       point: 0);
@@ -44,17 +38,29 @@ class _RegisterPageState extends State<RegisterPage> {
 
       setState(() => this.image = imageTemp);
     } on PlatformException catch (e) {
-      print("Fail to pick image : $e");
+      debugPrint("Fail to pick image : $e");
     }
-    Reference ref =
-        FirebaseStorage.instance.ref().child("/Images/" + uuid.v4());
-    await ref.putFile(File(image!.path));
-    ref.getDownloadURL().then((value) {
-      print(value);
-    });
   }
 
   final formkey = GlobalKey<FormState>();
+  final AuthViewModel authViewModel = AuthViewModel();
+
+  onSubmit() async {
+    if (formkey.currentState!.validate()) {
+      formkey.currentState!.save();
+      if (image == null) {
+        Get.snackbar("กรุณาเลือกรูปภาพ", "กรุณาเลือกรูปภาพ",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
+        return;
+      }
+      user.role == "Tutor"
+          ? Get.toNamed('/register2',
+              arguments: user, parameters: {'image': image!.path})
+          : authViewModel.registerStudent(user, image);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,13 +107,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                         elevation: 2.0,
                                         fillColor: const Color.fromRGBO(
                                             0, 216, 133, 1),
+                                        padding: const EdgeInsets.all(15.0),
+                                        shape: const CircleBorder(),
                                         child: const Icon(
                                           color: Colors.white,
                                           Icons.edit,
                                           size: 35.0,
                                         ),
-                                        padding: const EdgeInsets.all(15.0),
-                                        shape: const CircleBorder(),
                                       ),
                                     )
                                   ],
@@ -117,16 +123,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                     pickImage();
                                   },
                                   child: Container(
+                                    height: 200,
+                                    decoration: const BoxDecoration(
+                                        color: Colors.grey,
+                                        shape: BoxShape.circle),
                                     child: const Center(
                                       child: Icon(
                                         Icons.add_a_photo_outlined,
                                         size: 100,
                                       ),
                                     ),
-                                    height: 200,
-                                    decoration: const BoxDecoration(
-                                        color: Colors.grey,
-                                        shape: BoxShape.circle),
                                   ),
                                 )),
                       const Text(
@@ -152,6 +158,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             hintStyle:
                                 TextStyle(fontFamily: 'Athiti', fontSize: 20),
                           ),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: MultiValidator([
                             RequiredValidator(errorText: "โปรดกรอกชื่อของคุณ"),
                           ]),
@@ -183,6 +190,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             hintStyle:
                                 TextStyle(fontFamily: 'Athiti', fontSize: 20),
                           ),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: MultiValidator([
                             RequiredValidator(
                                 errorText: "โปรดกรอกชื่อเล่นของคุณ"),
@@ -216,6 +224,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             hintStyle:
                                 TextStyle(fontFamily: 'Athiti', fontSize: 20),
                           ),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: MultiValidator([
                             RequiredValidator(
                                 errorText: "โปรดกรอกอีเมลล์ของคุณ"),
@@ -250,46 +259,16 @@ class _RegisterPageState extends State<RegisterPage> {
                               hintStyle:
                                   TextStyle(fontFamily: 'Athiti', fontSize: 20),
                             ),
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             validator: ((value) {
                               if (value!.isEmpty) {
                                 return "โปรดกรอกรหัสผ่านของคุณ";
                               } else if (value.length < 6) {
                                 return "รหัสผ่านควรยาวกว่า 6 ตัว";
                               }
+                              return null;
                             })),
-                      ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      const Text(
-                        "วันเกิด",
-                        style: TextStyle(
-                            fontFamily: 'Athiti',
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        child: TextFormField(
-                          onChanged: (String? birthDay) {
-                            user.birthDay = birthDay!;
-                          },
-                          keyboardType: TextInputType.datetime,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                            hintText: "วว/ดด/ปปปป(พุทธศักราช)",
-                            hintStyle:
-                                TextStyle(fontFamily: 'Athiti', fontSize: 20),
-                          ),
-                          validator: MultiValidator([
-                            RequiredValidator(
-                                errorText: "โปรดกรอกวันเกิดของคุณ"),
-                          ]),
-                        ),
                       ),
                       const SizedBox(
                         height: 12,
@@ -373,16 +352,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 backgroundColor:
                                     MaterialStatePropertyAll<Color>(
                                         Color.fromRGBO(0, 216, 133, 1))),
-                            onPressed: () {
-                              if (formkey.currentState!.validate()) {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return user.role == "Tutor"
-                                      ? const RegisterPage2()
-                                      : const MyHomePage();
-                                }));
-                              }
-                            },
+                            onPressed: onSubmit,
                             child: const Text(
                               "ลงทะเบียน",
                               style: TextStyle(
