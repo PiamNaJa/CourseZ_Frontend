@@ -130,9 +130,18 @@ class _CoursePageState extends State<CoursePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      children: [Heading24px(text: _courseData.coursename),const ratingStar(rating: 4.5)],
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5),
+                          child: Heading24px(text: _courseData.coursename),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5),
+                          child: ratingStar(rating: _courseData.rating!),
+                        ),
+                        Title14px(text: _courseData.rating.toString()),
+                      ],
                     ),
-                    
                     const Title14px(
                       text: 'ชื่อครู',
                       color: greyColor,

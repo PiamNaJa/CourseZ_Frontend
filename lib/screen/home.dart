@@ -121,8 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       const SizedBox(
                         height: 12,
                       ),
-                      Obx(() => ListViewCourse(
-                          rating: 4.5, level: levelController.level)),
+                      Obx(() => ListViewCourse(level: levelController.level)),
                     ],
                   ),
                 ),
