@@ -132,13 +132,13 @@ class _CoursePageState extends State<CoursePage> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(right: 5),
-                          child: Heading24px(text: _courseData.coursename),
+                          child: Heading24px(text: courseData.coursename),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(right: 5),
-                          child: ratingStar(rating: _courseData.rating!),
+                          child: ratingStar(rating: courseData.rating!),
                         ),
-                        Title14px(text: _courseData.rating.toString()),
+                        Title14px(text: courseData.rating.toString()),
                       ],
                     ),
                     const Title14px(
