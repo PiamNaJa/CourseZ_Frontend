@@ -89,7 +89,10 @@ class AuthViewModel {
       _authController.isLogin = true;
     } else {
       debugPrint(res.body);
-      Get.snackbar('Error', 'Something went wrong');
+      Get.snackbar('Error', 'Something went wrong',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
     }
   }
 
@@ -140,7 +143,10 @@ class AuthViewModel {
       Get.offAllNamed('/first');
     } else {
       debugPrint(res.body);
-      Get.snackbar('Error', 'Something went wrong');
+      Get.snackbar('Error', 'Something went wrong',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
     }
   }
 
@@ -188,7 +194,10 @@ class AuthViewModel {
       Get.offAllNamed('/first');
     } else {
       debugPrint(res.body);
-      Get.snackbar('Error', 'Something went wrong');
+      Get.snackbar('Error', 'Something went wrong',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
     }
   }
 }
