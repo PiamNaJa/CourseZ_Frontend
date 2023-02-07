@@ -1,6 +1,6 @@
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/screen/ProfilePage.dart';
-import 'package:coursez/screen/Registerpage.dart';
+import 'package:coursez/screen/chatPage.dart';
 import 'package:coursez/screen/home.dart';
 import 'package:coursez/screen/loginPage.dart';
 import 'package:coursez/screen/postPage.dart';
@@ -20,7 +20,7 @@ class _FirstPageState extends State<FirstPage> {
   final page = [
     const MyHomePage(),
     const PostPage(),
-    const Registerpage(),
+    const ChatPage(),
     const ProfilePage()
   ];
   final PageController _pageController = PageController();

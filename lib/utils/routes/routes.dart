@@ -1,5 +1,6 @@
 import 'package:coursez/screen/Reg.dart';
 import 'package:coursez/screen/Register2.dart';
+import 'package:coursez/screen/chatPage.dart';
 import 'package:coursez/screen/coursePage.dart';
 import 'package:coursez/screen/courseSubjectPage.dart';
 import 'package:coursez/screen/expandPage.dart';
@@ -25,7 +26,8 @@ class Routes {
     GetPage(name: '/expand', page: () => const ExpandPage()),
     GetPage(name: '/post', page: () => const PostPage()),
     GetPage(name: '/coursesubject', page: () => CourseSubject()),
-    GetPage(name: '/coursedetail', page: () => const CoursePage())
+    GetPage(name: '/coursedetail', page: () => const CoursePage()),
+    GetPage(name: '/chat', page: () => const ChatPage())
   ];
   static List<GetPage> get getRoutes => _getRoutes;
 }

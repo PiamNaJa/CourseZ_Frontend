@@ -120,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.all(
-                                            Radius.circular(40))),
+                                            Radius.circular(20))),
                                     hintText: 'p@example.com',
                                   ),
                                   controller: emailController,
@@ -150,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                                   decoration: const InputDecoration(
                                       border: OutlineInputBorder(
                                           borderRadius: BorderRadius.all(
-                                              Radius.circular(40))),
+                                              Radius.circular(20))),
                                       hintText: 'รหัสผ่าน',
                                       suffixIcon:
                                           Icon(Icons.visibility_off_outlined)),
@@ -191,12 +191,21 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
-                          TextButton(
-                              onPressed: () => Get.toNamed('/register'),
-                              child: const Title16px(
-                                text: 'ลงทะเบียน',
-                                color: primaryColor,
-                              ))
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Title16px(
+                                text: 'ยังไม่มีบัญชีผู้ใช้?',
+                                color: greyColor,
+                              ),
+                              TextButton(
+                                  onPressed: () => Get.toNamed('/register'),
+                                  child: const Title16px(
+                                    text: 'ลงทะเบียน',
+                                    color: primaryColor,
+                                  )),
+                            ],
+                          )
                         ])),
                   ],
                 ),

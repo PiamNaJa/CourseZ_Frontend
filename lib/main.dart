@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       getPages: Routes.getRoutes,
-      initialRoute: '/register',
+      initialRoute: '/first',
     );
   }
 }
