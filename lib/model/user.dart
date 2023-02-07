@@ -3,26 +3,26 @@ import 'history.dart';
 import 'userTeacher.dart';
 
 class User {
-  final int userId;
-  final String? email;
-  final String fullName;
-  final String nickName;
-  final String? birthDay;
-  final String? role;
-  final String picture;
-  final int? point;
-  final List<History>? history;
-  final UserTeacher? userTeacher;
+  int? userId;
+  String email;
+  String? password;
+  String fullName;
+  String nickName;
+  String role;
+  String picture;
+  int point;
+  List<History>? history;
+  UserTeacher? userTeacher;
 
   User({
-    required this.userId,
+    this.userId,
     required this.email,
     required this.fullName,
     required this.nickName,
-    required this.birthDay,
     required this.role,
     required this.picture,
     required this.point,
+    this.password,
     this.history,
     this.userTeacher,
   });
@@ -31,9 +31,9 @@ class User {
     return User(
       userId: json['user_id'],
       email: json['email'],
+      password: json['password'],
       fullName: json['fullname'],
       nickName: json['nickname'],
-      birthDay: json['birthday'],
       role: json['role'],
       picture: json['picture'],
       point: json['point'],
@@ -44,5 +44,15 @@ class User {
           ? UserTeacher.fromJson(json['teacher'])
           : null,
     );
+  }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Email'] = email;
+    data['Password'] = password;
+    data['Fullname'] = fullName;
+    data['Nickname'] = nickName;
+    data['Picture'] = picture;
+    data['Role'] = role;
+    return data;
   }
 }

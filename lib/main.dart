@@ -1,10 +1,15 @@
+import 'package:coursez/controllers/auth_controller.dart';
+import 'package:coursez/firebase_options.dart';
 import 'package:coursez/utils/routes/routes.dart';
-import 'package:coursez/view_model/auth_view_model.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:coursez/controllers/auth_controller.dart';
-void main() {
+
+Future<void> main() async {
   runApp(const MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -12,6 +17,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Get.put(AuthController());
     return GetMaterialApp(
       title: 'CourseZ',
       theme: ThemeData(
@@ -19,7 +25,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       getPages: Routes.getRoutes,
-      initialRoute: '/first',
+      initialRoute: '/register',
     );
   }
 }

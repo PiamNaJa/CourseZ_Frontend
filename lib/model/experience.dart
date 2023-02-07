@@ -1,12 +1,12 @@
 class Experience {
-  final int experienceId;
-  final int teacherId;
-  final String title;
-  final String evidence;
+  int? experienceId;
+  int? teacherId;
+  String title;
+  String evidence;
 
   Experience(
-      {required this.experienceId,
-      required this.teacherId,
+      {this.experienceId,
+      this.teacherId,
       required this.title,
       required this.evidence});
 
@@ -17,5 +17,12 @@ class Experience {
       title: json['title'],
       evidence: json['evidence'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'evidence': evidence,
+    };
   }
 }

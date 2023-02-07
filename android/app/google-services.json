@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "410983509658",
+    "project_id": "coursez-50fb3",
+    "storage_bucket": "coursez-50fb3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410983509658:android:4d655c821d63fb46963923",
+        "android_client_info": {
+          "package_name": "com.coursez.coursez"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "410983509658-icb4t6182j8ljfo7tfnbn6kotas1hh51.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQ4s2KF9ZBz6JDA0id3JgkRc36o2Mgy8c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "410983509658-icb4t6182j8ljfo7tfnbn6kotas1hh51.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

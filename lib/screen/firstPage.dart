@@ -24,13 +24,14 @@ class _FirstPageState extends State<FirstPage> {
     const ProfilePage()
   ];
   final PageController _pageController = PageController();
+  final AuthViewModel authViewModel = AuthViewModel();
   int currentIndex = 0;
 
   @override
   initState() {
     super.initState();
     Get.put(AuthController());
-    AuthViewModel.checkAuth().then((value) => debugPrint(value.toString()));
+    authViewModel.checkAuth().then((value) => debugPrint(value.toString()));
   }
 
   @override

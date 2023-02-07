@@ -7,17 +7,18 @@ class Bt extends StatelessWidget {
   final Color fontcolor;
   final VoidCallback onPressed;
 
-  const Bt(
-      {super.key,
-      required this.text,
-      required this.color,
-      this.fontcolor = const Color(0xFFFFFFFF),
-      required this.onPressed});
+  const Bt({
+    super.key,
+    required this.text,
+    required this.color,
+    this.fontcolor = const Color(0xFFFFFFFF),
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40,
+      height: 50,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(

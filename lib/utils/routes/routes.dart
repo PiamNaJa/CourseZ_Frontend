@@ -1,5 +1,5 @@
-import 'package:coursez/middleware/auth_middleware.dart';
-import 'package:coursez/screen/Registerpage.dart';
+import 'package:coursez/screen/Reg.dart';
+import 'package:coursez/screen/Register2.dart';
 import 'package:coursez/screen/coursePage.dart';
 import 'package:coursez/screen/courseSubjectPage.dart';
 import 'package:coursez/screen/expandPage.dart';
@@ -14,11 +14,12 @@ class Routes {
   static final List<GetPage> _getRoutes = [
     GetPage(name: '/login', page: () => const LoginPage()),
     GetPage(
-        name: '/home',
-        page: () => const MyHomePage(),
-        // middlewares: [AuthMiddleware()]
-        ),
-    GetPage(name: '/register', page: () => const Registerpage()),
+      name: '/home',
+      page: () => const MyHomePage(),
+      // middlewares: [AuthMiddleware()]
+    ),
+    GetPage(name: '/register', page: () => const RegisterPage()),
+    GetPage(name: '/register2', page: () => const RegisterPage2()),
     GetPage(name: '/first', page: () => const FirstPage()),
     GetPage(name: '/profile', page: () => const ProfilePage()),
     GetPage(name: '/expand', page: () => const ExpandPage()),

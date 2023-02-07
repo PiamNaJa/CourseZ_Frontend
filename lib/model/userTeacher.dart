@@ -3,20 +3,20 @@ import 'reviewTutor.dart';
 import 'course.dart';
 
 class UserTeacher {
-  final int teacherId;
-  final int userId;
+  final int? teacherId;
+  final int? userId;
   final String teacherLicense;
   final String transcipt;
   final String idCard;
   final String psychologicalTest;
   final int money;
   final List<ReviewTutor>? reviews;
-  final List<Experience>? experiences;
+  List<Experience>? experiences;
   final List<Course>? courses;
 
   UserTeacher(
-      {required this.teacherId,
-      required this.userId,
+      {this.teacherId,
+      this.userId,
       required this.teacherLicense,
       required this.transcipt,
       required this.idCard,
