@@ -99,36 +99,30 @@ class _RegisterPageState extends State<RegisterPage> {
                               ? Stack(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.all(15.0),
+                                      padding: const EdgeInsets.all(15),
                                       child: ClipOval(
                                           child: Image.file(
                                         image!,
-                                        height: MediaQuery.of(Get.context!)
-                                                .size
-                                                .height *
-                                            0.12,
-                                        width: MediaQuery.of(Get.context!)
-                                                .size
-                                                .height *
-                                            0.12,
+                                        height: 120,
+                                        width: 120,
                                         fit: BoxFit.cover,
                                       )),
                                     ),
                                     Positioned(
-                                      bottom: 0,
-                                      right: 0,
+                                      top: 10,
+                                      left: 75,
                                       child: RawMaterialButton(
                                         onPressed: () {
                                           pickImage();
                                         },
                                         elevation: 2.0,
                                         fillColor: primaryColor,
-                                        padding: const EdgeInsets.all(15.0),
+                                        padding: const EdgeInsets.all(15),
                                         shape: const CircleBorder(),
                                         child: const Icon(
                                           color: Colors.white,
                                           Icons.edit,
-                                          size: 15,
+                                          size: 25,
                                         ),
                                       ),
                                     )

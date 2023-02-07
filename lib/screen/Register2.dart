@@ -4,6 +4,8 @@ import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/auth_view_model.dart';
 import 'package:coursez/widgets/button/button.dart';
 import 'package:coursez/widgets/button/radiobutton.dart';
+import 'package:coursez/widgets/text/heading2_20px.dart';
+import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,14 +22,6 @@ class RegisterPage2 extends StatefulWidget {
 
 class _RegisterPage2State extends State<RegisterPage2> {
   User user = Get.arguments;
-  // User user = User(
-  //     email: '',
-  //     password: '',
-  //     fullName: '',
-  //     nickName: '',
-  //     role: '',
-  //     picture: '',
-  //     point: 0);
   String? image = Get.parameters['image'];
   bool isTeacher = true, isTutor = false, isWaiting = false;
   List<Experience> experiences =
@@ -35,6 +29,7 @@ class _RegisterPage2State extends State<RegisterPage2> {
   List<File?> experienceImages = List.filled(1, null, growable: true);
   int experienceLength = 1;
   File? teacherLicense, transcript, idCard, psychologicalTest;
+  final formkey = GlobalKey<FormState>();
   final uri = Uri.parse("https://testyourself.psychtests.com/testid/4176");
   pickImage() async {
     try {
@@ -51,31 +46,37 @@ class _RegisterPage2State extends State<RegisterPage2> {
   }
 
   onTeacherSubmit() {
-    if (experienceImages.length == 1 &&
-        experienceImages[0] == null &&
-        experiences[0].title == '') {
-      Get.snackbar('Error', 'กรุณาเพิ่มประสบการณ์',
+    if (formkey.currentState!.validate() == false) {
+      Get.snackbar('เกิดข้อผิดพลาด', 'กรุณากรอกข้อมูลให้ครบถ้วน',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
+      return;
+    }
+
+    if (experienceImages.length == 1 && experienceImages[0] == null) {
+      Get.snackbar('เกิดข้อผิดพลาด', 'กรุณาเพิ่มประสบการณ์',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white);
       return;
     }
     if (teacherLicense == null) {
-      Get.snackbar('Error', 'โปรดเพิ่มใบประกอบวิชาชีพครู',
+      Get.snackbar('เกิดข้อผิดพลาด', 'โปรดเพิ่มใบประกอบวิชาชีพครู',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white);
       return;
     }
     if (transcript == null) {
-      Get.snackbar('Error', 'โปรดเพิ่มเอกสารรับรองผลการศึกษา',
+      Get.snackbar('เกิดข้อผิดพลาด', 'โปรดเพิ่มเอกสารรับรองผลการศึกษา',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white);
       return;
     }
     if (idCard == null) {
-      Get.snackbar('Error', 'โปรดเพิ่มบัตรประชาชน',
+      Get.snackbar('เกิดข้อผิดพลาด', 'โปรดเพิ่มบัตรประชาชน',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white);
@@ -89,24 +90,29 @@ class _RegisterPage2State extends State<RegisterPage2> {
   }
 
   onTutorSubmit() {
-    if (experienceImages.length == 1 &&
-        experienceImages[0] == null &&
-        experiences[0].title == '') {
-      Get.snackbar('Error', 'กรุณาเพิ่มประสบการณ์',
+    if (formkey.currentState!.validate() == false) {
+      Get.snackbar('เกิดข้อผิดพลาด', 'กรุณากรอกข้อมูลให้ครบถ้วน',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
+      return;
+    }
+    if (experienceImages.length == 1 && experienceImages[0] == null) {
+      Get.snackbar('เกิดข้อผิดพลาด', 'กรุณาเพิ่มประสบการณ์',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white);
       return;
     }
     if (psychologicalTest == null) {
-      Get.snackbar('Error', 'โปรดส่งผลการทดสอบจิตวิทยา',
+      Get.snackbar('เกิดข้อผิดพลาด', 'โปรดส่งผลการทดสอบจิตวิทยา',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white);
       return;
     }
     if (idCard == null) {
-      Get.snackbar('Error', 'โปรดเพิ่มบัตรประชาชน',
+      Get.snackbar('เกิดข้อผิดพลาด', 'โปรดเพิ่มบัตรประชาชน',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white);
@@ -151,6 +157,9 @@ class _RegisterPage2State extends State<RegisterPage2> {
                       fontFamily: 'Athiti',
                       fontSize: 20,
                       fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 12,
                 ),
                 LayoutBuilder(builder: (context, constraints) {
                   return Row(
@@ -202,13 +211,7 @@ class _RegisterPage2State extends State<RegisterPage2> {
                 const SizedBox(
                   height: 24,
                 ),
-                const Text(
-                  "ประสบการณ์ของท่าน",
-                  style: TextStyle(
-                      fontFamily: 'Athiti',
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
+                const Heading20px(text: 'ประสบการณ์ของท่าน'),
                 SizedBox(
                   height: 12,
                   child: Container(
@@ -216,7 +219,14 @@ class _RegisterPage2State extends State<RegisterPage2> {
                           border:
                               Border(bottom: BorderSide(color: greyColor)))),
                 ),
-                for (var i = 0; i < experiences.length; i++) experienceForm(i),
+                Form(
+                    key: formkey,
+                    child: Column(
+                      children: [
+                        for (var i = 0; i < experiences.length; i++)
+                          experienceForm(i),
+                      ],
+                    )),
                 Bt(
                   text: "เพิ่มประสบการณ์",
                   color: primaryColor,
@@ -244,7 +254,7 @@ class _RegisterPage2State extends State<RegisterPage2> {
                   height: 24,
                 ),
                 SizedBox(
-                  height: 40,
+                  height: 50,
                   width: double.infinity,
                   child: ElevatedButton(
                       style: const ButtonStyle(
@@ -259,12 +269,9 @@ class _RegisterPage2State extends State<RegisterPage2> {
                           ? const CircularProgressIndicator(
                               color: whiteColor,
                             )
-                          : const Text(
-                              "ลงทะเบียน",
-                              style: TextStyle(
-                                  fontFamily: 'Athiti',
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
+                          : const Title16px(
+                              text: 'ลงทะเบียน',
+                              color: whiteColor,
                             )),
                 ),
               ],
@@ -285,7 +292,40 @@ class _RegisterPage2State extends State<RegisterPage2> {
       ),
       Center(
         child: teacherLicense != null
-            ? Image.file(teacherLicense!)
+            ? Stack(
+                alignment: AlignmentDirectional.topEnd,
+                // fit: StackFit.passthrough,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Image.file(
+                      teacherLicense!,
+                      height: 250,
+                      fit: BoxFit.cover,
+                      // width: MediaQuery.of(context).size.width * 0.8,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 50,
+                    child: RawMaterialButton(
+                      onPressed: () {
+                        pickImage().then((value) => setState(
+                              () => teacherLicense = value,
+                            ));
+                      },
+                      elevation: 2.0,
+                      fillColor: primaryColor,
+                      padding: const EdgeInsets.all(15),
+                      shape: const CircleBorder(),
+                      child: const Icon(
+                        color: Colors.white,
+                        Icons.edit,
+                        size: 25,
+                      ),
+                    ),
+                  ),
+                ],
+              )
             : SizedBox(
                 height: 200,
                 width: double.infinity,
@@ -323,7 +363,40 @@ class _RegisterPage2State extends State<RegisterPage2> {
       ),
       Center(
         child: transcript != null
-            ? Image.file(transcript!)
+            ? Stack(
+                alignment: AlignmentDirectional.topEnd,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Image.file(
+                      transcript!,
+                      height: 250,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 50,
+                    child: RawMaterialButton(
+                      onPressed: () {
+                        pickImage().then((value) {
+                          setState(() {
+                            transcript = value;
+                          });
+                        });
+                      },
+                      elevation: 2.0,
+                      fillColor: primaryColor,
+                      padding: const EdgeInsets.all(15),
+                      shape: const CircleBorder(),
+                      child: const Icon(
+                        color: Colors.white,
+                        Icons.edit,
+                        size: 25,
+                      ),
+                    ),
+                  ),
+                ],
+              )
             : SizedBox(
                 height: 200,
                 width: double.infinity,
@@ -361,7 +434,40 @@ class _RegisterPage2State extends State<RegisterPage2> {
       ),
       Center(
         child: idCard != null
-            ? Image.file(idCard!)
+            ? Stack(
+                alignment: AlignmentDirectional.topEnd,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Image.file(
+                      idCard!,
+                      height: 250,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 50,
+                    child: RawMaterialButton(
+                      onPressed: () {
+                        pickImage().then((value) {
+                          setState(() {
+                            idCard = value;
+                          });
+                        });
+                      },
+                      elevation: 2.0,
+                      fillColor: primaryColor,
+                      padding: const EdgeInsets.all(15),
+                      shape: const CircleBorder(),
+                      child: const Icon(
+                        color: Colors.white,
+                        Icons.edit,
+                        size: 25,
+                      ),
+                    ),
+                  ),
+                ],
+              )
             : SizedBox(
                 height: 200,
                 width: double.infinity,
@@ -393,42 +499,60 @@ class _RegisterPage2State extends State<RegisterPage2> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "ท่านต้องผ่านการทดสอบจิตวิทยาที่นี่",
-          style: TextStyle(
-              fontFamily: 'Athiti', fontSize: 20, fontWeight: FontWeight.bold),
+        const Heading20px(text: 'ท่านต้องผ่านการทดสอบจิตวิทยาที่นี่'),
+        const SizedBox(
+          height: 12,
         ),
         SizedBox(
           width: 150,
-          child: ElevatedButton(
-              style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll<Color>(
-                      Color.fromARGB(255, 120, 122, 122))),
-              onPressed: () {
-                launchUrl(uri);
-              },
-              child: const Text(
-                "ทำแบบสอบถาม",
-                style: TextStyle(
-                    fontFamily: 'Athiti',
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
-              )),
+          child: Bt(
+              text: 'ทำแบบทดสอบ',
+              color: secondaryColor,
+              onPressed: () => launchUrl(uri)),
         ),
         const SizedBox(
           height: 12,
         ),
-        const Text(
-          "ส่งผลทดสอบจิตวิทยา",
-          style: TextStyle(
-              fontFamily: 'Athiti', fontSize: 20, fontWeight: FontWeight.bold),
-        ),
+        const Heading20px(text: 'ส่งผลทดสอบจิตวิทยา'),
         const SizedBox(
           height: 12,
         ),
         Center(
           child: psychologicalTest != null
-              ? Image.file(psychologicalTest!)
+              ? Stack(
+                  alignment: AlignmentDirectional.topEnd,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Image.file(
+                        psychologicalTest!,
+                        height: 250,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 50,
+                      child: RawMaterialButton(
+                        onPressed: () {
+                          pickImage().then((value) {
+                            setState(() {
+                              psychologicalTest = value;
+                            });
+                          });
+                        },
+                        elevation: 2.0,
+                        fillColor: primaryColor,
+                        padding: const EdgeInsets.all(15),
+                        shape: const CircleBorder(),
+                        child: const Icon(
+                          color: Colors.white,
+                          Icons.edit,
+                          size: 25,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
               : SizedBox(
                   height: 200,
                   width: double.infinity,
@@ -461,17 +585,46 @@ class _RegisterPage2State extends State<RegisterPage2> {
         const SizedBox(
           height: 12,
         ),
-        const Text(
-          "บัตรประชาชน",
-          style: TextStyle(
-              fontFamily: 'Athiti', fontSize: 20, fontWeight: FontWeight.bold),
-        ),
+        const Heading20px(text: 'บัตรประชาชน'),
         const SizedBox(
           height: 12,
         ),
         Center(
           child: idCard != null
-              ? Image.file(idCard!)
+              ? Stack(
+                  alignment: AlignmentDirectional.topEnd,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Image.file(
+                        idCard!,
+                        height: 250,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 50,
+                      child: RawMaterialButton(
+                        onPressed: () {
+                          pickImage().then((value) {
+                            setState(() {
+                              idCard = value;
+                            });
+                          });
+                        },
+                        elevation: 2.0,
+                        fillColor: primaryColor,
+                        padding: const EdgeInsets.all(15),
+                        shape: const CircleBorder(),
+                        child: const Icon(
+                          color: Colors.white,
+                          Icons.edit,
+                          size: 25,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
               : SizedBox(
                   height: 200,
                   width: double.infinity,
@@ -509,10 +662,21 @@ class _RegisterPage2State extends State<RegisterPage2> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "${index + 1}.ประสบการณ์ที่ผ่านมา",
-          style: const TextStyle(
-              fontFamily: 'Athiti', fontSize: 20, fontWeight: FontWeight.bold),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Heading20px(text: '${index + 1}.ประสบการณ์ที่ผ่านมา'),
+            (index > 0)
+                ? IconButton(
+                    onPressed: () =>
+                        setState(() => experiences.removeAt(index)),
+                    icon: const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                  )
+                : const SizedBox(),
+          ],
         ),
         const SizedBox(
           height: 12,
@@ -526,31 +690,59 @@ class _RegisterPage2State extends State<RegisterPage2> {
             hintText: "วุฒิการศึกษา/เคยเป็นวิทยากรที่ไหน/เข้าร่วมกิจกรรม",
             hintStyle: TextStyle(fontFamily: 'Athiti', fontSize: 14),
           ),
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'กรุณากรอกข้อมูล';
+            }
+            return null;
+          },
         ),
         const SizedBox(
           height: 12,
         ),
-        const Text(
-          "หลักฐาน",
-          style: TextStyle(
-              fontFamily: 'Athiti', fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const Text(
-          "-ใบประกาศณียบัตร",
-          style: TextStyle(
-              fontFamily: 'Athiti', fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const Text(
-          "-ภาพกิจกรรมที่ท่านได้เข้าร่วม",
-          style: TextStyle(
-              fontFamily: 'Athiti', fontSize: 20, fontWeight: FontWeight.bold),
-        ),
+        const Heading20px(text: 'หลักฐาน'),
+        const Heading20px(text: '- ใบประกาศณียบัตร'),
+        const Heading20px(text: '- ภาพกิจกรรมที่ท่านได้เข้าร่วม'),
         const SizedBox(
           height: 12,
         ),
         Center(
           child: experienceImages[index] != null
-              ? Image.file(experienceImages[index]!)
+              ? Stack(
+                  alignment: AlignmentDirectional.topEnd,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Image.file(
+                        experienceImages[index]!,
+                        height: 250,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 50,
+                      child: RawMaterialButton(
+                        onPressed: () {
+                          pickImage().then((value) {
+                            setState(() {
+                              experienceImages[index] = value;
+                            });
+                          });
+                        },
+                        elevation: 2.0,
+                        fillColor: primaryColor,
+                        padding: const EdgeInsets.all(15),
+                        shape: const CircleBorder(),
+                        child: const Icon(
+                          color: Colors.white,
+                          Icons.edit,
+                          size: 25,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
               : SizedBox(
                   height: 200,
                   width: double.infinity,
