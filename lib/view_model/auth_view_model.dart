@@ -77,8 +77,10 @@ class AuthViewModel {
     const uuid = Uuid();
     Reference ref =
         FirebaseStorage.instance.ref().child("/Images/${uuid.v4()}");
-    await ref.putFile(File(image!.path));
-    user.picture = await ref.getDownloadURL();
+    if (image != null) {
+      await ref.putFile(File(image.path));
+      user.picture = await ref.getDownloadURL();
+    }
     final res = await _authRepository.registerStudent(user);
     if (res.statusCode == 201) {
       final data = json.decode(res.body);
@@ -101,14 +103,16 @@ class AuthViewModel {
       File? teacherLicense,
       File? transcript,
       File? idCard,
-      File? userPicture,
+      String userPicture,
       List<File?> experienceImages,
       List<Experience> experiences) async {
     const uuid = Uuid();
     Reference ref =
         FirebaseStorage.instance.ref().child("/Images/${uuid.v4()}");
-    await ref.putFile(File(userPicture!.path));
-    user.picture = await ref.getDownloadURL();
+    if (userPicture != '') {
+      await ref.putFile(File(userPicture));
+      user.picture = await ref.getDownloadURL();
+    }
     await ref.putFile(File(teacherLicense!.path));
     final teacherLicenseURL = await ref.getDownloadURL();
     await ref.putFile(File(transcript!.path));
@@ -154,14 +158,16 @@ class AuthViewModel {
       User user,
       File? psychologicalTest,
       File? idCard,
-      File? userPicture,
+      String userPicture,
       List<File?> experienceImages,
       List<Experience> experiences) async {
     const uuid = Uuid();
     Reference ref =
         FirebaseStorage.instance.ref().child("/Images/${uuid.v4()}");
-    await ref.putFile(File(userPicture!.path));
-    user.picture = await ref.getDownloadURL();
+    if (userPicture != '') {
+      await ref.putFile(File(userPicture));
+      user.picture = await ref.getDownloadURL();
+    }
     await ref.putFile(File(psychologicalTest!.path));
     final psychologicalURL = await ref.getDownloadURL();
     await ref.putFile(File(idCard!.path));

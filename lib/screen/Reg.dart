@@ -1,14 +1,17 @@
 import 'dart:io';
 import 'package:coursez/model/user.dart';
-import 'package:coursez/screen/Register2.dart';
+import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/auth_view_model.dart';
+import 'package:coursez/widgets/appbar/app_bar.dart';
+import 'package:coursez/widgets/button/button.dart';
+import 'package:coursez/widgets/button/radiobutton.dart';
+import 'package:coursez/widgets/text/heading2_20px.dart';
+import 'package:coursez/widgets/text/title16px.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-
-enum ProductTypeEnum { Donwloadable, Deliverable }
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -26,8 +29,13 @@ class _RegisterPageState extends State<RegisterPage> {
       role: '',
       picture: '',
       point: 0);
-  ProductTypeEnum? _productTypeEnum;
   File? image;
+  Color radioColor = greyColor;
+  Color bgRadioColor = whiteColor;
+  Color radioTextColor = blackColor;
+  bool isTutor = false;
+  bool isStudent = false;
+
   Future pickImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -48,16 +56,10 @@ class _RegisterPageState extends State<RegisterPage> {
   onSubmit() async {
     if (formkey.currentState!.validate()) {
       formkey.currentState!.save();
-      if (image == null) {
-        Get.snackbar("กรุณาเลือกรูปภาพ", "กรุณาเลือกรูปภาพ",
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white);
-        return;
-      }
       user.role == "Tutor"
           ? Get.toNamed('/register2',
-              arguments: user, parameters: {'image': image!.path})
+              arguments: user,
+              parameters: {'image': image != null ? image!.path : ''})
           : authViewModel.registerStudent(user, image);
     }
   }
@@ -65,20 +67,29 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: const CustomAppBar(
+          title: 'ลงทะเบียน',
+        ),
         body: Padding(
-            padding: const EdgeInsets.fromLTRB(22, 22, 22, 22),
+            padding: const EdgeInsets.fromLTRB(22, 0, 22, 22),
             child: Form(
               key: formkey,
               child: SingleChildScrollView(
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "โปรดกรอกข้อมูลให้ครบถ้วน",
-                        style: TextStyle(
-                            fontFamily: 'Athiti',
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold),
+                      Center(
+                        child: Column(
+                          children: const [
+                            Padding(
+                              padding: EdgeInsets.only(top: 10),
+                              child: Title16px(
+                                text: 'โปรดกรอกข้อมูลให้ครบถ้วน',
+                                color: greyColor,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                       const SizedBox(
                         height: 12,
@@ -88,31 +99,36 @@ class _RegisterPageState extends State<RegisterPage> {
                               ? Stack(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.all(20.0),
+                                      padding: const EdgeInsets.all(15.0),
                                       child: ClipOval(
                                           child: Image.file(
                                         image!,
-                                        height: 150,
-                                        width: 150,
+                                        height: MediaQuery.of(Get.context!)
+                                                .size
+                                                .height *
+                                            0.12,
+                                        width: MediaQuery.of(Get.context!)
+                                                .size
+                                                .height *
+                                            0.12,
                                         fit: BoxFit.cover,
                                       )),
                                     ),
                                     Positioned(
-                                      bottom: 120,
-                                      left: 110,
+                                      bottom: 0,
+                                      right: 0,
                                       child: RawMaterialButton(
                                         onPressed: () {
                                           pickImage();
                                         },
                                         elevation: 2.0,
-                                        fillColor: const Color.fromRGBO(
-                                            0, 216, 133, 1),
+                                        fillColor: primaryColor,
                                         padding: const EdgeInsets.all(15.0),
                                         shape: const CircleBorder(),
                                         child: const Icon(
                                           color: Colors.white,
                                           Icons.edit,
-                                          size: 35.0,
+                                          size: 15,
                                         ),
                                       ),
                                     )
@@ -123,25 +139,19 @@ class _RegisterPageState extends State<RegisterPage> {
                                     pickImage();
                                   },
                                   child: Container(
-                                    height: 200,
+                                    height: 100,
                                     decoration: const BoxDecoration(
-                                        color: Colors.grey,
+                                        color: greyColor,
                                         shape: BoxShape.circle),
                                     child: const Center(
                                       child: Icon(
                                         Icons.add_a_photo_outlined,
-                                        size: 100,
+                                        size: 50,
                                       ),
                                     ),
                                   ),
                                 )),
-                      const Text(
-                        "ชื่อจริง-นามสกุล",
-                        style: TextStyle(
-                            fontFamily: 'Athiti',
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
+                      const Heading20px(text: 'ชื่อจริง - นามสกุล'),
                       const SizedBox(
                         height: 10,
                       ),
@@ -155,8 +165,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20))),
                             hintText: "ชื่อจริง-นามสกุล",
-                            hintStyle:
-                                TextStyle(fontFamily: 'Athiti', fontSize: 20),
+                            hintStyle: TextStyle(
+                              fontFamily: 'Athiti',
+                              fontSize: 16,
+                            ),
                           ),
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: MultiValidator([
@@ -167,13 +179,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(
                         height: 12,
                       ),
-                      const Text(
-                        "ชื่อเล่น",
-                        style: TextStyle(
-                            fontFamily: 'Athiti',
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
+                      const Heading20px(text: 'ชื่อเล่น'),
                       const SizedBox(
                         height: 10,
                       ),
@@ -187,8 +193,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20))),
                             hintText: "ชื่อเล่น",
-                            hintStyle:
-                                TextStyle(fontFamily: 'Athiti', fontSize: 20),
+                            hintStyle: TextStyle(
+                              fontFamily: 'Athiti',
+                              fontSize: 16,
+                            ),
                           ),
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: MultiValidator([
@@ -200,13 +208,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(
                         height: 12,
                       ),
-                      const Text(
-                        "อีเมล",
-                        style: TextStyle(
-                            fontFamily: 'Athiti',
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
+                      const Heading20px(text: 'อีเมล'),
                       const SizedBox(
                         height: 10,
                       ),
@@ -221,8 +223,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20))),
                             hintText: "P@example.com",
-                            hintStyle:
-                                TextStyle(fontFamily: 'Athiti', fontSize: 20),
+                            hintStyle: TextStyle(
+                              fontFamily: 'Athiti',
+                              fontSize: 16,
+                            ),
                           ),
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: MultiValidator([
@@ -235,13 +239,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(
                         height: 12,
                       ),
-                      const Text(
-                        "รหัสผ่าน",
-                        style: TextStyle(
-                            fontFamily: 'Athiti',
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
+                      const Heading20px(text: 'รหัสผ่าน'),
                       const SizedBox(
                         height: 10,
                       ),
@@ -256,8 +254,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(20))),
                               hintText: "รหัสผ่าน",
-                              hintStyle:
-                                  TextStyle(fontFamily: 'Athiti', fontSize: 20),
+                              hintStyle: TextStyle(
+                                fontFamily: 'Athiti',
+                                fontSize: 16,
+                              ),
                             ),
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
@@ -265,7 +265,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               if (value!.isEmpty) {
                                 return "โปรดกรอกรหัสผ่านของคุณ";
                               } else if (value.length < 6) {
-                                return "รหัสผ่านควรยาวกว่า 6 ตัว";
+                                return "รหัสผ่านค้องมีความยาว 6 ตัวขึ้นไป";
                               }
                               return null;
                             })),
@@ -273,93 +273,84 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(
                         height: 12,
                       ),
-                      const Text(
-                        "ท่านคือใคร",
-                        style: TextStyle(
-                            fontFamily: 'Athiti',
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
+                      const Heading20px(text: 'ท่านคือใคร'),
                       const SizedBox(
                         height: 10,
                       ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile<ProductTypeEnum>(
-                                contentPadding: const EdgeInsets.all(0.0),
-                                value: ProductTypeEnum.Deliverable,
-                                groupValue: _productTypeEnum,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30)),
-                                activeColor:
-                                    const Color.fromRGBO(0, 216, 133, 1),
-                                title: const Text("นักเรียน"),
-                                onChanged: (val) {
-                                  setState(() {
-                                    _productTypeEnum = val;
-                                    user.role = "Student";
-                                  });
-                                }),
-                          ),
-                          Expanded(
-                            child: RadioListTile<ProductTypeEnum>(
-                                contentPadding: const EdgeInsets.all(0.0),
-                                value: ProductTypeEnum.Donwloadable,
-                                groupValue: _productTypeEnum,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30)),
-                                activeColor:
-                                    const Color.fromRGBO(0, 216, 133, 1),
-                                title: const Text("ติวเตอร์"),
-                                onChanged: (val) {
-                                  setState(() {
-                                    _productTypeEnum = val;
-                                    user.role = "Tutor";
-                                  });
-                                }),
-                          ),
-                        ],
-                      ),
-
-                      /*ElevatedButton.icon(
-                        style: const ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll<Color>(
-                                Color.fromARGB(255, 218, 217, 217))),
-                        icon: const Icon(
-                          Icons.add_photo_alternate_outlined,
-                          color: Colors.black,
-                        ),
-                        onPressed: () {
-                          pickImage();
-                        },
-                        label: const Text(
-                          "แนบรูปภาพ",
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),*/
+                      LayoutBuilder(builder: (context, constraints) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: SizedBox(
+                                width: constraints.maxWidth / 2 - 10,
+                                height: 45,
+                                child: RadioBt(
+                                  text: 'นักเรียน',
+                                  onPressed: () {
+                                    setState(() {
+                                      isStudent = true;
+                                      isTutor = false;
+                                      user.role = "Student";
+                                    });
+                                  },
+                                  backgroundColor:
+                                      isStudent ? primaryColor : whiteColor,
+                                  borderColor:
+                                      isStudent ? primaryColor : greyColor,
+                                  fontcolor:
+                                      isStudent ? whiteColor : blackColor,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: SizedBox(
+                                width: constraints.maxWidth / 2 - 10,
+                                height: 45,
+                                child: RadioBt(
+                                  text: 'ติวเตอร์',
+                                  onPressed: () {
+                                    setState(() {
+                                      isStudent = false;
+                                      isTutor = true;
+                                      user.role = "Tutor";
+                                    });
+                                  },
+                                  backgroundColor:
+                                      isTutor ? primaryColor : whiteColor,
+                                  borderColor:
+                                      isTutor ? primaryColor : greyColor,
+                                  fontcolor: isTutor ? whiteColor : blackColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
                       const SizedBox(
-                        height: 12,
+                        height: 24,
+                      ),
+                      Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: greyColor),
+                          ),
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          height: 1,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 24,
                       ),
                       SizedBox(
-                        height: 40,
+                        height: 50,
                         width: double.infinity,
-                        child: ElevatedButton(
-                            style: const ButtonStyle(
-                                backgroundColor:
-                                    MaterialStatePropertyAll<Color>(
-                                        Color.fromRGBO(0, 216, 133, 1))),
-                            onPressed: onSubmit,
-                            child: const Text(
-                              "ลงทะเบียน",
-                              style: TextStyle(
-                                  fontFamily: 'Athiti',
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
-                            )),
+                        child: Bt(
+                            text: 'ลงทะเบียน',
+                            color: primaryColor,
+                            onPressed: onSubmit),
                       )
                     ]),
               ),
