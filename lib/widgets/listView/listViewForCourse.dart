@@ -11,8 +11,8 @@ import 'package:coursez/model/course.dart';
 import 'package:get/get.dart';
 
 class ListViewCourse extends StatelessWidget {
-  const ListViewCourse({super.key, required this.rating, required this.level});
-  final double rating;
+  const ListViewCourse({super.key, required this.level});
+
   final int level;
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class ListViewCourse extends StatelessWidget {
                             width: 20,
                           ),
                       itemBuilder: (context, index) =>
-                          buildCard(snapshot.data[index], rating)),
+                          buildCard(snapshot.data[index])),
             ),
           );
         } else {
@@ -60,7 +60,7 @@ class ListViewCourse extends StatelessWidget {
   }
 }
 
-Widget buildCard(Course item, double rating) {
+Widget buildCard(Course item) {
   final CourseViewModel courseViewModel = CourseViewModel();
   return LayoutBuilder(
       builder: (BuildContext context, Constraints constraints) {
@@ -109,7 +109,7 @@ Widget buildCard(Course item, double rating) {
                     Body10px(
                       text: item.description,
                     ),
-                    ratingStar(rating: rating)
+                    ratingStar(rating: item.rating!),
                   ],
                 ),
               ),

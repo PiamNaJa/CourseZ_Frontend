@@ -24,7 +24,7 @@ class Routes {
     GetPage(name: '/expand', page: () => const ExpandPage()),
     GetPage(name: '/post', page: () => const PostPage()),
     GetPage(name: '/coursesubject', page: () => CourseSubject()),
-    GetPage(name: '/coursedetail', page: () => CoursePage())
+    GetPage(name: '/coursedetail', page: () => const CoursePage())
   ];
   static List<GetPage> get getRoutes => _getRoutes;
 }

@@ -33,26 +33,27 @@ class _MyHomePageState extends State<MyHomePage> {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              flexibleSpace: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: <Color>[
-                      primaryDarkColor,
-                      secondaryColor,
-                    ],
+                flexibleSpace: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: <Color>[
+                        primaryDarkColor,
+                        secondaryColor,
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              collapsedHeight: 60,
-              expandedHeight: 60,
-              floating: false,
-              centerTitle: true,
-              title: (_authController.isLogin)
-                  ? Heading24px(text: 'สวัสดีคุณ ${_authController.userid}')
-                  : const Heading24px(text: 'ยินดีต้อนรับสู่ CourseZ'),
-            ),
+                collapsedHeight: 60,
+                expandedHeight: 60,
+                floating: false,
+                centerTitle: true,
+                title: Obx(
+                  () => (_authController.isLogin)
+                      ? Heading24px(text: 'สวัสดีคุณ ${_authController.userid}')
+                      : const Heading24px(text: 'ยินดีต้อนรับสู่ CourseZ'),
+                )),
           ];
         },
         body: SingleChildScrollView(
@@ -121,8 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       const SizedBox(
                         height: 12,
                       ),
-                      Obx(() => ListViewCourse(
-                          rating: 4.5, level: levelController.level)),
+                      Obx(() => ListViewCourse(level: levelController.level)),
                     ],
                   ),
                 ),
