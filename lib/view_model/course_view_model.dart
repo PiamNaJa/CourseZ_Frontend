@@ -1,3 +1,4 @@
+import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/model/course.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/model/video.dart';
@@ -5,6 +6,7 @@ import 'package:coursez/repository/payment.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/utils/fetchData.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CourseViewModel {
   Future<List<Course>> loadCourse(int level) async {
@@ -86,21 +88,25 @@ class CourseViewModel {
     return course;
   }
 
-  int allVideoPriceInCourse(Course course) {
+  List allVideoPriceInCourse(Course course) {
     num price = 0;
+    List<int> videosId = [];
     for (var element in course.videos) {
+      if (element.price == 0) continue;
       price += element.price;
+      videosId.add(element.videoId);
     }
-    return price.toInt();
+    return [price.toInt(), videosId];
   }
 
   Future<void> buyAllVideoInCourse(Course course) async {
     try {
-      int amount = allVideoPriceInCourse(course);
+      var videos = allVideoPriceInCourse(course);
       final paymentIntent =
-          await PaymentApi.createPaymentIntent((amount * 100).toString());
+          await PaymentApi.createPaymentIntent((videos.first * 100).toString());
       await PaymentApi.makePayment(paymentIntent['client_secret']);
       await PaymentApi.showPayment(paymentIntent['client_secret']);
+      await PaymentApi.savePayment(videos.last);
       Get.snackbar('สำเร็จ', 'ชำระเงินสำเร็จ',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: primaryColor,
@@ -123,5 +129,13 @@ class CourseViewModel {
     } on Exception catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  Future<void> getPaidVideo() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final List<int> c =
+        await fecthData('payment/paid/videos', authorization: token!);
+    debugPrint(c.length.toString());
   }
 }

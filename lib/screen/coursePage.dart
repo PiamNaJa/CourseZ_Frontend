@@ -229,7 +229,8 @@ class _CoursePageState extends State<CoursePage> {
                                       .buyAllVideoInCourse(courseData)
                                       .then((value) {
                                     setState(() {
-                                      data = Get.arguments;
+                                      data = courseViewModel
+                                          .loadCourseById(courseData.courseId);
                                     });
                                   });
                                 }
