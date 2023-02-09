@@ -43,11 +43,12 @@ class PaymentApi {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
+      final Map<String, dynamic> body = {
+        'video_id': videosId,
+      };
       const url = 'http://10.0.2.2:5000/api/payment/videos';
-      await http.post(Uri.parse(url), body: {
-        'videosId': json.encode(videosId),
-      }, headers: {
-        "Authorization": "Bearer $token",
+      await http.post(Uri.parse(url), body: json.encode(body), headers: {
+        "Authorization": "$token",
         "Content-Type": "application/json"
       });
     } on SocketException {

@@ -1,5 +1,6 @@
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/utils/color.dart';
+import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/widgets/alert/alert.dart';
 import 'package:coursez/widgets/text/body12px.dart';
 import 'package:coursez/widgets/text/title12px.dart';
@@ -8,11 +9,16 @@ import 'package:get/get.dart';
 
 class VideoCard extends StatelessWidget {
   final String image;
+  final int videoId;
   final String name;
   final double width;
   final double height;
   final int price;
   final VoidCallback onTap;
+  final VoidCallback onBuy;
+  final bool isPaid;
+  final AuthController authController = Get.find<AuthController>();
+  final CourseViewModel courseViewModel = CourseViewModel();
   VideoCard(
       {super.key,
       required this.image,
@@ -20,8 +26,8 @@ class VideoCard extends StatelessWidget {
       required this.width,
       required this.height,
       required this.price,
-      required this.onTap});
-  AuthController authController = Get.find<AuthController>();
+      required this.onTap,
+      required this.isPaid, required this.videoId, required this.onBuy});
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +48,11 @@ class VideoCard extends StatelessWidget {
                   height: 70,
                   fit: BoxFit.cover,
                 )),
-                (price > 0)
+                (price > 0 && !isPaid)
                     ? Positioned(
                         child: ClipOval(
                         child: InkWell(
-                          onTap: () {
+                          onTap: () async {
                             if (!authController.isLogin) {
                               showDialog(
                                   context: context,
@@ -56,6 +62,8 @@ class VideoCard extends StatelessWidget {
                                       action: 'เข้าสู่ระบบ',
                                     );
                                   });
+                            } else {
+                              onBuy();
                             }
                           },
                           child: Container(

@@ -88,20 +88,32 @@ class CourseViewModel {
     return course;
   }
 
-  List allVideoPriceInCourse(Course course) {
+  Future<List> allVideoPriceInCourse(Course course) async {
     num price = 0;
     List<int> videosId = [];
+    final AuthController authController = Get.find<AuthController>();
     for (var element in course.videos) {
       if (element.price == 0) continue;
       price += element.price;
       videosId.add(element.videoId);
     }
+    if (authController.isLogin) {
+      final value = await getPaidVideo();
+      for (var id in value) {
+        if (videosId.contains(id)) {
+          price -=
+              course.videos.firstWhere((video) => video.videoId == id).price;
+          videosId.remove(id);
+        }
+      }
+    }
+    debugPrint(price.toString());
     return [price.toInt(), videosId];
   }
 
   Future<void> buyAllVideoInCourse(Course course) async {
     try {
-      var videos = allVideoPriceInCourse(course);
+      var videos = await allVideoPriceInCourse(course);
       final paymentIntent =
           await PaymentApi.createPaymentIntent((videos.first * 100).toString());
       await PaymentApi.makePayment(paymentIntent['client_secret']);
@@ -116,12 +128,14 @@ class CourseViewModel {
     }
   }
 
-  Future<void> buyVideo(Video video) async {
+  Future<void> buyVideo(int price, int videoId) async {
     try {
+      List<int> videos = List.filled(1, videoId);
       final paymentIntent =
-          await PaymentApi.createPaymentIntent((video.price * 100).toString());
+          await PaymentApi.createPaymentIntent((price * 100).toString());
       await PaymentApi.makePayment(paymentIntent['client_secret']);
       await PaymentApi.showPayment(paymentIntent['client_secret']);
+      await PaymentApi.savePayment(videos);
       Get.snackbar('สำเร็จ', 'ชำระเงินสำเร็จ',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: primaryColor,
@@ -131,11 +145,11 @@ class CourseViewModel {
     }
   }
 
-  Future<void> getPaidVideo() async {
+  Future<List<dynamic>> getPaidVideo() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    final List<int> c =
+    final List<dynamic> c =
         await fecthData('payment/paid/videos', authorization: token!);
-    debugPrint(c.length.toString());
+    return c;
   }
 }

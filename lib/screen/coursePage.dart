@@ -27,11 +27,20 @@ class _CoursePageState extends State<CoursePage> {
   late Future<Course> data;
   final AuthController authController = Get.find();
   final CourseViewModel courseViewModel = CourseViewModel();
+  List paidVideo = [];
+  int sumVideoPrice = 0;
+  bool isCalPrice = false;
 
   @override
   void initState() {
     // TODO: implement initState
     data = courseViewModel.loadCourseById(int.parse(courseId));
+    if (authController.isLogin) {
+      courseViewModel.getPaidVideo().then((value) => setState(
+            () => paidVideo.addAll(value),
+          ));
+    }
+
     super.initState();
   }
 
@@ -46,11 +55,12 @@ class _CoursePageState extends State<CoursePage> {
                 child: FutureBuilder(
                   future: data,
                   builder: ((context, snapshot) {
-                    return (snapshot.hasData)
-                        ? SizedBox(
-                            child: detail(snapshot.data!),
-                          )
-                        : const Center(child: CircularProgressIndicator());
+                    if (snapshot.hasData) {
+                      return SizedBox(
+                        child: detail(snapshot.data!),
+                      );
+                    }
+                    return const Center(child: CircularProgressIndicator());
                   }),
                 ))));
   }
@@ -59,7 +69,15 @@ class _CoursePageState extends State<CoursePage> {
     final Size size = MediaQuery.of(Get.context!).size;
     const double padding = 15;
     const sidePadding = EdgeInsets.symmetric(horizontal: padding);
-    final sumVideoPrice = courseViewModel.allVideoPriceInCourse(courseData);
+    if (!isCalPrice) {
+      courseViewModel
+          .allVideoPriceInCourse(courseData)
+          .then((value) => setState(
+                () => sumVideoPrice = value.first,
+              ));
+      isCalPrice = true;
+    }
+
     return Stack(
       children: [
         SingleChildScrollView(
@@ -208,36 +226,39 @@ class _CoursePageState extends State<CoursePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Heading20px(text: "บทเรียน"),
-                        Row(
-                          children: [
-                            Bt(
-                              text: "ซื้อทั้งหมด $sumVideoPrice บาท",
-                              color: primaryColor,
-                              onPressed: () {
-                                if (!authController.isLogin) {
-                                  showDialog(
-                                      context: Get.context!,
-                                      builder: (BuildContext context) {
-                                        return const AlertLogin(
-                                          body:
-                                              'กรุณาเข้าสู่ระบบเพื่อซื้อวีดิโอ',
-                                          action: 'เข้าสู่ระบบ',
-                                        );
-                                      });
-                                } else {
-                                  courseViewModel
-                                      .buyAllVideoInCourse(courseData)
-                                      .then((value) {
-                                    setState(() {
-                                      data = courseViewModel
-                                          .loadCourseById(courseData.courseId);
+                        if (sumVideoPrice != 0)
+                          Bt(
+                            text: "ซื้อทั้งหมด $sumVideoPrice บาท",
+                            color: primaryColor,
+                            onPressed: () {
+                              if (!authController.isLogin) {
+                                showDialog(
+                                    context: Get.context!,
+                                    builder: (BuildContext context) {
+                                      return const AlertLogin(
+                                        body: 'กรุณาเข้าสู่ระบบเพื่อซื้อวีดิโอ',
+                                        action: 'เข้าสู่ระบบ',
+                                      );
                                     });
+                              } else {
+                                courseViewModel
+                                    .buyAllVideoInCourse(courseData)
+                                    .then((value) {
+                                  setState(() {
+                                    courseViewModel
+                                        .allVideoPriceInCourse(courseData)
+                                        .then((value) =>
+                                            sumVideoPrice = value.first);
                                   });
-                                }
-                              },
-                            ),
-                          ],
-                        )
+                                  courseViewModel
+                                      .getPaidVideo()
+                                      .then((value) => setState(
+                                            () => paidVideo.addAll(value),
+                                          ));
+                                });
+                              }
+                            },
+                          )
                       ],
                     ),
                     const SizedBox(
@@ -252,14 +273,31 @@ class _CoursePageState extends State<CoursePage> {
                               courseData.videos.length,
                               ((index) {
                                 return VideoCard(
+                                  videoId: courseData.videos[index].videoId,
                                   image: courseData.videos[index].picture,
                                   name: courseData.videos[index].videoName,
                                   width: constraints.maxWidth * 0.3,
                                   height: constraints.maxWidth * 0.3 + 1,
                                   price: courseData.videos[index].price,
+                                  isPaid: paidVideo.contains(
+                                      courseData.videos[index].videoId),
                                   onTap: () {
                                     debugPrint(courseData.videos[index].videoId
                                         .toString());
+                                  },
+                                  onBuy: () async {
+                                    await courseViewModel.buyVideo(
+                                        courseData.videos[index].price,
+                                        courseData.videos[index].videoId);
+                                    final price = await courseViewModel
+                                        .allVideoPriceInCourse(courseData);
+                                    final video =
+                                        await courseViewModel.getPaidVideo();
+
+                                    setState(() {
+                                      sumVideoPrice = price.first;
+                                      paidVideo = video;
+                                    });
                                   },
                                 );
                               }),
