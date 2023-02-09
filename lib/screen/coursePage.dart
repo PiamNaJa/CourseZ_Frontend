@@ -124,25 +124,14 @@ class _CoursePageState extends State<CoursePage> {
               const SizedBox(
                 height: padding,
               ),
-              ExpandablePanel(
-                theme: const ExpandableThemeData(
-                  iconColor: primaryColor,
-                  useInkWell: true,
-                  tapBodyToExpand: true,
-                  tapBodyToCollapse: true,
-                  hasIcon: true,
-                  iconSize: 30,
-                ),
-                header: Padding(
-                    padding: sidePadding,
-                    child: Heading24px(
-                      text: courseData.coursename,
-                    )),
-                collapsed: Padding(
+              Padding(
                   padding: sidePadding,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Heading24px(
+                        text: courseData.coursename,
+                      ),
                       Row(
                         children: [
                           Padding(
@@ -159,9 +148,29 @@ class _CoursePageState extends State<CoursePage> {
                       const SizedBox(
                         height: padding,
                       ),
-                      const Title14px(
-                        text: 'รายละเอียด',
-                      ),
+                    ],
+                  )),
+              ExpandablePanel(
+                theme: const ExpandableThemeData(
+                  iconColor: primaryColor,
+                  useInkWell: true,
+                  tapBodyToExpand: false,
+                  tapBodyToCollapse: true,
+                  hasIcon: true,
+                  iconSize: 20,
+                  headerAlignment: ExpandablePanelHeaderAlignment.center,
+                ),
+                header: const Padding(
+                  padding: sidePadding,
+                  child: Title14px(
+                    text: 'รายละเอียด',
+                  ),
+                ),
+                collapsed: Padding(
+                  padding: sidePadding,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
                         courseData.description,
                         style: const TextStyle(
@@ -170,49 +179,20 @@ class _CoursePageState extends State<CoursePage> {
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        softWrap: true,
                       ),
                     ],
                   ),
                 ),
                 expanded: Padding(
-                    padding: sidePadding,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 5),
-                              child: ratingStar(rating: courseData.rating!),
-                            ),
-                            Title14px(text: courseData.rating.toString()),
-                          ],
-                        ),
-                        const Title14px(
-                          text: 'ชื่อครู',
-                          color: greyColor,
-                        ),
-                        const SizedBox(
-                          height: padding,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Title14px(
-                              text: 'รายละเอียด',
-                            ),
-                            Text(
-                              courseData.description,
-                              style: const TextStyle(
-                                fontFamily: 'Athiti',
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    )),
+                  padding: sidePadding,
+                  child: Text(
+                    courseData.description,
+                    style: const TextStyle(
+                      fontFamily: 'Athiti',
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(
                 height: padding,
