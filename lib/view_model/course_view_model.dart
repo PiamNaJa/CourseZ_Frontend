@@ -1,7 +1,10 @@
 import 'package:coursez/model/course.dart';
-import 'package:coursez/model/reviewVideo.dart';
+import 'package:flutter/material.dart';
+import 'package:coursez/model/video.dart';
+import 'package:coursez/repository/payment.dart';
+import 'package:coursez/utils/color.dart';
 import 'package:coursez/utils/fetchData.dart';
-import 'package:coursez/model/reviewVideo.dart';
+import 'package:get/get.dart';
 
 class CourseViewModel {
   Future<List<Course>> loadCourse(int level) async {
@@ -89,5 +92,36 @@ class CourseViewModel {
       price += element.price;
     }
     return price.toInt();
+  }
+
+  Future<void> buyAllVideoInCourse(Course course) async {
+    try {
+      int amount = allVideoPriceInCourse(course);
+      final paymentIntent =
+          await PaymentApi.createPaymentIntent((amount * 100).toString());
+      await PaymentApi.makePayment(paymentIntent['client_secret']);
+      await PaymentApi.showPayment(paymentIntent['client_secret']);
+      Get.snackbar('สำเร็จ', 'ชำระเงินสำเร็จ',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: primaryColor,
+          colorText: whiteColor);
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<void> buyVideo(Video video) async {
+    try {
+      final paymentIntent =
+          await PaymentApi.createPaymentIntent((video.price * 100).toString());
+      await PaymentApi.makePayment(paymentIntent['client_secret']);
+      await PaymentApi.showPayment(paymentIntent['client_secret']);
+      Get.snackbar('สำเร็จ', 'ชำระเงินสำเร็จ',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: primaryColor,
+          colorText: whiteColor);
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }

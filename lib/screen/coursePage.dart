@@ -1,4 +1,5 @@
 import 'package:coursez/controllers/auth_controller.dart';
+import 'package:coursez/model/course.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/widgets/Icon/border_icon.dart';
@@ -22,13 +23,15 @@ class CoursePage extends StatefulWidget {
 
 class _CoursePageState extends State<CoursePage> {
   final Icon fav = const Icon(Icons.favorite_border);
-  final data = Get.arguments;
+  final String courseId = Get.parameters['course_id']!;
+  late Future<Course> data;
   final AuthController authController = Get.find();
   final CourseViewModel courseViewModel = CourseViewModel();
 
   @override
   void initState() {
     // TODO: implement initState
+    data = courseViewModel.loadCourseById(int.parse(courseId));
     super.initState();
   }
 
@@ -45,14 +48,14 @@ class _CoursePageState extends State<CoursePage> {
                   builder: ((context, snapshot) {
                     return (snapshot.hasData)
                         ? SizedBox(
-                            child: detail(snapshot.data),
+                            child: detail(snapshot.data!),
                           )
                         : const Center(child: CircularProgressIndicator());
                   }),
                 ))));
   }
 
-  Widget detail(dynamic courseData) {
+  Widget detail(Course courseData) {
     final Size size = MediaQuery.of(Get.context!).size;
     const double padding = 15;
     const sidePadding = EdgeInsets.symmetric(horizontal: padding);
@@ -221,6 +224,14 @@ class _CoursePageState extends State<CoursePage> {
                                           action: 'เข้าสู่ระบบ',
                                         );
                                       });
+                                } else {
+                                  courseViewModel
+                                      .buyAllVideoInCourse(courseData)
+                                      .then((value) {
+                                    setState(() {
+                                      data = Get.arguments;
+                                    });
+                                  });
                                 }
                               },
                             ),

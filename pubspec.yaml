@@ -56,6 +56,7 @@ dependencies:
   dotted_border: ^2.0.0+3
   shared_preferences: ^2.0.17
   expandable: ^5.0.1
+  flutter_stripe: ^8.0.0+1
 
 flutter_icons:
   android: true
