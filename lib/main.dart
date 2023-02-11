@@ -1,4 +1,4 @@
-import 'package:coursez/controllers/auth_controller.dart';
+import 'package:coursez/binding.dart';
 import 'package:coursez/firebase_options.dart';
 import 'package:coursez/utils/routes/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Stripe.publishableKey =
         "pk_test_51MZElyCAl36cmn5LTpHty4ZaOx3zUdc0SipdECjQOt17CT3aNvI3VbiC0Po2TGvu8PuV26l1dUB1cV9bOAQ7kKf8005icXFGkp";
-    Get.put(AuthController());
     return GetMaterialApp(
+      initialBinding: FirstBinding(),
       title: 'CourseZ',
       theme: ThemeData(
         primarySwatch: Colors.green,
