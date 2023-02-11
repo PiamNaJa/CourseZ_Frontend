@@ -30,7 +30,6 @@ class _FirstPageState extends State<FirstPage> {
   @override
   initState() {
     super.initState();
-    Get.put(AuthController());
     authViewModel.checkAuth().then((value) => debugPrint(value.toString()));
   }
 

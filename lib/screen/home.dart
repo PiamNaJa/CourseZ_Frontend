@@ -22,9 +22,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final Color _prefixIconColor = greyColor;
-  CourseViewModel courseViewModel = CourseViewModel();
-  TutorViewModel tutorViewModel = TutorViewModel();
-  LevelController levelController = Get.put(LevelController());
+  final CourseViewModel courseViewModel = CourseViewModel();
+  final TutorViewModel tutorViewModel = TutorViewModel();
+  final LevelController levelController = Get.put(LevelController());
   final AuthController _authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
@@ -33,27 +33,27 @@ class _MyHomePageState extends State<MyHomePage> {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-                flexibleSpace: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: <Color>[
-                        primaryDarkColor,
-                        secondaryColor,
-                      ],
-                    ),
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: <Color>[
+                      primaryDarkColor,
+                      secondaryColor,
+                    ],
                   ),
                 ),
-                collapsedHeight: 60,
-                expandedHeight: 60,
-                floating: false,
-                centerTitle: true,
-                title: Obx(
-                  () => (_authController.isLogin)
-                      ? Heading24px(text: 'สวัสดีคุณ ${_authController.userid}')
-                      : const Heading24px(text: 'ยินดีต้อนรับสู่ CourseZ'),
-                )),
+              ),
+              collapsedHeight: 60,
+              expandedHeight: 60,
+              floating: false,
+              centerTitle: true,
+              title: Obx(() => Heading24px(
+                  text: _authController.isLogin
+                      ? 'สวัสดีคุณ ${_authController.userid}'
+                      : 'ยินดีต้อนรับสู่ CourseZ')),
+            ),
           ];
         },
         body: SingleChildScrollView(

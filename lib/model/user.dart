@@ -1,3 +1,4 @@
+import 'package:coursez/model/video.dart';
 import 'package:flutter/material.dart';
 import 'history.dart';
 import 'userTeacher.dart';

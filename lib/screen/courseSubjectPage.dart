@@ -2,12 +2,8 @@ import 'package:coursez/components/courseList.dart';
 import 'package:coursez/model/course.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/widgets/appbar/app_bar.dart';
-import 'package:coursez/widgets/rating/rating.dart';
-import 'package:coursez/widgets/text/title14px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 
 class CourseSubject extends StatelessWidget {

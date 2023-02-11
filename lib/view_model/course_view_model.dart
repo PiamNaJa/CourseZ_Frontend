@@ -1,7 +1,12 @@
+import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/model/course.dart';
-import 'package:coursez/model/reviewVideo.dart';
+import 'package:flutter/material.dart';
+import 'package:coursez/model/video.dart';
+import 'package:coursez/repository/payment.dart';
+import 'package:coursez/utils/color.dart';
 import 'package:coursez/utils/fetchData.dart';
-import 'package:coursez/model/reviewVideo.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CourseViewModel {
   Future<List<Course>> loadCourse(int level) async {
@@ -83,11 +88,68 @@ class CourseViewModel {
     return course;
   }
 
-  int allVideoPriceInCourse(Course course) {
+  Future<List> allVideoPriceInCourse(Course course) async {
     num price = 0;
+    List<int> videosId = [];
+    final AuthController authController = Get.find<AuthController>();
     for (var element in course.videos) {
+      if (element.price == 0) continue;
       price += element.price;
+      videosId.add(element.videoId);
     }
-    return price.toInt();
+    if (authController.isLogin) {
+      final value = await getPaidVideo();
+      for (var id in value) {
+        if (videosId.contains(id)) {
+          price -=
+              course.videos.firstWhere((video) => video.videoId == id).price;
+          videosId.remove(id);
+        }
+      }
+    }
+    debugPrint(price.toString());
+    return [price.toInt(), videosId];
+  }
+
+  Future<void> buyAllVideoInCourse(Course course) async {
+    try {
+      var videos = await allVideoPriceInCourse(course);
+      final paymentIntent =
+          await PaymentApi.createPaymentIntent((videos.first * 100).toString());
+      await PaymentApi.makePayment(paymentIntent['client_secret']);
+      await PaymentApi.showPayment(paymentIntent['client_secret']);
+      await PaymentApi.savePayment(videos.last);
+      Get.snackbar('สำเร็จ', 'ชำระเงินสำเร็จ',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: primaryColor,
+          colorText: whiteColor);
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<void> buyVideo(int price, int videoId) async {
+    try {
+      List<int> videos = List.filled(1, videoId);
+      final paymentIntent =
+          await PaymentApi.createPaymentIntent((price * 100).toString());
+      await PaymentApi.makePayment(paymentIntent['client_secret']);
+      await PaymentApi.showPayment(paymentIntent['client_secret']);
+      await PaymentApi.savePayment(videos);
+      Get.snackbar('สำเร็จ', 'ชำระเงินสำเร็จ',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: primaryColor,
+          colorText: whiteColor);
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<List<dynamic>> getPaidVideo() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final List<dynamic> c =
+        await fecthData('payment/paid/videos', authorization: token!);
+    return c;
   }
 }
