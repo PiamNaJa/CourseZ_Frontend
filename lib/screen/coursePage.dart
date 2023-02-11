@@ -284,6 +284,8 @@ class _CoursePageState extends State<CoursePage> {
                                   onTap: () {
                                     debugPrint(courseData.videos[index].videoId
                                         .toString());
+                                    Get.toNamed(
+                                        "/course/$courseId/video/${courseData.videos[index].videoId}");
                                   },
                                   onBuy: () async {
                                     await courseViewModel.buyVideo(

@@ -26,8 +26,8 @@ class Routes {
     GetPage(name: '/expand', page: () => const ExpandPage()),
     GetPage(name: '/post', page: () => const PostPage()),
     GetPage(name: '/coursesubject', page: () => CourseSubject()),
-    GetPage(name: '/coursedetail', page: () => const CoursePage()),
-    GetPage(name: '/chat', page: () => const ChatPage())
+    GetPage(name: '/course/:course_id', page: () => const CoursePage()),
+    GetPage(name: '/chat', page: () => const ChatPage()),
   ];
   static List<GetPage> get getRoutes => _getRoutes;
 }
