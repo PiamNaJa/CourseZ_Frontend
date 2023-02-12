@@ -56,6 +56,9 @@ dependencies:
   url_launcher: ^6.1.8
   dotted_border: ^2.0.0+3
   shared_preferences: ^2.0.17
+  flick_video_player: ^0.5.0
+  video_player: ^2.5.1
+  expandable: ^5.0.1
 
 flutter_icons:
   android: true
