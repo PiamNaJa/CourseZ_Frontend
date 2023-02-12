@@ -1,12 +1,18 @@
 import 'package:coursez/model/video.dart';
 import 'package:coursez/widgets/rating/rating.dart';
 import 'package:coursez/widgets/text/body10px.dart';
-import 'package:coursez/widgets/text/body16.dart';
+import 'package:coursez/widgets/text/body12px.dart';
+import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:coursez/widgets/text/title12px.dart';
+import 'package:coursez/widgets/text/title14px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
+import 'package:expandable/expandable.dart';
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/utils/color.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPage extends StatefulWidget {
@@ -18,8 +24,6 @@ class VideoPage extends StatefulWidget {
 
 class _VideoPageState extends State<VideoPage> {
   bool isFocus = false;
-  late VideoPlayerController _controller;
-  late Future<void> _video;
 
   Video video = Video(
       videoId: 1,
@@ -35,22 +39,22 @@ class _VideoPageState extends State<VideoPage> {
           "https://firebasestorage.googleapis.com/v0/b/coursez-50fb3.appspot.com/o/Course%2FCourse_1%2FVideo_1%2F%E0%B8%8A%E0%B8%B5%E0%B8%97%E0%B8%88%E0%B8%B3%E0%B8%99%E0%B8%A7%E0%B8%99%E0%B9%80%E0%B8%95%E0%B9%87%E0%B8%A1%20%E0%B8%A1.1%20(course_1-Video_1).pdf?alt=media&token=20bb4339-a353-4c68-918b-c6a39cc7ba27",
       createdAt: DateTime.now());
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = VideoPlayerController.network(video.url);
-    _video = _controller.initialize().then((value) {
-      setState(() {
-        _controller.play();
-      });
-    });
-    debugPrint(_controller.dataSource);
-  }
+  late FlickManager flickManager = FlickManager(
+    videoPlayerController: VideoPlayerController.network(video.url),
+  );
+
+  late double timeToDoQuiz;
+  final isExpanded = true;
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  void initState() {
+    // TODO: implement initState
+    flickManager.flickVideoManager!.videoPlayerController!.addListener(() {
+      timeToDoQuiz = flickManager.flickVideoManager!.videoPlayerController!
+              .value.duration.inSeconds *
+          0.9;
+    });
+    super.initState();
   }
 
   @override
@@ -73,31 +77,50 @@ class _VideoPageState extends State<VideoPage> {
             SizedBox(
               height: 200,
               width: double.infinity,
-              // decoration: const BoxDecoration(color: blackColor),
-              child: FutureBuilder(
-                  future: _video,
-                  builder: ((context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return AspectRatio(
-                        aspectRatio: _controller.value.aspectRatio,
-                        child: VideoPlayer(_controller),
-                      );
-                    }
-                    return Container(
-                      alignment: Alignment.center,
-                      width: 30,
-                      height: 30,
-                      child: const CircularProgressIndicator(
-                        color: primaryColor,
-                      ),
-                    );
-                  })),
+              child: FlickVideoPlayer(
+                flickManager: flickManager,
+                flickVideoWithControls: const FlickVideoWithControls(
+                  controls: FlickPortraitControls(),
+                ),
+                flickVideoWithControlsFullscreen: const FlickVideoWithControls(
+                  controls: FlickLandscapeControls(),
+                ),
+              ),
             ),
             Container(
-              decoration: const BoxDecoration(color: Colors.grey),
-              child: Container(
-                  padding: const EdgeInsets.all(15),
-                  child: Text(video.description)),
+              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+              decoration: BoxDecoration(
+                color: whiteColor,
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    spreadRadius: 5,
+                    blurRadius: 10,
+                    offset: const Offset(0, 1), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: ExpandablePanel(
+                theme: const ExpandableThemeData(
+                  headerAlignment: ExpandablePanelHeaderAlignment.center,
+                  tapBodyToCollapse: true,
+                  hasIcon: true,
+                  iconColor: primaryColor,
+                ),
+                header: const Title14px(text: 'รายละเอียด'),
+                collapsed: Body12px(text: video.description),
+                expanded: Text(
+                  video.description,
+                  style: const TextStyle(
+                    fontFamily: 'Athiti',
+                    fontSize: 12,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
             ),
             SizedBox(
               height: 70,
@@ -191,7 +214,45 @@ class _VideoPageState extends State<VideoPage> {
                         children: [
                           Title12px(text: video.videoName),
                           TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                if (flickManager
+                                        .flickVideoManager!
+                                        .videoPlayerController!
+                                        .value
+                                        .position
+                                        .inSeconds >=
+                                    timeToDoQuiz) {
+                                  debugPrint('pass');
+                                  // Get.toNamed('exercise', arguments: video);
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Heading24px(
+                                              text: 'แจ้งเตือน'),
+                                          content: const Text(
+                                            'คุณยังไม่ได้เรียนคลิปให้จบ กรุณาเรียนคลิปให้จบก่อนทำแบบทดสอบ',
+                                            style: TextStyle(
+                                              fontFamily: 'Athiti',
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Title12px(
+                                                  text: 'ตกลง',
+                                                  color: primaryColor,
+                                                ))
+                                          ],
+                                        );
+                                      });
+                                }
+                              },
                               child: const Text(
                                 'ทำแบบทดสอบ',
                                 style: TextStyle(
@@ -231,6 +292,9 @@ class _VideoPageState extends State<VideoPage> {
                                     fit: BoxFit.cover,
                                   ),
                                 ),
+                                SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.01),
                                 TextButton(
                                     onPressed: () {},
                                     child: const Text(
@@ -272,20 +336,6 @@ class _VideoPageState extends State<VideoPage> {
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     if (_controller.value.isPlaying) {
-      //       setState(() {
-      //         _controller.pause();
-      //       });
-      //     } else {
-      //       setState(() {
-      //         _controller.play();
-      //       });
-      //     }
-      //   },
-      //   child: const Icon(Icons.play_arrow_rounded),
-      // ),
     );
   }
 }
