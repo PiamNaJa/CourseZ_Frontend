@@ -253,7 +253,7 @@ class _CoursePageState extends State<CoursePage> {
                                   courseViewModel
                                       .getPaidVideo()
                                       .then((value) => setState(
-                                            () => paidVideo.addAll(value),
+                                            () => paidVideo = value,
                                           ));
                                 });
                               }
