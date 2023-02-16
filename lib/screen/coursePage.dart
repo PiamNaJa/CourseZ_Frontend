@@ -26,12 +26,6 @@ class _CoursePageState extends State<CoursePage> {
   final CourseViewModel courseViewModel = CourseViewModel();
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -136,7 +130,7 @@ class _CoursePageState extends State<CoursePage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(right: 5),
-                          child: ratingStar(rating: courseData.rating!),
+                          child: RatingStar(rating: courseData.rating!, size: 20),
                         ),
                         Title14px(text: courseData.rating.toString()),
                       ],
@@ -221,6 +215,9 @@ class _CoursePageState extends State<CoursePage> {
                                   height: constraints.maxWidth * 0.3 + 1,
                                   price: courseData.videos[index].price,
                                   onTap: () {
+                                    
+                                    Get.toNamed(
+                                        '/course/${courseData.courseId}/video/${courseData.videos[index].videoId}', parameters: {"video_name": courseData.videos[index].videoName});
                                     debugPrint(courseData.videos[index].videoId
                                         .toString());
                                   },
@@ -239,108 +236,3 @@ class _CoursePageState extends State<CoursePage> {
     );
   }
 }
-
-
-
-// SafeArea(
-//       child: SingleChildScrollView(
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Container(
-//               color: primaryLighterColor,
-//               child: Padding(
-//                 padding: const EdgeInsets.all(15.0),
-//                 child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       LayoutBuilder(builder: (context, constraints) {
-//                         return Row(
-//                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: [
-//                             Image.network(
-//                               courseData['picture'] as String,
-//                               width: constraints.maxWidth * 0.5,
-//                               fit: BoxFit.fill,
-//                             ),
-//                             IconButton(
-//                               onPressed: () {
-//                                 setState(() {
-//                                   if (fav ==
-//                                       const Icon(Icons.favorite_border)) {
-//                                     fav == const Icon(Icons.favorite_sharp);
-//                                     debugPrint('fav');
-//                                   } else {
-//                                     fav == const Icon(Icons.favorite_border);
-//                                     debugPrint('not fav');
-//                                   }
-//                                 });
-//                               },
-//                               icon: fav,
-//                               iconSize: 35,
-//                             )
-//                           ],
-//                         );
-//                       }),
-//                       Heading30px(text: courseData['course_name']!),
-//                       Row(
-//                         children: [
-//                           Body16px(text: 'โดย ${courseData["course_name"]}'),
-//                           const ratingStar(rating: 5),
-//                         ],
-//                       ),
-//                       Body16px(text: courseData["description"]!),
-//                     ]),
-//               ),
-//             ),
-//             //Line
-//             const SizedBox(
-//               height: 15,
-//             ),
-//             Padding(
-//               padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-//               child: Column(
-//                 children: [
-//                   Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       const Heading30px(text: "บทเรียน"),
-//                       Bt(
-//                         text: "ซื้อทั้งหมด",
-//                         color: primaryColor,
-//                         onPressed: () {},
-//                       )
-//                     ],
-//                   ),
-//                   const SizedBox(
-//                     height: 15,
-//                   ),
-//                   Center(
-//                     child: LayoutBuilder(builder: (context, constraints) {
-//                       return Wrap(
-//                           spacing: constraints.maxWidth * 0.06,
-//                           runSpacing: 12,
-//                           children: List.generate(
-//                             courseData['videos'].length,
-//                             ((index) {
-//                               return VideoCard(
-//                                 image: courseData['videos'][index]['picture'],
-//                                 name: courseData['videos'][index]
-//                                     ['video_name'],
-//                                 width: 100,
-//                                 height: 100,
-//                                 price: courseData['videos'][index]['price'],
-//                                 onPressed: () {},
-//                               );
-//                             }),
-//                           ));
-//                     }),
-//                   )
-//                 ],
-//               ),
-//             )
-//           ],
-//         ),
-//       ),
-//     )

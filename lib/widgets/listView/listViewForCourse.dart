@@ -66,7 +66,8 @@ Widget buildCard(Course item) {
       builder: (BuildContext context, Constraints constraints) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed('/coursedetail', arguments: courseViewModel.loadCourseById(item.courseId));
+        Get.toNamed('/coursedetail',
+            arguments: courseViewModel.loadCourseById(item.courseId));
       },
       child: SingleChildScrollView(
         child: Container(
@@ -109,7 +110,7 @@ Widget buildCard(Course item) {
                     Body10px(
                       text: item.description,
                     ),
-                    ratingStar(rating: item.rating!),
+                    RatingStar(rating: item.rating!, size: 20,),
                   ],
                 ),
               ),

@@ -88,7 +88,7 @@ Widget buildCard(dynamic item) {
                   children: [
                     Title12px(text: '${item['nickname']}'),
                     Body10px(text: '${item['fullname']}'),
-                    ratingStar(rating: item['rating'].toDouble()),
+                    RatingStar(rating: item['rating'].toDouble(), size: 20,),
                   ],
                 ),
               ),

@@ -126,7 +126,7 @@ Widget _tutor(dynamic item) {
                   children: [
                     Heading20px(text: item['fullname']),
                     Title14px(text: item['nickname']),
-                    ratingStar(rating: item['rating'].toDouble())
+                    RatingStar(rating: item['rating'].toDouble(), size: 20,)
                   ],
                 ),
               )),

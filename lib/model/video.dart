@@ -12,9 +12,9 @@ class Video {
   final String description;
   final String url;
   final String sheet;
-  final DateTime createdAt;
-  final List<ReviewVideo>? reviews;
-  final List<Exercise>? exercises;
+  final String createdAt;
+  final List<dynamic> reviews;
+  final List<dynamic> exercises;
 
   Video(
       {required this.videoId,
@@ -26,8 +26,8 @@ class Video {
       required this.url,
       required this.sheet,
       required this.createdAt,
-      this.reviews,
-      this.exercises});
+      this.reviews = const [],
+      this.exercises = const []});
 
   factory Video.fromJson(Map<String, dynamic> json) {
     return Video(
