@@ -6,6 +6,7 @@ import 'package:coursez/screen/courseSubjectPage.dart';
 import 'package:coursez/screen/expandPage.dart';
 import 'package:coursez/screen/firstPage.dart';
 import 'package:coursez/screen/home.dart';
+import 'package:coursez/screen/inboxPage.dart';
 import 'package:coursez/screen/loginPage.dart';
 import 'package:coursez/screen/postPage.dart';
 import 'package:coursez/screen/profilePage.dart';

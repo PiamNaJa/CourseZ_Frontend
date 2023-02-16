@@ -66,6 +66,8 @@ dependencies:
   like_button: ^2.0.5
   jiffy: ^5.0.0
 
+  web_socket_channel: ^2.3.0
+  chat_bubbles: ^1.4.1
 
 flutter_icons:
   android: true
