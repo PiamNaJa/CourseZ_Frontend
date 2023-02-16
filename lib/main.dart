@@ -1,4 +1,5 @@
 import 'package:coursez/controllers/auth_controller.dart';
+import 'package:coursez/controllers/inboxcontroller.dart';
 import 'package:coursez/firebase_options.dart';
 import 'package:coursez/utils/routes/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(AuthController());
+    Get.put(InboxController());
     return GetMaterialApp(
       title: 'CourseZ',
       theme: ThemeData(

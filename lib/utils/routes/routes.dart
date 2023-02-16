@@ -6,6 +6,7 @@ import 'package:coursez/screen/courseSubjectPage.dart';
 import 'package:coursez/screen/expandPage.dart';
 import 'package:coursez/screen/firstPage.dart';
 import 'package:coursez/screen/home.dart';
+import 'package:coursez/screen/inboxPage.dart';
 import 'package:coursez/screen/loginPage.dart';
 import 'package:coursez/screen/postPage.dart';
 import 'package:coursez/screen/profilePage.dart';
@@ -27,7 +28,8 @@ class Routes {
     GetPage(name: '/post', page: () => const PostPage()),
     GetPage(name: '/coursesubject', page: () => CourseSubject()),
     GetPage(name: '/coursedetail', page: () => const CoursePage()),
-    GetPage(name: '/chat', page: () => const ChatPage())
+    GetPage(name: '/chat/:chatroom_id', page: () => const ChatPage()),
+    GetPage(name: '/inbox', page: () => InboxPage()),
   ];
   static List<GetPage> get getRoutes => _getRoutes;
 }

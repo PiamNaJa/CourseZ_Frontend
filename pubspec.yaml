@@ -49,12 +49,13 @@ dependencies:
   get: ^4.6.5
   image_picker: ^0.8.3
   firebase_storage: ^11.0.10
-  firebase_auth: ^4.2.5
   firebase_core: ^2.4.1
   uuid: ^3.0.7
   url_launcher: ^6.1.8
   dotted_border: ^2.0.0+3
   shared_preferences: ^2.0.17
+  web_socket_channel: ^2.3.0
+  chat_bubbles: ^1.4.1
 
 flutter_icons:
   android: true
