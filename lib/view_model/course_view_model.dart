@@ -1,7 +1,7 @@
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/model/course.dart';
+import 'package:coursez/repository/course_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:coursez/model/video.dart';
 import 'package:coursez/repository/payment.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/utils/fetchData.dart';
@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CourseViewModel {
+  final CourseRepository _courseRepository = CourseRepository();
   Future<List<Course>> loadCourse(int level) async {
     final c = await fecthData('course');
     final course = c.map((e) => Course.fromJson(e)).toList();
@@ -151,5 +152,27 @@ class CourseViewModel {
     final List<dynamic> c =
         await fecthData('payment/paid/videos', authorization: token!);
     return c;
+  }
+
+  Future<void> likeOrUnlikeCourse(String courseId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final bool isPass =
+        await _courseRepository.likeOrUnlikeCourse(courseId, token!);
+
+    if (!isPass) {
+      Get.snackbar('ผิดพลาด', 'มีบางอย่างผิดพลาด',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: whiteColor);
+    }
+  }
+
+  Future<bool> checkIsLikeCourse(String courseId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final bool isLike =
+        await fecthData('course/$courseId/islike', authorization: token!);
+    return isLike;
   }
 }

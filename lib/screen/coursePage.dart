@@ -13,6 +13,7 @@ import 'package:coursez/widgets/videoCard.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:like_button/like_button.dart';
 
 class CoursePage extends StatefulWidget {
   const CoursePage({super.key});
@@ -29,18 +30,19 @@ class _CoursePageState extends State<CoursePage> {
   final CourseViewModel courseViewModel = CourseViewModel();
   List paidVideo = [];
   int sumVideoPrice = 0;
-  bool isCalPrice = false;
+  bool isCalPrice = false, isLike = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     data = courseViewModel.loadCourseById(int.parse(courseId));
     if (authController.isLogin) {
       courseViewModel.getPaidVideo().then((value) => setState(
             () => paidVideo.addAll(value),
           ));
     }
-
+    if(authController.isLogin) {
+      courseViewModel.checkIsLikeCourse(courseId).then((value) => isLike = value);
+    }
     super.initState();
   }
 
@@ -113,29 +115,31 @@ class _CoursePageState extends State<CoursePage> {
                                   color: primaryColor,
                                 )),
                           ),
-                          InkWell(
-                            onTap: () {
-                              if (authController.isLogin) {
-                                setState(() {});
-                              } else {
-                                showDialog(
-                                    context: Get.context!,
-                                    builder: (BuildContext context) {
-                                      return const AlertLogin(
-                                        body:
-                                            'กรุณาเข้าสู่ระบบเพื่อเพิ่มวีดิโอที่ชอบ',
-                                        action: 'เข้าสู่ระบบ',
-                                      );
-                                    });
-                              }
-                            },
-                            child: const BorderIcon(
-                                width: 50,
-                                height: 50,
-                                child: Icon(
-                                  Icons.favorite_border,
-                                )),
-                          )
+                          BorderIcon(
+                              width: 50,
+                              height: 50,
+                              child: LikeButton(
+                                isLiked: isLike,
+                                onTap: (isLiked) async {
+                                  isLike = !isLiked;
+                                  if (authController.isLogin) {
+                                    await courseViewModel
+                                        .likeOrUnlikeCourse(courseId);
+                                    return !isLiked;
+                                  } else {
+                                    showDialog(
+                                        context: Get.context!,
+                                        builder: (BuildContext context) {
+                                          return const AlertLogin(
+                                            body:
+                                                'กรุณาเข้าสู่ระบบเพื่อเพิ่มวีดิโอที่ชอบ',
+                                            action: 'เข้าสู่ระบบ',
+                                          );
+                                        });
+                                    return false;
+                                  }
+                                },
+                              ))
                         ],
                       ),
                     ),
@@ -284,8 +288,11 @@ class _CoursePageState extends State<CoursePage> {
                                   onTap: () {
                                     debugPrint(courseData.videos[index].videoId
                                         .toString());
-                                    Get.toNamed(
-                                        "/course/$courseId/video/${courseData.videos[index].videoId}");
+                                    if (paidVideo.contains(
+                                        courseData.videos[index].videoId)) {
+                                      Get.toNamed(
+                                          "/course/$courseId/video/${courseData.videos[index].videoId}");
+                                    }
                                   },
                                   onBuy: () async {
                                     await courseViewModel.buyVideo(
