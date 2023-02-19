@@ -130,7 +130,8 @@ class _CoursePageState extends State<CoursePage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(right: 5),
-                          child: RatingStar(rating: courseData.rating!, size: 20),
+                          child:
+                              RatingStar(rating: courseData.rating!, size: 20),
                         ),
                         Title14px(text: courseData.rating.toString()),
                       ],
@@ -215,9 +216,13 @@ class _CoursePageState extends State<CoursePage> {
                                   height: constraints.maxWidth * 0.3 + 1,
                                   price: courseData.videos[index].price,
                                   onTap: () {
-                                    
                                     Get.toNamed(
-                                        '/course/${courseData.courseId}/video/${courseData.videos[index].videoId}', parameters: {"video_name": courseData.videos[index].videoName});
+                                        '/course/${courseData.courseId}/video/${courseData.videos[index].videoId}',
+                                        parameters: {
+                                          "video_name": courseData
+                                              .videos[index].videoName,
+                                          "teacher_id": courseData.teacherId.toString()
+                                        });
                                     debugPrint(courseData.videos[index].videoId
                                         .toString());
                                   },

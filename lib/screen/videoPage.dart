@@ -19,6 +19,7 @@ import 'package:coursez/utils/color.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:video_player/video_player.dart';
+import 'package:coursez/model/user.dart';
 
 class VideoPage extends StatefulWidget {
   const VideoPage({super.key});
@@ -36,7 +37,9 @@ class _VideoPageState extends State<VideoPage> {
   bool isInitVideo = false;
   late FlickManager flickManager;
   String videoName = Get.parameters["video_name"]!;
-
+  String teacherId = Get.parameters["teacher_id"]!;
+  User teacher = User(
+      email: '', fullName: '', nickName: '', role: '', picture: '', point: 0);
   void _initVideo(String url) {
     flickManager = FlickManager(
       videoPlayerController: VideoPlayerController.network(url),
@@ -47,6 +50,14 @@ class _VideoPageState extends State<VideoPage> {
           0.9;
     });
     isInitVideo = true;
+  }
+
+  @override
+  void initState() {
+    videoViewModel.getTeacherName(int.parse(teacherId)).then((value) {
+      teacher = value;
+    });
+    super.initState();
   }
 
   @override
@@ -86,6 +97,7 @@ class _VideoPageState extends State<VideoPage> {
   }
 
   Widget videoDetail(Video video, FlickManager flickManager) {
+    double tutorRating = videoViewModel.getTutorRating(teacher.userTeacher!);
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -175,7 +187,16 @@ class _VideoPageState extends State<VideoPage> {
             ),
           ),
           Container(
-              decoration: const BoxDecoration(color: whiteColor),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    primaryLightColor,
+                    secondaryLighterColor,
+                  ],
+                ),
+              ),
               padding: const EdgeInsets.fromLTRB(15, 0, 15, 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,7 +247,7 @@ class _VideoPageState extends State<VideoPage> {
                   ],
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   height: 40,
                   decoration: BoxDecoration(
                       border: Border.all(color: greyColor),
@@ -296,48 +317,52 @@ class _VideoPageState extends State<VideoPage> {
                     color: tertiaryColor,
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Heading20px(text: 'ติวเตอร์'),
-                      Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: Row(
+                const SizedBox(
+                  height: 12,
+                ),
+                InkWell(
+                  onTap: () {},
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: blackColor.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            teacher.picture,
+                            width: 45,
+                            height: 45,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.03),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ClipOval(
-                              child: Image.network(
-                                video.picture,
-                                width: 50,
-                                height: 50,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            SizedBox(
-                                width:
-                                    MediaQuery.of(context).size.width * 0.01),
-                            TextButton(
-                                onPressed: () {},
-                                child: const Text(
-                                  'ติวเตอร์',
-                                  style: TextStyle(
-                                      fontFamily: 'Athiti',
-                                      fontSize: 16,
-                                      color: blackColor,
-                                      fontWeight: FontWeight.w700,
-                                      height: 1.5,
-                                      decoration: TextDecoration.underline),
-                                ))
+                            Title16px(text: teacher.fullName),
+                            Body12px(text: teacher.nickName),
                           ],
                         ),
-                      )
-                    ],
+                        Expanded(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            RatingStar(rating: tutorRating, size: 17),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Body14px(text: tutorRating.toStringAsPrecision(2)),
+                          ],
+                        ))
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      border: Border(bottom: BorderSide(color: greyColor))),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 15),

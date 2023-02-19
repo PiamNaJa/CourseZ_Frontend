@@ -1,3 +1,6 @@
+import 'package:coursez/model/course.dart';
+import 'package:coursez/model/user.dart';
+import 'package:coursez/model/userTeacher.dart';
 import 'package:coursez/model/video.dart';
 import 'package:coursez/utils/fetchData.dart';
 
@@ -38,5 +41,24 @@ class VideoViewModel {
     }
 
     return 0;
+  }
+
+  Future<User> getTeacherName(int teacherid) async {
+    final t = await fecthData("user/teacher/$teacherid");
+    final dynamic teacher = User.fromJson(t);
+
+    return teacher;
+  }
+
+  double getTutorRating(UserTeacher teacher) {
+    double rating = 0;
+    if (teacher.reviews!.isEmpty) {
+      return 0;
+    } else {
+      for (var i = 0; i < teacher.reviews!.length; i++) {
+        rating += teacher.reviews![i].rating;
+      }
+      return (rating / teacher.reviews!.length);
+    }
   }
 }
