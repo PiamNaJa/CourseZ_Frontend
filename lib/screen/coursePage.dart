@@ -41,7 +41,7 @@ class _CoursePageState extends State<CoursePage> {
           ));
     }
     if(authController.isLogin) {
-      courseViewModel.checkIsLikeCourse(courseId).then((value) => isLike = value);
+      courseViewModel.checkIsLikeCourse(courseId).then((value) => setState(() => isLike = value));
     }
     super.initState();
   }
