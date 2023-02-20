@@ -163,9 +163,10 @@ class _CoursePageState extends State<CoursePage> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 5),
-                            child: ratingStar(rating: courseData.rating!),
+                            child: ratingStar(rating: courseData.rating),
                           ),
-                          Title14px(text: courseData.rating.toString()),
+                          Title14px(
+                              text: courseData.rating.toStringAsPrecision(2)),
                         ],
                       ),
                       const Title14px(
@@ -278,6 +279,8 @@ class _CoursePageState extends State<CoursePage> {
                             children: List.generate(
                               courseData.videos.length,
                               ((index) {
+                                final bool isPaid = paidVideo
+                                    .contains(courseData.videos[index].videoId);
                                 return VideoCard(
                                   videoId: courseData.videos[index].videoId,
                                   image: courseData.videos[index].picture,
@@ -285,18 +288,8 @@ class _CoursePageState extends State<CoursePage> {
                                   width: constraints.maxWidth * 0.3,
                                   height: constraints.maxWidth * 0.3 + 1,
                                   price: courseData.videos[index].price,
-                                  isPaid: paidVideo.contains(
-                                      courseData.videos[index].videoId),
+                                  isPaid: isPaid,
                                   onTap: () async {
-                                    debugPrint(courseData.videos[index].videoId
-                                        .toString());
-                                    if (paidVideo.contains(
-                                            courseData.videos[index].videoId) &&
-                                        courseData.videos[index].price == 0) {
-                                      // Get.toNamed(
-                                      //     "/course/$courseId/video/${courseData.videos[index].videoId}");
-                                    }
-
                                     if (!authController.isLogin &&
                                         courseData.videos[index].price > 0) {
                                       debugPrint('please login');
@@ -310,7 +303,8 @@ class _CoursePageState extends State<CoursePage> {
                                             );
                                           });
                                     } else {
-                                      if (courseData.videos[index].price > 0) {
+                                      if (courseData.videos[index].price > 0 &&
+                                          !isPaid) {
                                         await courseViewModel.buyVideo(
                                             courseData.videos[index].price,
                                             courseData.videos[index].videoId);
@@ -324,8 +318,8 @@ class _CoursePageState extends State<CoursePage> {
                                           paidVideo = video;
                                         });
                                       } else {
-                                        // Get.toNamed(
-                                        //     "/course/$courseId/video/${courseData.videos[index].videoId}");
+                                        Get.toNamed(
+                                            "/course/$courseId/video/${courseData.videos[index].videoId}");
                                       }
                                     }
                                   },
