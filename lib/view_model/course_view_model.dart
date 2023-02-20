@@ -27,7 +27,8 @@ class CourseViewModel {
     for (var i = 0; i < courseLevel.length; i++) {
       courseLevel[i] = caculateCourseRating(courseLevel[i]);
     }
-    return courseLevel;
+    final sortedCourses = courseInsertionSort(courseLevel);
+    return sortedCourses;
   }
 
   Future<List<Course>> loadCourseBySubject(int subjectId) async {
@@ -40,7 +41,8 @@ class CourseViewModel {
     for (int i = 0; i < courseSubject.length; i++) {
       courseSubject[i] = caculateCourseRating(courseSubject[i]);
     }
-    return courseSubject;
+    final sortedCourses = courseInsertionSort(courseSubject);
+    return sortedCourses;
   }
 
   Course caculateCourseRating(Course course) {
@@ -58,6 +60,19 @@ class CourseViewModel {
       course.rating = 0;
     }
     return course;
+  }
+
+  List<Course> courseInsertionSort(List<Course> courses) {
+    for (int i = 0; i < courses.length; i++) {
+      final key = courses[i];
+      int j = i - 1;
+      while (j >= 0 && courses[j].rating < key.rating) {
+        courses[j + 1] = courses[j];
+        j = j - 1;
+      }
+      courses[j + 1] = key;
+    }
+    return courses;
   }
 
   Future<Course> loadCourseById(int courseId) async {
