@@ -40,8 +40,10 @@ class _CoursePageState extends State<CoursePage> {
             () => paidVideo.addAll(value),
           ));
     }
-    if(authController.isLogin) {
-      courseViewModel.checkIsLikeCourse(courseId).then((value) => setState(() => isLike = value));
+    if (authController.isLogin) {
+      courseViewModel
+          .checkIsLikeCourse(courseId)
+          .then((value) => setState(() => isLike = value));
     }
     super.initState();
   }
@@ -285,28 +287,47 @@ class _CoursePageState extends State<CoursePage> {
                                   price: courseData.videos[index].price,
                                   isPaid: paidVideo.contains(
                                       courseData.videos[index].videoId),
-                                  onTap: () {
+                                  onTap: () async {
                                     debugPrint(courseData.videos[index].videoId
                                         .toString());
                                     if (paidVideo.contains(
-                                        courseData.videos[index].videoId)) {
-                                      Get.toNamed(
-                                          "/course/$courseId/video/${courseData.videos[index].videoId}");
+                                            courseData.videos[index].videoId) &&
+                                        courseData.videos[index].price == 0) {
+                                      // Get.toNamed(
+                                      //     "/course/$courseId/video/${courseData.videos[index].videoId}");
                                     }
-                                  },
-                                  onBuy: () async {
-                                    await courseViewModel.buyVideo(
-                                        courseData.videos[index].price,
-                                        courseData.videos[index].videoId);
-                                    final price = await courseViewModel
-                                        .allVideoPriceInCourse(courseData);
-                                    final video =
-                                        await courseViewModel.getPaidVideo();
 
-                                    setState(() {
-                                      sumVideoPrice = price.first;
-                                      paidVideo = video;
-                                    });
+                                    if (!authController.isLogin &&
+                                        courseData.videos[index].price > 0) {
+                                      debugPrint('please login');
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return const AlertLogin(
+                                              body:
+                                                  'กรุณาเข้าสู่ระบบเพื่อซื้อวีดิโอ',
+                                              action: 'เข้าสู่ระบบ',
+                                            );
+                                          });
+                                    } else {
+                                      if (courseData.videos[index].price > 0) {
+                                        await courseViewModel.buyVideo(
+                                            courseData.videos[index].price,
+                                            courseData.videos[index].videoId);
+                                        final price = await courseViewModel
+                                            .allVideoPriceInCourse(courseData);
+                                        final video = await courseViewModel
+                                            .getPaidVideo();
+
+                                        setState(() {
+                                          sumVideoPrice = price.first;
+                                          paidVideo = video;
+                                        });
+                                      } else {
+                                        // Get.toNamed(
+                                        //     "/course/$courseId/video/${courseData.videos[index].videoId}");
+                                      }
+                                    }
                                   },
                                 );
                               }),
