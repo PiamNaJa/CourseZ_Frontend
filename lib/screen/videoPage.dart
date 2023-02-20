@@ -10,9 +10,8 @@ import 'package:coursez/widgets/text/body16.dart';
 import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:coursez/widgets/text/title12px.dart';
-import 'package:coursez/widgets/text/title14px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
-import 'package:expandable/expandable.dart';
+import 'package:expandable_text/expandable_text.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/utils/color.dart';
@@ -115,43 +114,27 @@ class _VideoPageState extends State<VideoPage> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+            padding:
+                const EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 10),
             decoration: const BoxDecoration(
               color: whiteColor,
             ),
-            child: ExpandablePanel(
-              theme: const ExpandableThemeData(
-                headerAlignment: ExpandablePanelHeaderAlignment.center,
-                tapBodyToCollapse: true,
-                hasIcon: true,
-                iconColor: primaryColor,
-              ),
-              header: const Title14px(text: 'รายละเอียด'),
-              collapsed: (video.description.length >= 130)
-                  ? Text(
-                      '${video.description.substring(0, 130)}...',
-                      style: const TextStyle(
-                        fontFamily: 'Athiti',
-                        fontSize: 12,
-                        color: Colors.black,
-                      ),
-                    )
-                  : Text(
-                      video.description,
-                      style: const TextStyle(
-                        fontFamily: 'Athiti',
-                        fontSize: 12,
-                        color: Colors.black,
-                      ),
-                    ),
-              expanded: Text(
-                video.description,
-                style: const TextStyle(
-                  fontFamily: 'Athiti',
-                  fontSize: 12,
-                  color: Colors.black,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Title16px(text: 'รายละเอียด'),
+                ExpandableText(
+                  video.description,
+                  expandText: 'ดูเพิ่มเติม',
+                  collapseText: 'ดูน้อยลง',
+                  maxLines: 2,
+                  linkColor: secondaryColor,
+                  style: const TextStyle(
+                    fontFamily: 'Athiti',
+                    fontSize: 14,
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
           SizedBox(
@@ -187,13 +170,14 @@ class _VideoPageState extends State<VideoPage> {
             ),
           ),
           Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
+                    
                     primaryLightColor,
-                    secondaryLighterColor,
+                    whiteColor.withOpacity(0.95),
                   ],
                 ),
               ),
@@ -475,24 +459,37 @@ class _VideoPageState extends State<VideoPage> {
 
   Widget reviewCard(ReviewVideo review) {
     return Padding(
-      padding: const EdgeInsets.all(5),
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: blackColor.withOpacity(0.05),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            RatingStar(rating: review.rating, size: 15),
-            Padding(
-              padding: const EdgeInsets.only(top: 5, bottom: 5),
-              child: Body14px(text: review.comment),
-            )
-          ],
-        ),
-      ),
-    );
+        padding: const EdgeInsets.all(5),
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: blackColor.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              RatingStar(rating: review.rating, size: 15),
+              Padding(
+                padding: const EdgeInsets.only(top: 5, bottom: 5),
+                child: ExpandableText(
+                  review.comment,
+                  expandText: 'ดูเพิ่มเติม',
+                  collapseText: 'ดูน้อยลง',
+                  maxLines: 1,
+                  linkColor: secondaryDarkColor,
+                  animation: true,
+                  collapseOnTextTap: true,
+                  style: const TextStyle(
+                    fontFamily: 'Athiti',
+                    fontSize: 14,
+                    color: blackColor,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 }
