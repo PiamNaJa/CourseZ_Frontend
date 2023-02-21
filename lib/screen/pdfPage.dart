@@ -75,31 +75,32 @@ class _PDFPageState extends State<PDFPage> {
                 semanticLabel: 'Download',
               ),
               onPressed: () async {
-                final status = await Permission.storage.status;
-                debugPrint(status.toString());
+                final status = await Permission.storage.request();
                 if (status.isGranted) {
                   final externalDir = await getExternalStorageDirectory();
-                  Map<Permission, PermissionStatus> statuses = await [
-                    Permission.storage,
-                  ].request();
-                  FlutterDownloader.enqueue(
+                  await FlutterDownloader.enqueue(
+                    fileName: widget.name +
+                        DateTime.now()
+                            .millisecond
+                            .toString()
+                            .replaceAll(" ", ""),
                     url: widget.path,
                     savedDir: externalDir!.path,
                     showNotification:
                         true, // show download progress in status bar (for Android)
                     openFileFromNotification:
                         true, // click on notification to open downloaded file (for Android)
-                  ).then((value) => null);
-                } else {
+                  );
+                } else if (status.isDenied || status.isPermanentlyDenied) {
                   Get.defaultDialog(
-                    title: 'Permission denied',
-                    middleText: 'Please allow storage permission',
+                    title: 'การเข้าถึงที่เก็บข้อมูลถูกปฎิเสธ',
+                    middleText: 'โปรดอนุญาตการเข้าถึงข้อมูล',
                     textConfirm: 'OK',
                     onConfirm: () {
                       Get.back();
+                      openAppSettings();
                     },
                   );
-                  debugPrint('Permission denied');
                 }
               },
             ),
