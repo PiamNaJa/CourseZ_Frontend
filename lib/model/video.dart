@@ -13,8 +13,8 @@ class Video {
   final String url;
   final String sheet;
   final String createdAt;
-  final List<dynamic> reviews;
-  final List<dynamic> exercises;
+  final List<ReviewVideo> reviews;
+  final List<Exercise> exercises;
 
   Video(
       {required this.videoId,
@@ -26,8 +26,8 @@ class Video {
       required this.url,
       required this.sheet,
       required this.createdAt,
-      this.reviews = const [],
-      this.exercises = const []});
+      required this.reviews,
+      required this.exercises});
 
   factory Video.fromJson(Map<String, dynamic> json) {
     return Video(
@@ -41,10 +41,12 @@ class Video {
       sheet: json['sheet'],
       createdAt: json['created_at'],
       reviews: json['reviews'] != null
-          ? json['reviews'].map((c) => ReviewVideo.fromJson(c)).toList()
+          ? List.from(
+              json['reviews'].map((c) => ReviewVideo.fromJson(c)).toList())
           : List.empty(),
       exercises: json['exercises'] != null
-          ? json['exercises'].map((c) => Exercise.fromJson(c)).toList()
+          ? List.from(
+              json['exercises'].map((c) => Exercise.fromJson(c)).toList())
           : List.empty(),
     );
   }

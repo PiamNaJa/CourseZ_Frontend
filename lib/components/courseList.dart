@@ -5,8 +5,6 @@ import 'package:coursez/widgets/rating/rating.dart';
 import 'package:coursez/widgets/text/title14px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 
 class CourseList extends StatelessWidget {
@@ -19,7 +17,7 @@ class CourseList extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Get.toNamed('/coursedetail',
-            arguments: courseViewModel.loadCourseById(item.courseId));
+            parameters: {'course_id': item.courseId.toString()});
       },
       child: Container(
         color: Colors.transparent, //ไม่ใส่แล้วกดช่องว่างไม่ได้

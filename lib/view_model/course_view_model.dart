@@ -1,9 +1,15 @@
+import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/model/course.dart';
-import 'package:coursez/model/reviewVideo.dart';
+import 'package:coursez/repository/course_repository.dart';
+import 'package:flutter/material.dart';
+import 'package:coursez/repository/payment.dart';
+import 'package:coursez/utils/color.dart';
 import 'package:coursez/utils/fetchData.dart';
-import 'package:coursez/model/reviewVideo.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CourseViewModel {
+  final CourseRepository _courseRepository = CourseRepository();
   Future<List<Course>> loadCourse(int level) async {
     final c = await fecthData('course');
     final course = c.map((e) => Course.fromJson(e)).toList();
@@ -19,47 +25,54 @@ class CourseViewModel {
     }
 
     for (var i = 0; i < courseLevel.length; i++) {
-      double rating = 0;
-      int count = 0;
-      for (var j = 0; j < courseLevel[i].videos.length; j++) {
-        for (var k = 0; k < courseLevel[i].videos[j].reviews.length; k++) {
-          rating += courseLevel[i].videos[j].reviews[k].rating;
-          count++;
-        }
-      }
-      if (count != 0) {
-        courseLevel[i].rating = rating / count;
-      } else {
-        courseLevel[i].rating = 0;
-      }
+      courseLevel[i] = caculateCourseRating(courseLevel[i]);
     }
-    return courseLevel;
+    final sortedCourses = courseInsertionSort(courseLevel);
+    return sortedCourses;
   }
 
   Future<List<Course>> loadCourseBySubject(int subjectId) async {
     final c = await fecthData('course');
     final course = c.map((e) => Course.fromJson(e)).toList();
-    List<Course> courseSubject = [];
     final cs = course
         .where((element) => element.subject?.subjectId == subjectId)
         .toList();
-    cs.forEach((e) => courseSubject.add(e));
-    for (var i = 0; i < courseSubject.length; i++) {
-      double rating = 0;
-      int count = 0;
-      for (var j = 0; j < courseSubject[i].videos.length; j++) {
-        for (var k = 0; k < courseSubject[i].videos[j].reviews.length; k++) {
-          rating += courseSubject[i].videos[j].reviews[k].rating;
-          count++;
-        }
-      }
-      if (count != 0) {
-        courseSubject[i].rating = rating / count;
-      } else {
-        courseSubject[i].rating = 0;
+    List<Course> courseSubject = List.from(cs);
+    for (int i = 0; i < courseSubject.length; i++) {
+      courseSubject[i] = caculateCourseRating(courseSubject[i]);
+    }
+    final sortedCourses = courseInsertionSort(courseSubject);
+    return sortedCourses;
+  }
+
+  Course caculateCourseRating(Course course) {
+    double rating = 0;
+    int count = 0;
+    for (int i = 0; i < course.videos.length; i++) {
+      for (int j = 0; j < course.videos[i].reviews.length; j++) {
+        rating += course.videos[i].reviews[j].rating;
+        count++;
       }
     }
-    return courseSubject;
+    if (count != 0) {
+      course.rating = rating / count;
+    } else {
+      course.rating = 0;
+    }
+    return course;
+  }
+
+  List<Course> courseInsertionSort(List<Course> courses) {
+    for (int i = 0; i < courses.length; i++) {
+      final key = courses[i];
+      int j = i - 1;
+      while (j >= 0 && courses[j].rating < key.rating) {
+        courses[j + 1] = courses[j];
+        j = j - 1;
+      }
+      courses[j + 1] = key;
+    }
+    return courses;
   }
 
   Future<Course> loadCourseById(int courseId) async {
@@ -75,19 +88,96 @@ class CourseViewModel {
       }
       if (count != 0) {
         course.rating = rating / count;
-      } else {
-        course.rating = 0;
       }
     }
 
     return course;
   }
 
-  int allVideoPriceInCourse(Course course) {
+  Future<List> allVideoPriceInCourse(Course course) async {
     num price = 0;
+    List<int> videosId = [];
+    final AuthController authController = Get.find<AuthController>();
     for (var element in course.videos) {
+      if (element.price == 0) continue;
       price += element.price;
+      videosId.add(element.videoId);
     }
-    return price.toInt();
+    if (authController.isLogin) {
+      final value = await getPaidVideo();
+      for (var id in value) {
+        if (videosId.contains(id)) {
+          price -=
+              course.videos.firstWhere((video) => video.videoId == id).price;
+          videosId.remove(id);
+        }
+      }
+    }
+    debugPrint(price.toString());
+    return [price.toInt(), videosId];
+  }
+
+  Future<void> buyAllVideoInCourse(Course course) async {
+    try {
+      var videos = await allVideoPriceInCourse(course);
+      final paymentIntent =
+          await PaymentApi.createPaymentIntent((videos.first * 100).toString());
+      await PaymentApi.makePayment(paymentIntent['client_secret']);
+      await PaymentApi.showPayment(paymentIntent['client_secret']);
+      await PaymentApi.savePayment(videos.last);
+      Get.snackbar('สำเร็จ', 'ชำระเงินสำเร็จ',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: primaryColor,
+          colorText: whiteColor);
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<void> buyVideo(int price, int videoId) async {
+    try {
+      List<int> videos = List.filled(1, videoId);
+      final paymentIntent =
+          await PaymentApi.createPaymentIntent((price * 100).toString());
+      await PaymentApi.makePayment(paymentIntent['client_secret']);
+      await PaymentApi.showPayment(paymentIntent['client_secret']);
+      await PaymentApi.savePayment(videos);
+      Get.snackbar('สำเร็จ', 'ชำระเงินสำเร็จ',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: primaryColor,
+          colorText: whiteColor);
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<List<dynamic>> getPaidVideo() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final List<dynamic> c =
+        await fecthData('payment/paid/videos', authorization: token!);
+    return c;
+  }
+
+  Future<void> likeOrUnlikeCourse(String courseId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final bool isPass =
+        await _courseRepository.likeOrUnlikeCourse(courseId, token!);
+
+    if (!isPass) {
+      Get.snackbar('ผิดพลาด', 'มีบางอย่างผิดพลาด',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: whiteColor);
+    }
+  }
+
+  Future<bool> checkIsLikeCourse(String courseId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final bool isLike =
+        await fecthData('course/$courseId/islike', authorization: token!);
+    return isLike;
   }
 }

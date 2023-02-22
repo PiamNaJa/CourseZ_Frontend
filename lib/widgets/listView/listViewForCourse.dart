@@ -61,13 +61,11 @@ class ListViewCourse extends StatelessWidget {
 }
 
 Widget buildCard(Course item) {
-  final CourseViewModel courseViewModel = CourseViewModel();
   return LayoutBuilder(
       builder: (BuildContext context, Constraints constraints) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed('/coursedetail',
-            arguments: courseViewModel.loadCourseById(item.courseId));
+        Get.toNamed('/course/${item.courseId.toString()}');
       },
       child: SingleChildScrollView(
         child: Container(

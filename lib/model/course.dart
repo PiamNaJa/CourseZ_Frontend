@@ -10,7 +10,7 @@ class Course {
   late String coursename;
   late String picture;
   late String description;
-  late double? rating;
+  late double rating;
 
   Course(
       {required this.courseId,
@@ -21,7 +21,7 @@ class Course {
       required this.coursename,
       required this.picture,
       required this.description,
-      this.rating});
+      this.rating = 0});
 
   factory Course.fromJson(Map<String, dynamic> json) {
     return Course(
