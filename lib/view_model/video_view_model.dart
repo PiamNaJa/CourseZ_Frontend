@@ -61,4 +61,9 @@ class VideoViewModel {
       return (rating / teacher.reviews!.length);
     }
   }
+
+  String formatReviewDate(int createdAt) {
+    var date = DateTime.fromMillisecondsSinceEpoch(createdAt * 1000);
+    return date.toString().substring(0, 16);
+  }
 }
