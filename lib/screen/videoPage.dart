@@ -187,16 +187,7 @@ class _VideoPageState extends State<VideoPage> {
             ),
           ),
           Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    primaryLightColor,
-                    whiteColor.withOpacity(0.95),
-                  ],
-                ),
-              ),
+              color: whiteColor,
               padding: const EdgeInsets.fromLTRB(15, 0, 15, 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -503,6 +494,10 @@ class _VideoPageState extends State<VideoPage> {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
+              ),
+              Body12px(
+                text: '${videoViewModel.formatReviewDate(review.createdAt)} น.',
+                color: greyColor,
               ),
             ],
           ),
