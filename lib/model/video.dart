@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'reviewVideo.dart';
 import 'exercise.dart';
 
@@ -10,6 +12,7 @@ class Video {
   final String description;
   final String url;
   final String sheet;
+  final String createdAt;
   final List<ReviewVideo> reviews;
   final List<Exercise> exercises;
 
@@ -22,6 +25,7 @@ class Video {
       required this.description,
       required this.url,
       required this.sheet,
+      required this.createdAt,
       required this.reviews,
       required this.exercises});
 
@@ -35,6 +39,7 @@ class Video {
       description: json['description'],
       url: json['url'],
       sheet: json['sheet'],
+      createdAt: json['created_at'],
       reviews: json['reviews'] != null
           ? List.from(
               json['reviews'].map((c) => ReviewVideo.fromJson(c)).toList())

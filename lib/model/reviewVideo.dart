@@ -1,7 +1,7 @@
 class ReviewVideo {
   final int reviewVideoId;
   final int videoId;
-  final int rating;
+  final double rating;
   final String comment;
 
   ReviewVideo(
@@ -14,7 +14,7 @@ class ReviewVideo {
     return ReviewVideo(
       reviewVideoId: json['review_video_id'],
       videoId: json['video_id'],
-      rating: json['rating'],
+      rating: json['rating'].toDouble(),
       comment: json['comment'],
     );
   }
