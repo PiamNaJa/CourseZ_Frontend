@@ -76,11 +76,14 @@ class CourseList extends StatelessWidget {
                                   ),
                                   Row(
                                     children: [
-                                      RatingStar(rating: item.rating!, size: 20,),
+                                      RatingStar(
+                                        rating: item.rating,
+                                        size: 20,
+                                      ),
                                       Padding(
                                         padding: const EdgeInsets.only(left: 5),
                                         child: Title14px(
-                                            text: item.rating!.toString()),
+                                            text: item.rating.toString()),
                                       )
                                     ],
                                   )

@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/pdf_view_model.dart';
+import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_render/pdf_render_widgets.dart';
@@ -45,13 +46,7 @@ class _PDFPageState extends State<PDFPage> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0.0,
-          title: Text(widget.name,
-              style: const TextStyle(
-                fontFamily: 'Athiti',
-                color: blackColor,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              )),
+          title: Heading20px(text: widget.name),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(0),
             child: LinearProgressIndicator(

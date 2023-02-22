@@ -163,7 +163,7 @@ class _CoursePageState extends State<CoursePage> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 5),
-                            child: ratingStar(rating: courseData.rating),
+                            child: RatingStar(rating: courseData.rating, size: 20,),
                           ),
                           Title14px(
                               text: courseData.rating.toStringAsPrecision(2)),
@@ -319,7 +319,8 @@ class _CoursePageState extends State<CoursePage> {
                                         });
                                       } else {
                                         Get.toNamed(
-                                            "/course/$courseId/video/${courseData.videos[index].videoId}");
+                                            "/course/$courseId/video/${courseData.videos[index].videoId}", parameters: {'video_name': courseData.videos[index].videoName,
+                                            'teacher_id': courseData.teacherId.toString(),});
                                       }
                                     }
                                   },

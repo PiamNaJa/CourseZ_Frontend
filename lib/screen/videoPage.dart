@@ -38,7 +38,16 @@ class _VideoPageState extends State<VideoPage> {
   String videoName = Get.parameters["video_name"]!;
   String teacherId = Get.parameters["teacher_id"]!;
   User teacher = User(
-      email: '', fullName: '', nickName: '', role: '', picture: '', point: 0);
+      email: '',
+      fullName: '',
+      nickName: '',
+      role: '',
+      picture: '',
+      point: 0,
+      paidVideos: [],
+      likeCourses: [],
+      likeVideos: [],
+      transactions: []);
   void _initVideo(String url) {
     flickManager = FlickManager(
       videoPlayerController: VideoPlayerController.network(url),
@@ -54,7 +63,9 @@ class _VideoPageState extends State<VideoPage> {
   @override
   void initState() {
     videoViewModel.getTeacherName(int.parse(teacherId)).then((value) {
-      teacher = value;
+      setState(() {
+        teacher = value;
+      });
     });
     super.initState();
   }
@@ -97,6 +108,16 @@ class _VideoPageState extends State<VideoPage> {
 
   Widget videoDetail(Video video, FlickManager flickManager) {
     double tutorRating = videoViewModel.getTutorRating(teacher.userTeacher!);
+    FlickVideoWithControls flickVideoWithControls = FlickVideoWithControls(
+      controls: FlickPortraitControls(
+        progressBarSettings: FlickProgressBarSettings(
+          playedColor: primaryColor,
+          bufferedColor: primaryLighterColor.withOpacity(0.8),
+          handleColor: primaryColor,
+        ),
+      ),
+      iconThemeData: const IconThemeData(color: primaryColor),
+    );
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -104,14 +125,9 @@ class _VideoPageState extends State<VideoPage> {
             height: 200,
             width: double.infinity,
             child: FlickVideoPlayer(
-              flickManager: flickManager,
-              flickVideoWithControls: const FlickVideoWithControls(
-                controls: FlickPortraitControls(),
-              ),
-              flickVideoWithControlsFullscreen: const FlickVideoWithControls(
-                controls: FlickLandscapeControls(),
-              ),
-            ),
+                flickManager: flickManager,
+                flickVideoWithControls: flickVideoWithControls,
+                flickVideoWithControlsFullscreen: flickVideoWithControls),
           ),
           Container(
             padding:
@@ -128,6 +144,7 @@ class _VideoPageState extends State<VideoPage> {
                   expandText: 'ดูเพิ่มเติม',
                   collapseText: 'ดูน้อยลง',
                   maxLines: 2,
+                  animation: true,
                   linkColor: secondaryColor,
                   style: const TextStyle(
                     fontFamily: 'Athiti',
@@ -175,7 +192,6 @@ class _VideoPageState extends State<VideoPage> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    
                     primaryLightColor,
                     whiteColor.withOpacity(0.95),
                   ],

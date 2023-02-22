@@ -108,7 +108,7 @@ Widget buildCard(Course item) {
                     Body10px(
                       text: item.description,
                     ),
-                    RatingStar(rating: item.rating!, size: 20,),
+                    RatingStar(rating: item.rating, size: 20,),
                   ],
                 ),
               ),
