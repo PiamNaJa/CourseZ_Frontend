@@ -11,7 +11,8 @@ class Post {
   final int classLevel;
   final String caption;
   final String postPicture;
-  final List<Comment>? comments;
+  final List<Comment> comments;
+  final int createdAt;
 
   Post(
       {required this.postId,
@@ -22,7 +23,8 @@ class Post {
       required this.classLevel,
       required this.caption,
       required this.postPicture,
-      this.comments});
+      required this.comments,
+      required this.createdAt});
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
@@ -36,8 +38,9 @@ class Post {
       caption: json['caption'],
       postPicture: json['post_picture'],
       comments: json['comments'] != null
-          ? json['comments'].map((c) => Comment.fromJson(c)).toList()
+          ? List.from(json['comments'].map((c) => Comment.fromJson(c)).toList())
           : List.empty(),
+      createdAt: json['created_at'],
     );
   }
 }

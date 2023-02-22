@@ -12,7 +12,7 @@ class Video {
   final String description;
   final String url;
   final String sheet;
-  final String createdAt;
+  final int createdAt;
   final List<ReviewVideo> reviews;
   final List<Exercise> exercises;
 

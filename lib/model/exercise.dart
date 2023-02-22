@@ -6,14 +6,14 @@ class Exercise {
   final int videoId;
   final String question;
   final String image;
-  final List<Choice>? choices;
+  final List<Choice> choices;
 
   Exercise({
     required this.exerciseId,
     required this.videoId,
     required this.question,
     required this.image,
-    this.choices,
+    required this.choices,
   });
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
@@ -23,7 +23,7 @@ class Exercise {
       question: json['question'],
       image: json['image'],
       choices: json['choices'] != null
-          ? json['choices'].map((c) => Choice.fromJson(c)).toList()
+          ? List.from(json['choices'].map((c) => Choice.fromJson(c)).toList())
           : List.empty(),
     );
   }
