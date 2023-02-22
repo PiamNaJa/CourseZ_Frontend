@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'reviewVideo.dart';
 import 'exercise.dart';
 
@@ -10,8 +12,9 @@ class Video {
   final String description;
   final String url;
   final String sheet;
-  final List<ReviewVideo>? reviews;
-  final List<Exercise>? exercises;
+  final String createdAt;
+  final List<ReviewVideo> reviews;
+  final List<Exercise> exercises;
 
   Video(
       {required this.videoId,
@@ -22,8 +25,9 @@ class Video {
       required this.description,
       required this.url,
       required this.sheet,
-      this.reviews,
-      this.exercises});
+      required this.createdAt,
+      required this.reviews,
+      required this.exercises});
 
   factory Video.fromJson(Map<String, dynamic> json) {
     return Video(
@@ -35,11 +39,14 @@ class Video {
       description: json['description'],
       url: json['url'],
       sheet: json['sheet'],
+      createdAt: json['created_at'],
       reviews: json['reviews'] != null
-          ? json['reviews'].map((c) => ReviewVideo.fromJson(c)).toList()
+          ? List.from(
+              json['reviews'].map((c) => ReviewVideo.fromJson(c)).toList())
           : List.empty(),
       exercises: json['exercises'] != null
-          ? json['exercises'].map((c) => Exercise.fromJson(c)).toList()
+          ? List.from(
+              json['exercises'].map((c) => Exercise.fromJson(c)).toList())
           : List.empty(),
     );
   }

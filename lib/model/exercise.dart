@@ -2,8 +2,8 @@ import 'dart:ffi';
 import 'choice.dart';
 
 class Exercise {
-  final Int32 exerciseId;
-  final Int32 videoId;
+  final int exerciseId;
+  final int videoId;
   final String question;
   final String image;
   final List<Choice>? choices;

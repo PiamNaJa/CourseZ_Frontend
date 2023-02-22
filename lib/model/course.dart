@@ -5,12 +5,12 @@ class Course {
   late int courseId;
   late int subjectId;
   late Subject? subject;
-  late List<dynamic> videos;
+  late List<Video> videos;
   late int teacherId;
   late String coursename;
   late String picture;
   late String description;
-  late double? rating;
+  late double rating;
 
   Course(
       {required this.courseId,
@@ -21,7 +21,7 @@ class Course {
       required this.coursename,
       required this.picture,
       required this.description,
-      this.rating});
+      this.rating = 0});
 
   factory Course.fromJson(Map<String, dynamic> json) {
     return Course(
@@ -29,7 +29,7 @@ class Course {
       subjectId: json['subject_id'],
       subject: json['subject'] != null ? Subject.fromJson(json['subject']): null,
       videos: json['videos'] != null
-          ? json['videos'].map((c) => Video.fromJson(c)).toList()
+          ? List.from(json['videos'].map((c) => Video.fromJson(c)).toList())
           : List.empty(),
       teacherId: json['teacher_id'],
       coursename: json['course_name'],
