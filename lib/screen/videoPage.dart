@@ -16,6 +16,7 @@ import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:get/get.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:video_player/video_player.dart';
 import 'package:coursez/model/user.dart';
@@ -37,7 +38,21 @@ class _VideoPageState extends State<VideoPage> {
   late FlickManager flickManager;
   String videoName = Get.parameters["video_name"]!;
   String teacherId = Get.parameters["teacher_id"]!;
-  late User teacher;
+  User teacher = User(
+      email: '',
+      fullName: '',
+      history: [],
+      likeCourses: [],
+      likeVideos: [],
+      nickName: '',
+      paidVideos: [],
+      picture: '',
+      point: 0,
+      role: '',
+      transactions: [],
+      password: '',
+      userId: 0,
+      userTeacher: null);
   void _initVideo(String url) {
     flickManager = FlickManager(
       videoPlayerController: VideoPlayerController.network(url),
@@ -141,6 +156,11 @@ class _VideoPageState extends State<VideoPage> {
                     fontSize: 14,
                   ),
                 ),
+                Body12px(
+                  text:
+                      'เผยแพร่เมื่อ ${videoViewModel.formatVideoDate(video.createdAt)}',
+                  color: greyColor,
+                ),
               ],
             ),
           ),
@@ -177,16 +197,7 @@ class _VideoPageState extends State<VideoPage> {
             ),
           ),
           Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    primaryLightColor,
-                    whiteColor.withOpacity(0.95),
-                  ],
-                ),
-              ),
+              color: whiteColor,
               padding: const EdgeInsets.fromLTRB(15, 0, 15, 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -493,6 +504,10 @@ class _VideoPageState extends State<VideoPage> {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
+              ),
+              Body12px(
+                text: '${videoViewModel.formatReviewDate(review.createdAt)} น.',
+                color: greyColor,
               ),
             ],
           ),
