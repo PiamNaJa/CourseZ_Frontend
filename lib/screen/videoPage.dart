@@ -38,7 +38,7 @@ class _VideoPageState extends State<VideoPage> {
   late FlickManager flickManager;
   String videoName = Get.parameters["video_name"]!;
   String teacherId = Get.parameters["teacher_id"]!;
-  late User teacher = User(
+  User teacher = User(
       email: '',
       fullName: '',
       history: [],
