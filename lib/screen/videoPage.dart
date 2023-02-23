@@ -38,7 +38,21 @@ class _VideoPageState extends State<VideoPage> {
   late FlickManager flickManager;
   String videoName = Get.parameters["video_name"]!;
   String teacherId = Get.parameters["teacher_id"]!;
-  late User teacher;
+  late User teacher = User(
+      email: '',
+      fullName: '',
+      history: [],
+      likeCourses: [],
+      likeVideos: [],
+      nickName: '',
+      paidVideos: [],
+      picture: '',
+      point: 0,
+      role: '',
+      transactions: [],
+      password: '',
+      userId: 0,
+      userTeacher: null);
   void _initVideo(String url) {
     flickManager = FlickManager(
       videoPlayerController: VideoPlayerController.network(url),
