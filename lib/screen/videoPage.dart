@@ -16,6 +16,7 @@ import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:get/get.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:video_player/video_player.dart';
 import 'package:coursez/model/user.dart';
@@ -140,6 +141,11 @@ class _VideoPageState extends State<VideoPage> {
                     fontFamily: 'Athiti',
                     fontSize: 14,
                   ),
+                ),
+                Body12px(
+                  text:
+                      'เผยแพร่เมื่อ ${videoViewModel.formatVideoDate(video.createdAt)}',
+                  color: greyColor,
                 ),
               ],
             ),
