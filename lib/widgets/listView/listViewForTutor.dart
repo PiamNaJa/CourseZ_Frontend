@@ -1,3 +1,4 @@
+import 'package:coursez/model/tutor.dart';
 import 'package:coursez/view_model/tutor_view_model.dart';
 import 'package:coursez/widgets/text/body10px.dart';
 import 'package:coursez/widgets/text/title12px.dart';
@@ -9,8 +10,7 @@ import 'package:flutter/material.dart';
 import '../../utils/color.dart';
 
 class ListViewTutor extends StatelessWidget {
-  const ListViewTutor({super.key, required this.rating, required this.level});
-  final double rating;
+  const ListViewTutor({super.key, required this.level});
   final int level;
 
   @override
@@ -21,7 +21,7 @@ class ListViewTutor extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return SizedBox(
-              height: 190,
+              height: 200,
               child: (snapshot.data.length == 0)
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -56,7 +56,7 @@ class ListViewTutor extends StatelessWidget {
   }
 }
 
-Widget buildCard(dynamic item) {
+Widget buildCard(Tutor item) {
   return LayoutBuilder(
       builder: (BuildContext context, Constraints constraints) {
     return GestureDetector(
@@ -86,9 +86,12 @@ Widget buildCard(dynamic item) {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Title12px(text: '${item['nickname']}'),
-                    Body10px(text: '${item['fullname']}'),
-                    RatingStar(rating: item['rating'].toDouble(), size: 20,),
+                    Title12px(text: item.nickname),
+                    Body10px(text: item.fullname),
+                    RatingStar(
+                      rating: item.rating.toDouble(),
+                      size: 20,
+                    ),
                   ],
                 ),
               ),
@@ -97,7 +100,7 @@ Widget buildCard(dynamic item) {
               alignment: Alignment.topCenter,
               child: ClipOval(
                 child: Image.network(
-                  item['picture'],
+                  item.picture,
                   height: 110,
                   fit: BoxFit.cover,
                 ),
