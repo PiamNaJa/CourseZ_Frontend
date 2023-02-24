@@ -10,7 +10,6 @@ import 'package:coursez/screen/loginPage.dart';
 import 'package:coursez/screen/postPage.dart';
 import 'package:coursez/screen/profilePage.dart';
 import 'package:coursez/screen/videoPage.dart';
-import 'package:coursez/screen/searchPage.dart';
 import 'package:get/get.dart';
 
 class Routes {
@@ -28,7 +27,6 @@ class Routes {
     GetPage(name: '/expand', page: () => const ExpandPage()),
     GetPage(name: '/post', page: () => const PostPage()),
     GetPage(name: '/coursesubject', page: () => CourseSubject()),
-    GetPage(name: '/search', page: () => const SearchPage()),
     GetPage(name: '/course/:course_id', page: () => const CoursePage()),
     GetPage(name: '/chat', page: () => const ChatPage()),
     GetPage(name: '/course/:course_id/video/:video_id', page: () => const VideoPage()),
