@@ -16,8 +16,7 @@ class CourseList extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed('/coursedetail',
-            parameters: {'course_id': item.courseId.toString()});
+        Get.toNamed('/course/${item.courseId}');
       },
       child: Container(
         color: Colors.transparent, //ไม่ใส่แล้วกดช่องว่างไม่ได้
@@ -83,7 +82,8 @@ class CourseList extends StatelessWidget {
                                       Padding(
                                         padding: const EdgeInsets.only(left: 5),
                                         child: Title14px(
-                                            text: item.rating.toString()),
+                                            text: item.rating
+                                                .toStringAsPrecision(2)),
                                       )
                                     ],
                                   )
