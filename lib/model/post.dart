@@ -8,7 +8,6 @@ class Post {
   final Subject? subject;
   final int userid;
   final User? user;
-  final int classLevel;
   final String caption;
   final String postPicture;
   final List<Comment> comments;
@@ -20,7 +19,6 @@ class Post {
       this.subject,
       required this.userid,
       this.user,
-      required this.classLevel,
       required this.caption,
       required this.postPicture,
       required this.comments,
@@ -34,7 +32,6 @@ class Post {
           json['subject'] != null ? Subject.fromJson(json['subject']) : null,
       userid: json['user_id'],
       user: json['user'] != null ? User.fromJson(json['user']) : null,
-      classLevel: json['class_level'],
       caption: json['caption'],
       postPicture: json['post_picture'],
       comments: json['comments'] != null
