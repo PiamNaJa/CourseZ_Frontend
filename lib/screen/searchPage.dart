@@ -161,9 +161,11 @@ class _SearchPageState extends State<SearchPage> {
               child: Column(
                 children: [
                   ListTile(
-                    // onTap: () {
-                    //   Get.toNamed('/coursedetail', arguments: courseViewModel.loadCourseById(data[index].courseId));
-                    // },
+                    onTap: () {
+                      Get.toNamed(
+                        '/course/${data[index].courseId}',
+                      );
+                    },
                     visualDensity: const VisualDensity(vertical: 4),
                     contentPadding: const EdgeInsets.all(15),
                     leading: ClipRRect(
@@ -179,7 +181,10 @@ class _SearchPageState extends State<SearchPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Body12px(text: data[index].coursename),
-                        ratingStar(rating: data[index].rating),
+                        RatingStar(
+                          rating: data[index].rating,
+                          size: 20,
+                        ),
                       ],
                     ),
                     title: Title16px(text: data[index].coursename),
@@ -200,6 +205,14 @@ class _SearchPageState extends State<SearchPage> {
             shrinkWrap: true,
             itemCount: item.videos.length,
             itemBuilder: (context, index) => ListTile(
+                  onTap: () {
+                    Get.toNamed(
+                        '/course/${item.courseId}/video/${item.videos[index].videoId}',
+                        parameters: {
+                          "video_name": item.videos[index].videoName,
+                          "teacher_id": item.teacherId.toString()
+                        });
+                  },
                   contentPadding:
                       const EdgeInsets.only(top: 10, left: 15, right: 15),
                   leading: Image.network(
@@ -250,7 +263,10 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
                 title: Title16px(text: item[index].nickname),
-                subtitle: ratingStar(rating: item[index].rating.toDouble()),
+                subtitle: RatingStar(
+                  rating: item[index].rating.toDouble(),
+                  size: 20,
+                ),
               ),
             ));
   }
