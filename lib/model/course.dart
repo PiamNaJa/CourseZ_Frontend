@@ -41,4 +41,6 @@ class Course {
       createdAt: json['created_at'],
     );
   }
+
+  contains(String value) {}
 }
