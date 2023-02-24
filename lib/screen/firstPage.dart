@@ -19,7 +19,7 @@ class FirstPage extends StatefulWidget {
 class _FirstPageState extends State<FirstPage> {
   final page = [
     const MyHomePage(),
-    const PostPage(),
+    PostPage(),
     const ChatPage(),
     const ProfilePage()
   ];
