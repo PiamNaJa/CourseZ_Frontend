@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'choice.dart';
 
 class Exercise {

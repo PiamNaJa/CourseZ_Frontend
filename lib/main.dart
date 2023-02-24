@@ -31,10 +31,11 @@ class MyApp extends StatelessWidget {
       title: 'CourseZ',
       theme: ThemeData(
         primarySwatch: Colors.green,
+        fontFamily: 'Athiti'
       ),
       debugShowCheckedModeBanner: false,
       getPages: Routes.getRoutes,
-      initialRoute: '/first',
+      initialRoute: '/course/1/video/1/exercise',
       themeMode: ThemeMode.dark,
     );
   }

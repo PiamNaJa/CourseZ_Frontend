@@ -256,7 +256,8 @@ class _VideoPageState extends State<VideoPage> {
                                     .inSeconds >=
                                 timeToDoQuiz) {
                               debugPrint('pass');
-                              // Get.toNamed('exercise', arguments: video);
+                              Get.toNamed(
+                                  '/course/${Get.parameters["course_id"]!}/video/{$video.videoId}/exercise');
                             } else {
                               showDialog(
                                   context: context,
