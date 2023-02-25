@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       getPages: Routes.getRoutes,
-      initialRoute: '/login',
+      initialRoute: '/first',
       themeMode: ThemeMode.dark,
     );
   }

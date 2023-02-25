@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/utils/constants.dart';
+import 'package:coursez/utils/network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
@@ -46,7 +47,7 @@ class PaymentApi {
       final Map<String, dynamic> body = {
         'video_id': videosId,
       };
-      const url = 'http://10.0.2.2:5000/api/payment/videos';
+      const url = '${Network.baseUrl}/api/payment/videos';
       await http.post(Uri.parse(url), body: json.encode(body), headers: {
         "Authorization": "$token",
         "Content-Type": "application/json"

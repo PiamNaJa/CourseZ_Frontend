@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:coursez/model/user.dart';
+import 'package:coursez/utils/network.dart';
 import 'package:http/http.dart' as http;
 
 class AuthRepository {
   int statusCode = 0;
   Future loginUser(String email, String password) async {
     try {
-      const url = 'http://10.0.2.2:5000/api/user/login';
+      const url = '${Network.baseUrl}/api/user/login';
       Map data = {'email': email, 'password': password};
 
       var response = await http.post(Uri.parse(url),
@@ -21,7 +22,7 @@ class AuthRepository {
 
   // Future getData(String id) async {
   //   try {
-  //     String url = 'http://10.0.2.2:5000/api/user/$id';
+  //     String url = '${Network.baseUrl}/api/user/$id';
 
   //     var response = await http
   //         .get(Uri.parse(url), headers: {"Content-Type": "application/json"});
@@ -38,7 +39,7 @@ class AuthRepository {
 
   Future getNewToken(String token) async {
     try {
-      const url = 'http://10.0.2.2:5000/api/user/newtoken';
+      const url = '${Network.baseUrl}/api/user/newtoken';
       Map data = {'token': token};
       var response = await http.post(Uri.parse(url),
           headers: {"Content-Type": "application/json"},
@@ -52,7 +53,7 @@ class AuthRepository {
 
   Future<http.Response> registerStudent(User user) async {
     try {
-      const url = 'http://10.0.2.2:5000/api/user/register/student';
+      const url = '${Network.baseUrl}/api/user/register/student';
       var response = await http.post(Uri.parse(url),
           headers: {"Content-Type": "application/json"},
           body: json.encode(user.toJson()));
@@ -79,7 +80,7 @@ class AuthRepository {
       for (var i = 0; i < user.userTeacher!.experiences!.length; i++) {
         data['experience'].add(user.userTeacher!.experiences![i].toJson());
       }
-      const url = 'http://10.0.2.2:5000/api/user/register/teacher';
+      const url = '${Network.baseUrl}/api/user/register/teacher';
       var response = await http.post(Uri.parse(url),
           headers: {"Content-Type": "application/json"},
           body: json.encode(data));

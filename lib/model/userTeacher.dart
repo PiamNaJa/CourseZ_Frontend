@@ -42,7 +42,7 @@ class UserTeacher {
           ? json['experiences'].map((c) => Experience.fromJson(c)).toList()
           : List.empty(),
       courses: json['courses'] != null
-          ? json['courses'].map((c) => Course.fromJson(c)).toList()
+          ? List.from(json['courses'].map((c) => Course.fromJson(c)).toList())
           : List.empty(),
     );
   }

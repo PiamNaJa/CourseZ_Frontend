@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
               centerTitle: true,
               title: Obx(() => Heading24px(
                   text: _authController.isLogin
-                      ? 'สวัสดีคุณ ${_authController.userid}'
+                      ? 'สวัสดีคุณ ${_authController.username}'
                       : 'ยินดีต้อนรับสู่ CourseZ')),
             ),
           ];
