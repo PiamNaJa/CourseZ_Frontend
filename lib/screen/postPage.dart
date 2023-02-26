@@ -37,6 +37,7 @@ class PostPage extends StatelessWidget {
       'วิทยาศาสตร์',
     ];
     return Scaffold(
+        backgroundColor: whiteColor.withOpacity(0.95),
         appBar: AppBar(
           elevation: 0,
           toolbarHeight: 90,
@@ -63,12 +64,15 @@ class PostPage extends StatelessWidget {
                       child: Container(
                         height: 35,
                         decoration: BoxDecoration(
-                            border: Border.all(color: greyColor),
-                            borderRadius: BorderRadius.circular(25)),
+                          border: Border.all(color: greyColor),
+                          borderRadius: BorderRadius.circular(25),
+                        ),
                         child: ButtonTheme(
                           alignedDropdown: true,
                           child: DropdownButton(
                             alignment: Alignment.center,
+                            borderRadius: BorderRadius.circular(25),
+                            underline: Container(),
                             value: classLevel[0],
                             onChanged: (value) {},
                             items: classLevel
@@ -98,6 +102,7 @@ class PostPage extends StatelessWidget {
                           alignedDropdown: true,
                           child: DropdownButton(
                             borderRadius: BorderRadius.circular(25),
+                            underline: Container(),
                             alignment: Alignment.center,
                             value: subjectLevel[0],
                             onChanged: (value) {},
@@ -129,13 +134,7 @@ class PostPage extends StatelessWidget {
             child: Column(
               children: [
                 newPost(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Container(
-                    height: 1,
-                    color: greyColor,
-                  ),
-                ),
+                const SizedBox(height: 12),
                 FutureBuilder(
                   future: postViewModel.loadPost(0, 0),
                   builder: (context, snapshot) {
@@ -162,86 +161,134 @@ class PostPage extends StatelessWidget {
   Widget postList(Post item) {
     final authController = Get.find<AuthController>();
     final screenHeight = Get.height;
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            contentPadding: const EdgeInsets.all(0),
-            leading: ClipOval(
-              child: Image.network(
-                item.user!.picture,
-                width: 40,
-                height: 40,
-                fit: BoxFit.cover,
-              ),
+    return InkWell(
+      onTap: () {
+        Get.toNamed('/post/${item.postId.toString()}', parameters: {
+          "username": item.user!.nickName,
+          "user_id": item.user!.userId.toString(),
+          "flag": "0"
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 17),
+        decoration: const BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: greyColor,
+              width: 1,
             ),
-            title: Title16px(text: item.user!.fullName),
-            trailing: authController.userid == item.user!.userId
-                ? const Icon(Icons.more_horiz_outlined)
-                : const SizedBox(),
           ),
-          ExpandableText(
-            expandText: 'ดูเพิ่มเติม',
-            collapseText: 'ดูน้อยลง',
-            item.caption,
-            maxLines: 4,
-            linkColor: primaryColor,
-            style: const TextStyle(fontFamily: 'Athiti', fontSize: 14),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          item.postPicture.isNotEmpty
-              ? InkWell(
-                  child: ClipRect(
-                    child: Image.network(
-                      item.postPicture,
-                      width: double.infinity,
-                      height: screenHeight * 0.4,
-                      fit: BoxFit.cover,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              contentPadding: const EdgeInsets.all(0),
+              leading: ClipOval(
+                child: Image.network(
+                  item.user!.picture,
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              title: Title16px(text: item.user!.fullName),
+              trailing: authController.userid == item.user!.userId
+                  ? const Icon(Icons.more_horiz_outlined)
+                  : const SizedBox(),
+            ),
+            ExpandableText(
+              expandText: 'ดูเพิ่มเติม',
+              collapseText: 'ดูน้อยลง',
+              item.caption,
+              maxLines: 3,
+              linkColor: primaryColor,
+              style: const TextStyle(fontFamily: 'Athiti', fontSize: 14),
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            item.postPicture.isNotEmpty
+                ? InkWell(
+                    child: ClipRect(
+                      child: Image.network(
+                        item.postPicture,
+                        width: double.infinity,
+                        height: screenHeight * 0.4,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  onTap: () {
-                    showDialog(
-                        context: Get.context!,
-                        builder: (_) {
-                          return Dialog(
-                              insetPadding: const EdgeInsets.all(30),
-                              backgroundColor: Colors.transparent,
-                              child: InteractiveViewer(
-                                minScale: 0.8,
-                                maxScale: 2,
-                                child: Image.network(
-                                  item.postPicture,
-                                  fit: BoxFit.cover,
-                                ),
-                              ));
-                        });
-                  },
-                )
-              : const SizedBox(),
-          const SizedBox(
-            height: 12,
-          ),
-          const TextField(
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.only(left: 10, right: 10),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: greyColor),
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-              ),
-              hintText: 'แสดงความคิดเห็น',
-              hintStyle: TextStyle(
-                  fontFamily: 'Athiti', fontSize: 14, color: greyColor),
+                    onTap: () {
+                      showDialog(
+                          context: Get.context!,
+                          builder: (_) {
+                            return Dialog(
+                                insetPadding: const EdgeInsets.all(30),
+                                backgroundColor: Colors.transparent,
+                                child: InteractiveViewer(
+                                  minScale: 0.8,
+                                  maxScale: 2,
+                                  child: Image.network(
+                                    item.postPicture,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ));
+                          });
+                    },
+                  )
+                : const SizedBox(),
+            const SizedBox(
+              height: 12,
             ),
-          ),
-          const Divider(
-            color: blackColor,
-            height: 20,
-          ),
-        ],
+            Row(
+              children: [
+                ClipOval(
+                  child: authController.isLogin
+                      ? Image.network(
+                          authController.picture,
+                          width: 40,
+                          height: 40,
+                          fit: BoxFit.cover,
+                        )
+                      : Container(
+                          width: 40,
+                          height: 40,
+                          color: greyColor,
+                        ),
+                ),
+                Expanded(
+                  child: Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: InkWell(
+                        onTap: () {
+                          Get.toNamed('/post/${item.postId.toString()}',
+                              parameters: {
+                                "username": item.user!.nickName,
+                                "user_id": item.user!.userId.toString(),
+                                "flag": "1"
+                              });
+                        },
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          height: 45,
+                          decoration: BoxDecoration(
+                              color: whiteColor,
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(color: greyColor)),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Body14px(
+                              text: 'แสดงความคิดเห็น',
+                              color: greyColor,
+                            ),
+                          ),
+                        ),
+                      )),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -255,11 +302,15 @@ class PostPage extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: const Offset(0, 3), // changes position of shadow
+            spreadRadius: 0,
+            blurRadius: 5,
+            offset: const Offset(0, 5), // changes position of shadow
           ),
         ],
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(20),
+          bottomRight: Radius.circular(20),
+        ),
       ),
       child: Column(
         children: [
@@ -281,10 +332,12 @@ class PostPage extends StatelessWidget {
             title: authController.isLogin
                 ? Title14px(text: authController.username)
                 : const Title14px(text: 'ผู้เข้าชม'),
-            subtitle: authController.role == 'Teacher' ||
-                    authController.role == 'Tutor'
-                ? const Body14px(text: 'คุณครู')
-                : const Body14px(text: 'นักเรียน'),
+            subtitle: authController.isLogin
+                ? authController.role == 'Teacher' ||
+                        authController.role == 'Tutor'
+                    ? const Body14px(text: 'คุณครู')
+                    : const Body14px(text: 'นักเรียน')
+                : const Body14px(text: 'ผู้เข้าชม'),
           ),
           Row(
             children: [

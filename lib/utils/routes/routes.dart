@@ -33,9 +33,10 @@ class Routes {
     GetPage(name: '/search', page: () => const SearchPage()),
     GetPage(name: '/course/:course_id', page: () => const CoursePage()),
     GetPage(name: '/chat', page: () => const ChatPage()),
-    GetPage(name: '/course/:course_id/video/:video_id', page: () => const VideoPage()),
-    
-    GetPage(name: '/postdetail', page: () => const PostdetailPage())
+    GetPage(
+        name: '/course/:course_id/video/:video_id',
+        page: () => const VideoPage()),
+    GetPage(name: '/post/:post_id', page: () => const PostdetailPage())
   ];
   static List<GetPage> get getRoutes => _getRoutes;
 }

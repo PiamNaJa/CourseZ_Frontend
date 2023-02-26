@@ -35,4 +35,10 @@ class PostViewModel {
     //   return postLevelSubject;
     // }
   }
+
+  Future<Post> loadPostById(int postid) async{
+    final p = await fecthData('post/$postid');
+    final post = Post.fromJson((p));
+    return post;
+  }
 }
