@@ -17,8 +17,6 @@ class ExerciseResultPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Map<String, Object> dataArguments = Get.arguments;
-    final double correctPercentage =
-        dataArguments["correctPercentage"] as double;
     final Map<int, Choice> userSelectedChoice =
         dataArguments["userselectedchoice"] as Map<int, Choice>;
     final int points = dataArguments["points"] as int;

@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.green, fontFamily: 'Athiti'),
       debugShowCheckedModeBanner: false,
       getPages: Routes.getRoutes,
-      initialRoute: '/course/1/video/1/exercise',
+      initialRoute: '/first',
       themeMode: ThemeMode.dark,
     );
   }

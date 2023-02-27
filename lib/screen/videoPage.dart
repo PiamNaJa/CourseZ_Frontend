@@ -1,6 +1,8 @@
+import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/model/reviewVideo.dart';
 import 'package:coursez/model/video.dart';
 import 'package:coursez/screen/pdfPage.dart';
+import 'package:coursez/view_model/exercise_view_model.dart';
 import 'package:coursez/view_model/video_view_model.dart';
 import 'package:coursez/widgets/rating/rating.dart';
 import 'package:coursez/widgets/text/body10px.dart';
@@ -29,6 +31,7 @@ class VideoPage extends StatefulWidget {
 
 class _VideoPageState extends State<VideoPage> {
   VideoViewModel videoViewModel = VideoViewModel();
+  AuthController authController = Get.find<AuthController>();
   bool isFocus = false;
 
   late double timeToDoQuiz;
@@ -37,6 +40,9 @@ class _VideoPageState extends State<VideoPage> {
   late FlickManager flickManager;
   String videoName = Get.parameters["video_name"]!;
   String teacherId = Get.parameters["teacher_id"]!;
+  String courseId = Get.parameters["course_id"]!;
+  String videoId = Get.parameters["video_id"]!;
+  bool isDoneExercise = false;
   late User teacher;
   void _initVideo(String url) {
     flickManager = FlickManager(
@@ -57,6 +63,13 @@ class _VideoPageState extends State<VideoPage> {
         teacher = value;
       });
     });
+    if (authController.isLogin) {
+      ExerciseViewModel().isDoneExercise(courseId, videoId).then((value) {
+        setState(() {
+          isDoneExercise = value;
+        });
+      });
+    }
     super.initState();
   }
 
@@ -82,9 +95,7 @@ class _VideoPageState extends State<VideoPage> {
           ),
         ),
         body: FutureBuilder(
-          future: videoViewModel.loadVideoById(
-              int.parse(Get.parameters["course_id"]!),
-              int.parse(Get.parameters["video_id"]!)),
+          future: videoViewModel.loadVideoById(courseId, videoId),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               if (!isInitVideo) _initVideo(snapshot.data!.url);
@@ -242,64 +253,94 @@ class _VideoPageState extends State<VideoPage> {
                   decoration: BoxDecoration(
                       border: Border.all(color: greyColor),
                       borderRadius: BorderRadius.circular(10)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(child: Title12px(text: video.videoName)),
-                      TextButton(
-                          onPressed: () {
-                            if (flickManager
-                                    .flickVideoManager!
-                                    .videoPlayerController!
-                                    .value
-                                    .position
-                                    .inSeconds >=
-                                timeToDoQuiz) {
-                              debugPrint('pass');
-                              flickManager.flickControlManager!.pause();
-                              Get.toNamed(
-                                  '/course/${Get.parameters["course_id"]!}/video/${video.videoId}/exercise');
-                            } else {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title:
-                                          const Heading24px(text: 'แจ้งเตือน'),
-                                      content: const Text(
-                                        'คุณยังไม่ได้เรียนคลิปให้จบ กรุณาเรียนคลิปให้จบก่อนทำแบบทดสอบ',
-                                        style: TextStyle(
+                  child: !isDoneExercise
+                      ? authController.isLogin
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                    child: Title12px(text: video.videoName)),
+                                TextButton(
+                                    onPressed: () {
+                                      if (flickManager
+                                              .flickVideoManager!
+                                              .videoPlayerController!
+                                              .value
+                                              .position
+                                              .inSeconds >=
+                                          timeToDoQuiz) {
+                                        debugPrint('pass');
+                                        flickManager.flickControlManager!
+                                            .pause();
+                                        Get.toNamed(
+                                            '/course/${Get.parameters["course_id"]!}/video/${video.videoId}/exercise');
+                                      } else {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: const Heading24px(
+                                                    text: 'แจ้งเตือน'),
+                                                content: const Text(
+                                                  'คุณยังไม่ได้เรียนคลิปให้จบ กรุณาเรียนคลิปให้จบก่อนทำแบบทดสอบ',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Athiti',
+                                                    fontSize: 16,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Title12px(
+                                                        text: 'ตกลง',
+                                                        color: primaryColor,
+                                                      ))
+                                                ],
+                                              );
+                                            });
+                                      }
+                                    },
+                                    child: const Text(
+                                      'ทำแบบทดสอบ',
+                                      style: TextStyle(
                                           fontFamily: 'Athiti',
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Title12px(
-                                              text: 'ตกลง',
-                                              color: primaryColor,
-                                            ))
-                                      ],
-                                    );
-                                  });
-                            }
-                          },
-                          child: const Text(
-                            'ทำแบบทดสอบ',
-                            style: TextStyle(
-                                fontFamily: 'Athiti',
-                                fontSize: 12,
-                                color: blackColor,
-                                fontWeight: FontWeight.w700,
-                                height: 1.5,
-                                decoration: TextDecoration.underline),
-                          ))
-                    ],
-                  ),
+                                          fontSize: 12,
+                                          color: blackColor,
+                                          fontWeight: FontWeight.bold,
+                                          height: 1.5,
+                                          decoration: TextDecoration.underline),
+                                    ))
+                              ],
+                            )
+                          : Center(
+                              child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Title12px(
+                                    text: "เข้าสู่ระบบเพื่อทำแบบทดสอบ"),
+                                TextButton(
+                                    onPressed: () {
+                                      flickManager.flickControlManager!.pause();
+                                      Get.toNamed('/login');
+                                    },
+                                    child: const Text(
+                                      'คลิกที่นี่เพื่อเข้าสู่ระบบ',
+                                      style: TextStyle(
+                                          fontFamily: 'Athiti',
+                                          fontSize: 12,
+                                          color: blackColor,
+                                          fontWeight: FontWeight.bold,
+                                          height: 1.5,
+                                          decoration: TextDecoration.underline),
+                                    )),
+                              ],
+                            ))
+                      : const Center(
+                          child:
+                              Title12px(text: "คุณทำแบบทดสอบหลังเรียนนี้แล้ว")),
                 ),
                 const Padding(
                   padding: EdgeInsets.all(5),

@@ -5,7 +5,7 @@ import 'package:coursez/model/video.dart';
 import 'package:coursez/utils/fetchData.dart';
 
 class VideoViewModel {
-  Future<Video> loadVideoById(int courseid, int videoid) async {
+  Future<Video> loadVideoById(String courseid, String videoid) async {
     final v = await fecthData("course/$courseid/video/$videoid");
 
     return Video.fromJson(v);

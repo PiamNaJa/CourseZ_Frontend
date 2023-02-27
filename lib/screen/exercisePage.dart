@@ -1,3 +1,4 @@
+import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/controllers/choice_controller.dart';
 import 'package:coursez/model/choice.dart';
 import 'package:coursez/model/exercise.dart';
@@ -14,6 +15,8 @@ class ExercisePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ChoiceController choiceController = Get.put(ChoiceController());
+    final ExerciseViewModel exerciseViewModel = ExerciseViewModel();
+    final AuthController authController = Get.find<AuthController>();
     onSubmit(List<Exercise> exercise) {
       final userSelectedChoice = Map.fromEntries(
           choiceController.getchoice.entries.toList()
@@ -37,9 +40,10 @@ class ExercisePage extends StatelessWidget {
       } else {
         choiceController.points = 10;
       }
+      exerciseViewModel.addPoint(Get.parameters["course_id"]!,
+          Get.parameters["video_id"]!, choiceController.points);
       Get.offAndToNamed("${Get.currentRoute}/result", arguments: {
         "userselectedchoice": userSelectedChoice,
-        "correctPercentage": correctPercentage,
         "points": choiceController.points,
         "correctCount": choiceController.correctCount,
         "exercises": exercise
