@@ -3,7 +3,6 @@ import 'package:coursez/model/choice.dart';
 import 'package:coursez/model/exercise.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/exercise_view_model.dart';
-import 'package:coursez/widgets/button/button.dart';
 import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
@@ -16,7 +15,10 @@ class ExercisePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ChoiceController choiceController = Get.put(ChoiceController());
     onSubmit(List<Exercise> exercise) {
-      final userSelectedChoice = choiceController.getchoice;
+      final userSelectedChoice = Map.fromEntries(
+          choiceController.getchoice.entries.toList()
+            ..sort((e1, e2) => e1.key.compareTo(e2.key)));
+
       for (final choice in userSelectedChoice.values) {
         if (choice.correct) {
           choiceController.correctCount++;
@@ -24,7 +26,9 @@ class ExercisePage extends StatelessWidget {
       }
       final correctPercentage =
           (choiceController.correctCount / exercise.length) * 100;
-      if (correctPercentage < 50) {
+      if (correctPercentage == 0) {
+        choiceController.points = 0;
+      } else if (correctPercentage < 50) {
         choiceController.points = 3;
       } else if (correctPercentage >= 50 && correctPercentage < 70) {
         choiceController.points = 5;
@@ -33,12 +37,19 @@ class ExercisePage extends StatelessWidget {
       } else {
         choiceController.points = 10;
       }
+      Get.offAndToNamed("${Get.currentRoute}/result", arguments: {
+        "userselectedchoice": userSelectedChoice,
+        "correctPercentage": correctPercentage,
+        "points": choiceController.points,
+        "correctCount": choiceController.correctCount,
+        "exercises": exercise
+      });
     }
 
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        title: const Heading20px(text: "Exercise Page"),
+        title: const Heading20px(text: "แบบทดสอบหลังเรียน"),
         backgroundColor: whiteColor,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: primaryColor),
@@ -70,13 +81,25 @@ class ExercisePage extends StatelessWidget {
                         return ExerciseList(exercise: exercise[index]);
                       },
                     ),
-                    Obx(() => ElevatedButton(
-                        onPressed: choiceController.getchoice.values.isNotEmpty
-                            ? onSubmit(exercise)
-                            : null,
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: primaryColor),
-                        child: const Text("ส่งคำตอบ"))),
+                    const Divider(
+                      color: secondaryColor,
+                      thickness: 1.5,
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.07,
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: Obx(() => ElevatedButton(
+                          onPressed: choiceController.getchoice.isNotEmpty
+                              ? () => onSubmit(exercise)
+                              : null,
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: primaryColor),
+                          child: Title16px(
+                              color: whiteColor,
+                              text: choiceController.getchoice.isNotEmpty
+                                  ? "ส่งคำตอบ"
+                                  : "โปรดเลือกคำตอบ"))),
+                    ),
                   ],
                 ),
               );

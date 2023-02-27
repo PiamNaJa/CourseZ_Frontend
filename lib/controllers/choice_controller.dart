@@ -13,4 +13,8 @@ class ChoiceController extends GetxController {
   final _correctCount = 0.obs;
   set correctCount(int value) => _correctCount.value = value;
   int get correctCount => _correctCount.value;
+
+  final _isSubmit = false.obs;
+  set isSubmit(bool value) => _isSubmit.value = value;
+  bool get isSubmit => _isSubmit.value;
 }
