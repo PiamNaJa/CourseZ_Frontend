@@ -47,7 +47,6 @@ dependencies:
   dots_indicator: ^2.1.0
   get: ^4.6.5
   image_picker: ^0.8.3
-  firebase_auth: ^4.2.5
   firebase_core: ^2.4.1
   uuid: ^3.0.7
   url_launcher: ^6.1.8
@@ -65,6 +64,7 @@ dependencies:
   expandable: ^5.0.1
   flutter_stripe: ^8.0.0+1
   like_button: ^2.0.5
+  jiffy: ^5.0.0
 
 
 flutter_icons:
