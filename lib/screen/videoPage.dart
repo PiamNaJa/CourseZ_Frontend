@@ -44,7 +44,7 @@ class _VideoPageState extends State<VideoPage> {
   String courseId = Get.parameters["course_id"]!;
   String videoId = Get.parameters["video_id"]!;
   bool isDoneExercise = false;
-  late User teacher;
+  User teacher = User(email: '', fullName: '', likeCourses: [], likeVideos: [], nickName: '', picture: '', paidVideos: [], role: '', history: [], transactions: [], point: 0);
   
   void _initVideo(String url) {
     flickManager = FlickManager(
