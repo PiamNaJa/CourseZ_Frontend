@@ -7,6 +7,7 @@ import 'package:coursez/widgets/text/body10px.dart';
 import 'package:coursez/widgets/text/body12px.dart';
 import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/body16.dart';
+import 'package:coursez/widgets/text/expandableText.dart';
 import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:coursez/widgets/text/title12px.dart';
@@ -144,18 +145,13 @@ class _VideoPageState extends State<VideoPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Title16px(text: 'รายละเอียด'),
-                ExpandableText(
-                  video.description,
-                  expandText: 'ดูเพิ่มเติม',
-                  collapseText: 'ดูน้อยลง',
-                  maxLines: 2,
-                  animation: true,
-                  linkColor: secondaryColor,
-                  style: const TextStyle(
-                    fontFamily: 'Athiti',
-                    fontSize: 14,
-                  ),
-                ),
+                ExpandText(
+                    text: video.description,
+                    style: const TextStyle(
+                      fontFamily: 'Athiti',
+                      fontSize: 14,
+                    ),
+                    maxLines: 2),
                 Body12px(
                   text:
                       'เผยแพร่เมื่อ ${videoViewModel.formatVideoDate(video.createdAt)}',
@@ -488,23 +484,14 @@ class _VideoPageState extends State<VideoPage> {
             children: [
               RatingStar(rating: review.rating, size: 15),
               Padding(
-                padding: const EdgeInsets.only(top: 5, bottom: 5),
-                child: ExpandableText(
-                  review.comment,
-                  expandText: 'ดูเพิ่มเติม',
-                  collapseText: 'ดูน้อยลง',
-                  maxLines: 1,
-                  linkColor: secondaryDarkColor,
-                  animation: true,
-                  collapseOnTextTap: true,
-                  style: const TextStyle(
-                    fontFamily: 'Athiti',
-                    fontSize: 14,
-                    color: blackColor,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
+                  padding: const EdgeInsets.only(top: 5, bottom: 5),
+                  child: ExpandText(
+                      text: review.comment,
+                      style: const TextStyle(
+                        fontFamily: 'Athiti',
+                        fontSize: 14,
+                      ),
+                      maxLines: 1)),
               Body12px(
                 text: '${videoViewModel.formatReviewDate(review.createdAt)} น.',
                 color: greyColor,

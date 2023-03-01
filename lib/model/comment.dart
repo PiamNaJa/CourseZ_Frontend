@@ -2,9 +2,9 @@ import 'dart:ffi';
 import 'user.dart';
 
 class Comment {
-  final Int32 commentId;
-  final Int32 postId;
-  final Int32 userId;
+  final int commentId;
+  final int postId;
+  final int userId;
   final User? user;
   final String description;
   final int createdAt;

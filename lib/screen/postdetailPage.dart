@@ -1,12 +1,16 @@
 import 'package:coursez/controllers/auth_controller.dart';
+import 'package:coursez/controllers/post_controller.dart';
+import 'package:coursez/model/comment.dart';
 import 'package:coursez/model/post.dart';
+import 'package:coursez/repository/post_repository.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/post_view_model.dart';
-import 'package:coursez/widgets/appbar/app_bar.dart';
+import 'package:coursez/widgets/bottomSheet/customBottomSheet.dart';
+import 'package:coursez/widgets/text/body12px.dart';
+import 'package:coursez/widgets/text/expandableText.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
+import 'package:coursez/widgets/text/title14px.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 
 class PostdetailPage extends StatefulWidget {
@@ -18,25 +22,67 @@ class PostdetailPage extends StatefulWidget {
 
 class _PostdetailPageState extends State<PostdetailPage> {
   AuthController authController = Get.find<AuthController>();
+  PostViewModel postViewModel = PostViewModel();
+  PostRepository postRepository = PostRepository();
+  final CustomBottomSheet customBottomSheet = CustomBottomSheet();
   final String postid = Get.parameters['post_id']!;
   String username = Get.parameters['username']!;
   String userid = Get.parameters['user_id']!;
   String autoFocus = Get.parameters['flag']!;
-  PostViewModel postViewModel = PostViewModel();
+  String userPicture = Get.parameters['user_picture']!;
+  String postDate = Get.parameters['post_date']!;
+  double screenWidth = Get.width;
+  String myComment = '';
+  final formkey = GlobalKey<FormState>();
+
   late Future<Post> data;
 
   @override
   void initState() {
-    data = postViewModel.loadPostById(int.parse(postid));
+    data = postViewModel.loadPostById(postid);
     super.initState();
+  }
+
+  Future<void> onComment() async {
+    if (authController.isLogin) {
+      data = postViewModel.loadPostById(postid);
+      await postViewModel.addComment(postid, myComment);
+    } else {
+      Get.snackbar('กรุณาเข้าสู่ระบบ',
+          'เพื่อใช้งานความสามารถในการแสดงความคิดเห็นได้เต็มที่');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: whiteColor,
       appBar: AppBar(
         elevation: 0.0,
-        title: Heading20px(text: username),
+        titleSpacing: 0.0,
+        title: Row(
+          children: [
+            ClipOval(
+              child: Image.network(
+                userPicture,
+                width: 40,
+                height: 40,
+                fit: BoxFit.cover,
+              ),
+            ),
+            SizedBox(width: screenWidth * 0.02),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Heading20px(text: username),
+                Body12px(
+                  text: postViewModel.formatPostDate(int.parse(postDate)),
+                  color: greyColor,
+                ),
+              ],
+            ),
+          ],
+        ),
         backgroundColor: whiteColor,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: primaryColor),
@@ -48,24 +94,23 @@ class _PostdetailPageState extends State<PostdetailPage> {
           (authController.userid == int.parse(userid))
               ? IconButton(
                   icon: const Icon(Icons.more_horiz_rounded, color: greyColor),
-                  onPressed: () {},
+                  onPressed: () async {
+                    customBottomSheet.bottomSheetForPost(await data);
+                  },
                 )
               : Container(),
         ],
       ),
       body: SingleChildScrollView(
-        child: FutureBuilder<Post>(
-            future: data,
-            builder: ((context, snapshot) {
-              if (snapshot.hasData) {
-                return SizedBox(
-                  child: postDetail(snapshot.data!),
-                );
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            })),
-      ),
+          child: FutureBuilder(
+        future: data,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return postDetail(snapshot.data!);
+          }
+          return const CircularProgressIndicator();
+        },
+      )),
     );
   }
 
@@ -73,51 +118,52 @@ class _PostdetailPageState extends State<PostdetailPage> {
     final screenHeight = Get.height;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Text(
-              item.caption,
-              style: const TextStyle(
-                fontFamily: 'Athiti',
-                fontSize: 14,
-              ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Text(
+            item.caption,
+            style: const TextStyle(
+              fontFamily: 'Athiti',
+              fontSize: 14,
             ),
           ),
-          const SizedBox(height: 10),
-          item.postPicture.isNotEmpty
-              ? InkWell(
-                  child: ClipRect(
-                    child: Image.network(
-                      item.postPicture,
-                      width: double.infinity,
-                      height: screenHeight * 0.4,
-                      fit: BoxFit.cover,
-                    ),
+        ),
+        const SizedBox(height: 10),
+        item.postPicture.isNotEmpty
+            ? InkWell(
+                child: ClipRect(
+                  child: Image.network(
+                    item.postPicture,
+                    width: double.infinity,
+                    height: screenHeight * 0.4,
+                    fit: BoxFit.cover,
                   ),
-                  onTap: () {
-                    showDialog(
-                        context: Get.context!,
-                        builder: (_) {
-                          return Dialog(
-                              insetPadding: const EdgeInsets.all(30),
-                              backgroundColor: Colors.transparent,
-                              child: InteractiveViewer(
-                                minScale: 0.8,
-                                maxScale: 2,
-                                child: Image.network(
-                                  item.postPicture,
-                                  fit: BoxFit.cover,
-                                ),
-                              ));
-                        });
-                  },
-                )
-              : const SizedBox(),
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+                ),
+                onTap: () {
+                  showDialog(
+                      context: Get.context!,
+                      builder: (_) {
+                        return Dialog(
+                            insetPadding: const EdgeInsets.all(30),
+                            backgroundColor: Colors.transparent,
+                            child: InteractiveViewer(
+                              minScale: 0.8,
+                              maxScale: 2,
+                              child: Image.network(
+                                item.postPicture,
+                                fit: BoxFit.cover,
+                              ),
+                            ));
+                      });
+                },
+              )
+            : const SizedBox(),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Form(
+            key: formkey,
             child: Row(
               children: [
                 ClipOval(
@@ -149,11 +195,100 @@ class _PostdetailPageState extends State<PostdetailPage> {
                       hintStyle: TextStyle(
                           fontFamily: 'Athiti', fontSize: 14, color: greyColor),
                     ),
+                    style: const TextStyle(
+                        fontFamily: 'Athiti', fontSize: 14, color: blackColor),
+                    onChanged: (value) {
+                      setState(() {
+                        myComment = value;
+                      });
+                    },
                   ),
                 ),
+                (myComment.isNotEmpty)
+                    ? IconButton(
+                        icon:
+                            const Icon(Icons.send_rounded, color: primaryColor),
+                        padding: EdgeInsets.zero,
+                        onPressed: () {
+                          onComment().then((value) {
+                            setState(() {});
+                          });
+                        },
+                      )
+                    : Container(),
               ],
             ),
-          )
+          ),
+        ),
+        const SizedBox(height: 10),
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          separatorBuilder: (context, index) {
+            return const SizedBox(height: 10);
+          },
+          itemCount: item.comments.length,
+          itemBuilder: (context, index) {
+            return comment(item.comments[index]);
+          },
+        ),
+      ]),
+    );
+  }
+
+  Widget comment(Comment item) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipOval(
+            child: Image.network(
+              item.user!.picture,
+              width: 40,
+              height: 40,
+              fit: BoxFit.cover,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: blackColor.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                padding: EdgeInsets.symmetric(
+                    horizontal: (screenWidth - 80) * 0.05,
+                    vertical: (screenWidth - 80) * 0.02),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Title14px(text: item.user!.nickName),
+                    SizedBox(
+                        width: (screenWidth - 80) * 0.9,
+                        child: ExpandText(
+                            text: item.description,
+                            style: const TextStyle(
+                              fontFamily: 'Athiti',
+                              fontSize: 14,
+                            ),
+                            maxLines: 3)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 5),
+              Padding(
+                padding:
+                    EdgeInsets.symmetric(horizontal: (screenWidth - 80) * 0.05),
+                child: Body12px(
+                  text: postViewModel.formatPostDate(item.createdAt),
+                  color: greyColor,
+                ),
+              )
+            ],
+          ),
         ],
       ),
     );

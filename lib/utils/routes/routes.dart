@@ -28,7 +28,7 @@ class Routes {
     GetPage(name: '/first', page: () => const FirstPage()),
     GetPage(name: '/profile', page: () => const ProfilePage()),
     GetPage(name: '/expand', page: () => const ExpandPage()),
-    GetPage(name: '/post', page: () => const PostPage()),
+    GetPage(name: '/post', page: () => PostPage()),
     GetPage(name: '/coursesubject', page: () => CourseSubject()),
     GetPage(name: '/search', page: () => const SearchPage()),
     GetPage(name: '/course/:course_id', page: () => const CoursePage()),

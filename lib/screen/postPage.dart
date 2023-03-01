@@ -1,6 +1,15 @@
+import 'package:coursez/controllers/level_controller.dart';
+import 'package:coursez/controllers/level_controller.dart';
+import 'package:coursez/controllers/post_controller.dart';
 import 'package:coursez/model/post.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/post_view_model.dart';
+import 'package:coursez/widgets/bottomSheet/customBottomSheet.dart';
+import 'package:coursez/widgets/button/textbutton.dart';
+import 'package:coursez/widgets/listView/listViewPost.dart';
+import 'package:coursez/widgets/text/body12px.dart';
+import 'package:coursez/widgets/text/body16.dart';
+import 'package:coursez/widgets/text/expandableText.dart';
 import 'package:coursez/widgets/text/title14px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
 import 'package:expandable_text/expandable_text.dart';
@@ -12,30 +21,26 @@ import '../widgets/text/body14px.dart';
 import '../widgets/text/heading1_24px.dart';
 
 class PostPage extends StatelessWidget {
-  const PostPage({super.key});
+  final PostViewModel postViewModel = PostViewModel();
+  final CustomBottomSheet customBottomSheet = CustomBottomSheet();
+  final AuthController authController = Get.find();
+  PostPage({super.key});
+
+  // onComment() {
+  //   if (authController.isLogin) {
+  //     postViewModel.addComment(postid, myComment);
+  //   } else {
+  //     Get.snackbar('กรุณาเข้าสู่ระบบ',
+  //         'เพื่อใช้งานความสามารถในการแสดงความคิดเห็นได้เต็มที่');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    Get.put(AuthController());
-    PostViewModel postViewModel = PostViewModel();
-    final List<String> classLevel = [
-      'ระดับชั้นทั้งหมด',
-      'ม.1',
-      'ม.2',
-      'ม.3',
-      'ม.4',
-      'ม.5',
-      'ม.6',
-      'มหาวิทยาลัย'
-    ];
+    PostController postController = Get.find<PostController>();
+    double screenWidth = Get.width;
+    double screenHeight = Get.height;
 
-    final List<String> subjectLevel = [
-      'วิชาทั้งหมด',
-      'คณิตศาสตร์',
-      'ภาษาไทย',
-      'ภาษาอังกฤษ',
-      'วิทยาศาสตร์',
-    ];
     return Scaffold(
         backgroundColor: whiteColor.withOpacity(0.95),
         appBar: AppBar(
@@ -56,72 +61,32 @@ class PostPage extends StatelessWidget {
               children: [
                 const Heading24px(text: 'Community ถาม - ตอบ'),
                 const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        height: 35,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: greyColor),
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: ButtonTheme(
-                          alignedDropdown: true,
-                          child: DropdownButton(
-                            alignment: Alignment.center,
-                            borderRadius: BorderRadius.circular(25),
-                            underline: Container(),
-                            value: classLevel[0],
-                            onChanged: (value) {},
-                            items: classLevel
-                                .map<DropdownMenuItem<String>>((item) {
-                              return DropdownMenuItem<String>(
-                                value: item,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 5),
-                                  child: Body14px(text: item),
-                                ),
-                              );
-                            }).toList(),
-                          ),
+                InkWell(
+                  onTap: () {
+                    customBottomSheet.bottomSheetForDropdown();
+                  },
+                  child: Center(
+                    child: Container(
+                      width: screenWidth / 1.7,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: greyColor),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Obx(() => Body16px(
+                                text:
+                                    '${postController.subjectLevel} ${postController.subjectTitle}')),
+                            const Icon(Icons.arrow_drop_down_rounded)
+                          ],
                         ),
                       ),
                     ),
-                    const SizedBox(width: 30),
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        height: 35,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: greyColor),
-                            borderRadius: BorderRadius.circular(25)),
-                        child: ButtonTheme(
-                          alignedDropdown: true,
-                          child: DropdownButton(
-                            borderRadius: BorderRadius.circular(25),
-                            underline: Container(),
-                            alignment: Alignment.center,
-                            value: subjectLevel[0],
-                            onChanged: (value) {},
-                            items: subjectLevel
-                                .map<DropdownMenuItem<String>>((item) {
-                              return DropdownMenuItem<String>(
-                                value: item,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 5),
-                                  child: Body14px(text: item),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 )
               ],
             ),
@@ -135,162 +100,11 @@ class PostPage extends StatelessWidget {
               children: [
                 newPost(),
                 const SizedBox(height: 12),
-                FutureBuilder(
-                  future: postViewModel.loadPost(0, 0),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          return postList(snapshot.data![index]);
-                        },
-                      );
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  },
-                )
+                Obx(() => PostList(subjectId: postController.subjectid))
               ],
             ),
           ),
         ));
-  }
-
-  Widget postList(Post item) {
-    final authController = Get.find<AuthController>();
-    final screenHeight = Get.height;
-    return InkWell(
-      onTap: () {
-        Get.toNamed('/post/${item.postId.toString()}', parameters: {
-          "username": item.user!.nickName,
-          "user_id": item.user!.userId.toString(),
-          "flag": "0"
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 17),
-        decoration: const BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: greyColor,
-              width: 1,
-            ),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ListTile(
-              contentPadding: const EdgeInsets.all(0),
-              leading: ClipOval(
-                child: Image.network(
-                  item.user!.picture,
-                  width: 40,
-                  height: 40,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              title: Title16px(text: item.user!.fullName),
-              trailing: authController.userid == item.user!.userId
-                  ? const Icon(Icons.more_horiz_outlined)
-                  : const SizedBox(),
-            ),
-            ExpandableText(
-              expandText: 'ดูเพิ่มเติม',
-              collapseText: 'ดูน้อยลง',
-              item.caption,
-              maxLines: 3,
-              linkColor: primaryColor,
-              style: const TextStyle(fontFamily: 'Athiti', fontSize: 14),
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            item.postPicture.isNotEmpty
-                ? InkWell(
-                    child: ClipRect(
-                      child: Image.network(
-                        item.postPicture,
-                        width: double.infinity,
-                        height: screenHeight * 0.4,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    onTap: () {
-                      showDialog(
-                          context: Get.context!,
-                          builder: (_) {
-                            return Dialog(
-                                insetPadding: const EdgeInsets.all(30),
-                                backgroundColor: Colors.transparent,
-                                child: InteractiveViewer(
-                                  minScale: 0.8,
-                                  maxScale: 2,
-                                  child: Image.network(
-                                    item.postPicture,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ));
-                          });
-                    },
-                  )
-                : const SizedBox(),
-            const SizedBox(
-              height: 12,
-            ),
-            Row(
-              children: [
-                ClipOval(
-                  child: authController.isLogin
-                      ? Image.network(
-                          authController.picture,
-                          width: 40,
-                          height: 40,
-                          fit: BoxFit.cover,
-                        )
-                      : Container(
-                          width: 40,
-                          height: 40,
-                          color: greyColor,
-                        ),
-                ),
-                Expanded(
-                  child: Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: InkWell(
-                        onTap: () {
-                          Get.toNamed('/post/${item.postId.toString()}',
-                              parameters: {
-                                "username": item.user!.nickName,
-                                "user_id": item.user!.userId.toString(),
-                                "flag": "1"
-                              });
-                        },
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          height: 45,
-                          decoration: BoxDecoration(
-                              color: whiteColor,
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(color: greyColor)),
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Body14px(
-                              text: 'แสดงความคิดเห็น',
-                              color: greyColor,
-                            ),
-                          ),
-                        ),
-                      )),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget newPost() {

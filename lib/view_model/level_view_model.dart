@@ -6,7 +6,7 @@ class LevelViewModel {
     List<Map<String, dynamic>> levelSubject = [];
     final s = await fecthData('subject');
 
-    final subject = s.map((e) => Subject.fromJson(e)).toList();
+    final List<Subject> subject = List.from(s.map((e) => Subject.fromJson(e))) ;
 
     if (level == 0) {
       for (int i in [1, 2, 3, 4, 5, 6]) {

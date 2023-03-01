@@ -67,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       width: MediaQuery.of(context).size.width * 0.5,
                       height: 50,
                       child: TextField(
+                        readOnly: true,
                         style: const TextStyle(fontFamily: 'Athiti'),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.zero,
@@ -80,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 BorderRadius.all(Radius.circular(25.0)),
                           ),
                           focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: primaryColor),
+                            borderSide: BorderSide(color: greyColor),
                             borderRadius: BorderRadius.all(
                               Radius.circular(25.0),
                             ),
