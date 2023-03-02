@@ -45,7 +45,11 @@ class PostController extends GetxController {
   String get subjectTitle => _subjectTitle.value;
   set subjectTitle(String title) => _subjectTitle.value = title;
 
-  final _subjectLevel = ''.obs;
-  String get subjectLevel => _subjectLevel.value;
-  set subjectLevel(String level) => _subjectLevel.value = level;
+  final _classLevelName = ''.obs;
+  String get classLevelName => _classLevelName.value;
+  set classLevelName(String level) => _classLevelName.value = level;
+
+  final _classLevel = 0.obs;
+  int get classLevel => _classLevel.value;
+  set classLevel(int level) => _classLevel.value = level;
 }

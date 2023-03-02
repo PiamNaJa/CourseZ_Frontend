@@ -1,46 +1,60 @@
-import 'package:coursez/controllers/level_controller.dart';
-import 'package:coursez/controllers/level_controller.dart';
+import 'dart:io';
 import 'package:coursez/controllers/post_controller.dart';
 import 'package:coursez/model/post.dart';
 import 'package:coursez/utils/color.dart';
+import 'package:coursez/utils/pickImage.dart';
 import 'package:coursez/view_model/post_view_model.dart';
-import 'package:coursez/widgets/bottomSheet/customBottomSheet.dart';
-import 'package:coursez/widgets/button/textbutton.dart';
+import 'package:coursez/widgets/alert/alert.dart';
+import 'package:coursez/widgets/bottomSheet/dropdownBottomSheet.dart';
 import 'package:coursez/widgets/listView/listViewPost.dart';
-import 'package:coursez/widgets/text/body12px.dart';
 import 'package:coursez/widgets/text/body16.dart';
-import 'package:coursez/widgets/text/expandableText.dart';
 import 'package:coursez/widgets/text/title14px.dart';
-import 'package:coursez/widgets/text/title16px.dart';
-import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-
+import 'package:image_picker/image_picker.dart';
 import '../controllers/auth_controller.dart';
 import '../widgets/text/body14px.dart';
 import '../widgets/text/heading1_24px.dart';
 
-class PostPage extends StatelessWidget {
-  final PostViewModel postViewModel = PostViewModel();
-  final CustomBottomSheet customBottomSheet = CustomBottomSheet();
-  final AuthController authController = Get.find();
-  PostPage({super.key});
+class PostPage extends StatefulWidget {
+  const PostPage({super.key});
 
-  // onComment() {
-  //   if (authController.isLogin) {
-  //     postViewModel.addComment(postid, myComment);
-  //   } else {
-  //     Get.snackbar('กรุณาเข้าสู่ระบบ',
-  //         'เพื่อใช้งานความสามารถในการแสดงความคิดเห็นได้เต็มที่');
-  //   }
-  // }
+  @override
+  State<PostPage> createState() => _PostPageState();
+}
+
+class _PostPageState extends State<PostPage> {
+  final PostViewModel postViewModel = PostViewModel();
+  final AuthController authController = Get.find();
+  File? image;
+  final TextEditingController textcontroller = TextEditingController();
+
+  Future pickImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      if (image == null) return;
+
+      final imageTemp = File(image.path);
+      setState(() => this.image = imageTemp);
+    } on PlatformException catch (e) {
+      debugPrint("Fail to pick image : $e");
+    }
+  }
+
+  onSubmit() {
+    postViewModel.createPost(textcontroller.text.trim(), image);
+    setState(() {
+      image = null;
+      textcontroller.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     PostController postController = Get.find<PostController>();
     double screenWidth = Get.width;
-    double screenHeight = Get.height;
-
     return Scaffold(
         backgroundColor: whiteColor.withOpacity(0.95),
         appBar: AppBar(
@@ -61,32 +75,8 @@ class PostPage extends StatelessWidget {
               children: [
                 const Heading24px(text: 'Community ถาม - ตอบ'),
                 const SizedBox(height: 10),
-                InkWell(
-                  onTap: () {
-                    customBottomSheet.bottomSheetForDropdown();
-                  },
-                  child: Center(
-                    child: Container(
-                      width: screenWidth / 1.7,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: greyColor),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Obx(() => Body16px(
-                                text:
-                                    '${postController.subjectLevel} ${postController.subjectTitle}')),
-                            const Icon(Icons.arrow_drop_down_rounded)
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                Center(
+                  child: postSubjectDropdown(screenWidth / 1.7),
                 )
               ],
             ),
@@ -98,7 +88,7 @@ class PostPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: Column(
               children: [
-                newPost(),
+                newPost(context),
                 const SizedBox(height: 12),
                 Obx(() => PostList(subjectId: postController.subjectid))
               ],
@@ -107,9 +97,44 @@ class PostPage extends StatelessWidget {
         ));
   }
 
-  Widget newPost() {
+  Widget postSubjectDropdown(double width) {
+    PostController postController = Get.find<PostController>();
+    return InkWell(
+      onTap: () {
+        showModalBottomSheet(
+            context: Get.context!,
+            builder: (context) {
+              return const BottomSheetForDropdown();
+            });
+      },
+      child: Container(
+        width: width,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          border: Border.all(color: greyColor),
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Obx(() => Body16px(
+                  text:
+                      '${postController.classLevelName} ${postController.subjectTitle}')),
+              const Icon(Icons.arrow_drop_down_rounded)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget newPost(BuildContext context) {
     AuthController authController = Get.find<AuthController>();
+    PostController postController = Get.find<PostController>();
     final formKey = GlobalKey<FormState>();
+
     return Container(
       decoration: BoxDecoration(
         color: whiteColor,
@@ -153,42 +178,110 @@ class PostPage extends StatelessWidget {
                     : const Body14px(text: 'นักเรียน')
                 : const Body14px(text: 'ผู้เข้าชม'),
           ),
-          Row(
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.image),
-                color: primaryColor,
-              ),
-              Form(
-                  key: formKey,
-                  child: Flexible(
-                    child: TextFormField(
-                      enabled: authController.isLogin,
-                      decoration: InputDecoration(
-                        hintText: authController.isLogin
-                            ? 'เขียนโพสต์'
-                            : 'กรุณาเข้าสู่ระบบเพื่อเขียนโพสต์',
-                        border: InputBorder.none,
+          Center(
+            child: image != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: InkWell(
+                      child: Image.file(
+                        image!,
+                        width: double.infinity,
+                        height: 120,
+                        fit: BoxFit.cover,
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
+                      onTap: () {
+                        showDialog(
+                            context: Get.context!,
+                            builder: (_) {
+                              return Dialog(
+                                  insetPadding: const EdgeInsets.all(30),
+                                  backgroundColor: Colors.transparent,
+                                  child: InteractiveViewer(
+                                    minScale: 0.8,
+                                    maxScale: 2,
+                                    child: Image.file(
+                                      image!,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ));
+                            });
                       },
                     ),
-                  )),
-              IconButton(
+                  )
+                : Container(),
+          ),
+          Form(
+            key: formKey,
+            child: Row(
+              children: [
+                IconButton(
                   onPressed: () {
-                    // if (_formKey.currentState!.validate()) {
-                    //   ScaffoldMessenger.of(context)
-                    //       .showSnackBar(const SnackBar(content: Text('Pass')));
-                    // }
+                    if (authController.isLogin) {
+                      PickImage.pickImage().then((imageTemp) {
+                        setState(() => image = imageTemp);
+                      });
+                    } else {
+                      showDialog(
+                          context: context,
+                          builder: (_) {
+                            return const AlertLogin(
+                              body: 'กรุณาเข้าสู่ระบบเพื่อเขียนโพสต์',
+                              action: 'เข้าสู่ระบบ',
+                            );
+                          });
+                    }
                   },
-                  icon: const Icon(Icons.send),
-                  color: primaryColor),
-            ],
+                  icon: const Icon(Icons.image),
+                  color: primaryColor,
+                ),
+                Flexible(
+                  child: TextFormField(
+                    controller: textcontroller,
+                    enabled: authController.isLogin,
+                    decoration: InputDecoration(
+                      hintText: authController.isLogin
+                          ? 'เขียนโพสต์'
+                          : 'กรุณาเข้าสู่ระบบเพื่อเขียนโพสต์',
+                      border: InputBorder.none,
+                    ),
+                    onTap: () {
+                      if (!authController.isLogin) {
+                        showDialog(
+                            context: context,
+                            builder: (_) {
+                              return const AlertLogin(
+                                body: 'กรุณาเข้าสู่ระบบเพื่อเขียนโพสต์',
+                                action: 'เข้าสู่ระบบ',
+                              );
+                            });
+                      }
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'โปรดกรอกข้อความ';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                IconButton(
+                    onPressed: () {
+                      if (postController.classLevel != 0) {
+                        if (formKey.currentState!.validate()) {
+                          onSubmit();
+                        }
+                      } else {
+                        Get.snackbar(
+                            'กรุณาเลือกวิชา', 'กรุณาเลือกวิชาที่ต้องการโพสต์',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red,
+                            colorText: whiteColor);
+                      }
+                    },
+                    icon: const Icon(Icons.send),
+                    color: primaryColor),
+              ],
+            ),
           )
         ],
       ),

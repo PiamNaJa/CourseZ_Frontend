@@ -1,11 +1,10 @@
 import 'package:coursez/controllers/auth_controller.dart';
-import 'package:coursez/controllers/post_controller.dart';
 import 'package:coursez/model/comment.dart';
 import 'package:coursez/model/post.dart';
 import 'package:coursez/repository/post_repository.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/post_view_model.dart';
-import 'package:coursez/widgets/bottomSheet/customBottomSheet.dart';
+import 'package:coursez/widgets/bottomSheet/postBottomSheet.dart';
 import 'package:coursez/widgets/text/body12px.dart';
 import 'package:coursez/widgets/text/expandableText.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
@@ -24,7 +23,6 @@ class _PostdetailPageState extends State<PostdetailPage> {
   AuthController authController = Get.find<AuthController>();
   PostViewModel postViewModel = PostViewModel();
   PostRepository postRepository = PostRepository();
-  final CustomBottomSheet customBottomSheet = CustomBottomSheet();
   final String postid = Get.parameters['post_id']!;
   String username = Get.parameters['username']!;
   String userid = Get.parameters['user_id']!;
@@ -94,8 +92,13 @@ class _PostdetailPageState extends State<PostdetailPage> {
           (authController.userid == int.parse(userid))
               ? IconButton(
                   icon: const Icon(Icons.more_horiz_rounded, color: greyColor),
-                  onPressed: () async {
-                    customBottomSheet.bottomSheetForPost(await data);
+                  onPressed: () async{
+                    Post postData = await data;
+                    showModalBottomSheet(
+                        context: Get.context!,
+                        builder: (context) {
+                          return BottomSheetForPost(item: postData);
+                        });
                   },
                 )
               : Container(),

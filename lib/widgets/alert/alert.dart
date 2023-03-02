@@ -36,7 +36,10 @@ class AlertLogin extends StatelessWidget {
             Navigator.pop(context, false);
             Navigator.pushNamed(context, '/login');
           },
-          child: Title14px(text: action),
+          child: Title14px(
+            text: action,
+            color: primaryColor,
+          ),
         )
       ],
     );

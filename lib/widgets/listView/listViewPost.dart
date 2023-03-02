@@ -3,7 +3,7 @@ import 'package:coursez/controllers/post_controller.dart';
 import 'package:coursez/model/post.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/post_view_model.dart';
-import 'package:coursez/widgets/bottomSheet/customBottomSheet.dart';
+import 'package:coursez/widgets/bottomSheet/postBottomSheet.dart';
 import 'package:coursez/widgets/text/body12px.dart';
 import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/expandableText.dart';
@@ -19,7 +19,6 @@ class PostList extends StatelessWidget {
 
   PostViewModel postViewModel = PostViewModel();
   AuthController authController = Get.find();
-  CustomBottomSheet customBottomSheet = CustomBottomSheet();
   PostController postController = Get.find<PostController>();
 
   @override
@@ -110,9 +109,21 @@ class PostList extends StatelessWidget {
             ),
             trailing: authController.userid == item.user!.userId
                 ? IconButton(
-                    icon: const Icon(Icons.more_horiz_outlined),
+                    icon: const Icon(
+                      Icons.more_horiz_outlined,
+                      color: greyColor,
+                    ),
                     onPressed: () {
-                      customBottomSheet.bottomSheetForPost(item);
+                      showModalBottomSheet(
+                          context: Get.context!,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20)),
+                          ),
+                          builder: (context) {
+                            return BottomSheetForPost(item: item);
+                          });
                     })
                 : const SizedBox(),
           ),
@@ -222,58 +233,61 @@ class PostList extends StatelessWidget {
           ),
           if (item.comments.isNotEmpty)
             for (var i = 0; i < item.comments.length && i < 2; i++)
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipOval(
-                    child: Image.network(
-                      item.comments[i].user!.picture,
-                      width: 40,
-                      height: 40,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: blackColor.withOpacity(0.05),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: (screenWidth - 80) * 0.05,
-                            vertical: (screenWidth - 80) * 0.02),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Title14px(text: item.comments[i].user!.fullName),
-                            SizedBox(
-                                width: (screenWidth - 80) * 0.9,
-                                child: ExpandText(
-                                    text: item.comments[i].description,
-                                    style: const TextStyle(
-                                      fontFamily: 'Athiti',
-                                      fontSize: 14,
-                                    ),
-                                    maxLines: 3)),
-                          ],
-                        ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipOval(
+                      child: Image.network(
+                        item.comments[i].user!.picture,
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.cover,
                       ),
-                      const SizedBox(height: 5),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: (screenWidth - 80) * 0.05),
-                        child: Body12px(
-                          text: postViewModel
-                              .formatPostDate(item.comments[i].createdAt),
-                          color: greyColor,
+                    ),
+                    const SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: blackColor.withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: (screenWidth - 80) * 0.05,
+                              vertical: (screenWidth - 80) * 0.02),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Title14px(text: item.comments[i].user!.fullName),
+                              SizedBox(
+                                  width: (screenWidth - 80) * 0.9,
+                                  child: ExpandText(
+                                      text: item.comments[i].description,
+                                      style: const TextStyle(
+                                        fontFamily: 'Athiti',
+                                        fontSize: 14,
+                                      ),
+                                      maxLines: 3)),
+                            ],
+                          ),
                         ),
-                      )
-                    ],
-                  ),
-                ],
+                        const SizedBox(height: 5),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: (screenWidth - 80) * 0.05),
+                          child: Body12px(
+                            text: postViewModel
+                                .formatPostDate(item.comments[i].createdAt),
+                            color: greyColor,
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               )
           else
             const SizedBox(),

@@ -9,7 +9,7 @@ class Post {
   final int userid;
   final User? user;
   final String caption;
-  final String postPicture;
+  late final String postPicture;
   final List<Comment> comments;
   final int createdAt;
 

@@ -4,11 +4,14 @@ class DateViewModel {
   String formatDate(int createdAt) {
     var date = DateTime.fromMillisecondsSinceEpoch(createdAt * 1000);
     String timeago = Jiffy(date).fromNow();
-    if (timeago.contains('a few seconds')) {
+    if (timeago.contains('in a few second') ||
+        timeago.contains('a few seconds')) {
+      timeago = timeago.replaceAll('in a few seconds', 'ไม่กี่วินาที');
       timeago = timeago.replaceAll('a few seconds', 'ไม่กี่วินาที');
     } else if (timeago.contains('a second')) {
       timeago = timeago.replaceAll('a second', '1 วินาที');
-    } else if (timeago.contains('a minute')) {
+    } else if (timeago.contains('in a few minute') || timeago.contains('a minute')) {
+      timeago = timeago.replaceAll('in a few minute', '1 นาที');
       timeago = timeago.replaceAll('a minute', '1 นาที');
     } else if (timeago.contains('an hour')) {
       timeago = timeago.replaceAll('an hour', '1 ชั่วโมง');
