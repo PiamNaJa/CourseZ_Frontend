@@ -245,20 +245,12 @@ class _SearchPageState extends State<SearchPage> {
                     )
                   ]),
               child: ListTile(
-                visualDensity: const VisualDensity(vertical: 4),
-                contentPadding: const EdgeInsets.all(5),
-                leading: Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: CircleAvatar(
-                    radius: 30,
-                    child: ClipOval(
-                      child: Image.network(
-                        item[index].picture,
-                        height: 100,
-                        width: 100,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                leading: ClipOval(
+                  child: Image.network(
+                    item[index].picture,
+                    fit: BoxFit.cover,
                   ),
                 ),
                 title: Title16px(text: item[index].nickname),
@@ -266,6 +258,7 @@ class _SearchPageState extends State<SearchPage> {
                   rating: item[index].rating.toDouble(),
                   size: 20,
                 ),
+                trailing: const Icon(Icons.keyboard_arrow_right),
               ),
             ));
   }
