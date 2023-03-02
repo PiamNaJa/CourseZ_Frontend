@@ -36,7 +36,7 @@ class _CoursePageState extends State<CoursePage> {
   int sumVideoPrice = 0;
   bool isCalPrice = false, isLike = false;
   User teacher = User(
-      picture: '',
+      picture: 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
       userId: 0,
       email: '',
       fullName: '',
