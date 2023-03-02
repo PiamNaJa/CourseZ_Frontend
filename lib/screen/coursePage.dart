@@ -34,9 +34,10 @@ class _CoursePageState extends State<CoursePage> {
   final TutorViewModel tutorViewModel = TutorViewModel();
   List paidVideo = [];
   int sumVideoPrice = 0;
-  bool isCalPrice = false, isLike = false;
+  bool isCalPrice = false, isLike = false, isFetchTeacher = false;
   User teacher = User(
-      picture: 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
+      picture:
+          'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
       userId: 0,
       email: '',
       fullName: '',
@@ -78,11 +79,14 @@ class _CoursePageState extends State<CoursePage> {
                   future: data,
                   builder: ((context, snapshot) {
                     if (snapshot.hasData) {
-                      tutorViewModel
-                          .loadTutorById(snapshot.data!.teacherId.toString())
-                          .then((value) => setState(() {
-                                teacher = value;
-                              }));
+                      if (!isFetchTeacher) {
+                        tutorViewModel
+                            .loadTutorById(snapshot.data!.teacherId.toString())
+                            .then((value) => setState(() {
+                                  teacher = value;
+                                  isFetchTeacher = true;
+                                }));
+                      }
                       return SizedBox(
                         child: detail(snapshot.data!),
                       );
