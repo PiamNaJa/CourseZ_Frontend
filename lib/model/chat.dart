@@ -51,9 +51,9 @@ class ChatRoom {
   factory ChatRoom.fromJson(Map<String, dynamic> json) {
     return ChatRoom(
         inboxId: json['inbox_id'],
-        conversations: List.from(json['conversations']
+        conversations: json['conversations']!= null ?List.from(json['conversations']
             .map((v) => Conversations.fromJson(v))
-            .toList()));
+            .toList()): List.empty()) ;
   }
 
   Map<String, dynamic> toJson() {
@@ -69,14 +69,14 @@ class Conversations {
   int chatroomId;
   int senderId;
   String message;
-  int createAt;
+  int createdAt;
 
   Conversations(
       {required this.conversationId,
       required this.chatroomId,
       required this.senderId,
       required this.message,
-      required this.createAt});
+      required this.createdAt});
 
   factory Conversations.fromJson(Map<String, dynamic> json) {
     return Conversations(
@@ -84,7 +84,7 @@ class Conversations {
         chatroomId: json['chatroom_id'],
         senderId: json['sender_id'],
         message: json['message'],
-        createAt: json['create_at']);
+        createdAt: json['created_at']);
   }
 
   Map<String, dynamic> toJson() {
@@ -93,7 +93,7 @@ class Conversations {
     data['chatroom_id'] = chatroomId;
     data['sender_id'] = senderId;
     data['message'] = message;
-    data['create_at'] = createAt;
+    data['create_at'] = createdAt;
     return data;
   }
 }

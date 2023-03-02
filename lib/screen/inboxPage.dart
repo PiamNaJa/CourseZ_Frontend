@@ -3,7 +3,7 @@ import 'package:coursez/controllers/inboxcontroller.dart';
 import 'package:coursez/model/chat.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/widgets/button/button.dart';
-import 'package:coursez/widgets/text/heading1_30px.dart';
+import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/material.dart';
@@ -14,37 +14,70 @@ class InboxPage extends StatelessWidget {
   final authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      if (authController.isLogin) {
-        final inbox = Get.find<InboxController>();
-        inbox.fetchInbox();
-        if (inbox.inbox.isNotEmpty) {
-          return ListView.builder(
-              itemCount: inbox.inbox.length,
-              itemBuilder: (context, index) {
-                return inboxList(inbox.inbox[index]);
+    // final ChatViewModel chatViewModel = ChatViewModel();
+    // return Bt(text: "New Inbox", color: primaryColor, onPressed: () {
+    //   chatViewModel.newInbox(9);
+    // });
+    return Obx(
+      () {
+        if (authController.isLogin) {
+          final inbox = Get.find<InboxController>();
+          inbox.fetchInbox();
+          return StreamBuilder(
+              stream: inbox.inboxStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final List<Inbox> data = snapshot.data!;
+                  if (data.isEmpty) {
+                    return const Center(
+                        child: Heading24px(text: "คุณยังไม่มีการสนทนา"));
+                  }
+                  return ListView.builder(
+                    itemCount: data.length,
+                    itemBuilder: (context, index) {
+                      return inboxList(data[index]);
+                    },
+                  );
+                } else if (snapshot.hasError) {
+                  return const Center(
+                      child: Heading20px(
+                    text: "เกิดข้อผิดพลาด",
+                    color: Colors.red,
+                  ));
+                } else {
+                  return const Center(
+                      child: CircularProgressIndicator(
+                    color: primaryColor,
+                  ));
+                }
               });
-        } else {
-          return const Center(child: Heading20px(text: "คุณยังไม่มีการสนทนา"));
         }
-      }
-      return notLoginUI();
-    });
+        return notLoginUI();
+      },
+    );
   }
 
   Widget inboxList(Inbox data) {
+    final bool isUrl = GetUtils.isURL(data.lastMessage);
+    final bool isMeUser1 = authController.userid == data.user1.userId;
     return InkWell(
       onTap: () {
         Get.toNamed('/chat/${data.inboxId}');
       },
       child: ListTile(
         leading: CircleAvatar(
-          backgroundImage: NetworkImage(data.user1.picture),
+          backgroundImage:
+              NetworkImage(isMeUser1 ? data.user2.picture : data.user1.picture),
         ),
-        title: Title16px(text: data.user1.nickName),
+        title: Title16px(
+            text: isMeUser1 ? data.user2.nickName : data.user1.nickName),
         subtitle: Text(data.lastMessageUserId == authController.userid
-            ? "คุณ : ${data.lastMessage}"
-            : data.lastMessage),
+            ? isUrl
+                ? "คุณ : ได้ส่งรูปภาพ"
+                : "คุณ : ${data.lastMessage}"
+            : isUrl
+                ? "ได้ส่งรูปภาพ"
+                : data.lastMessage),
       ),
     );
   }

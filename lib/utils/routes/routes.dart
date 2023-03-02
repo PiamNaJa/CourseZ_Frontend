@@ -29,7 +29,7 @@ class Routes {
     GetPage(name: '/post', page: () => const PostPage()),
     GetPage(name: '/coursesubject', page: () => CourseSubject()),
     GetPage(name: '/course/:course_id', page: () => const CoursePage()),
-    GetPage(name: '/chat', page: () => const ChatPage()),
+    GetPage(name: '/chat/:chatroom_id', page: () => const ChatPage()),
     GetPage(name: '/course/:course_id/video/:video_id', page: () => const VideoPage()),
     
   ];

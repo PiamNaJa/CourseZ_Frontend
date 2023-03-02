@@ -8,11 +8,7 @@ class InboxController extends GetxController {
   List<Inbox> get inbox => _inbox;
   set inbox(List<Inbox> value) => _inbox.value = value;
 
-  fetchInbox() async => inbox = await chatViewModel.getInbox();
+  void fetchInbox() async => inbox = await chatViewModel.getInbox();
 
-  @override
-  void onInit() {
-    fetchInbox();
-    super.onInit();
-  }
+  Stream<List<Inbox>> get inboxStream => _inbox.stream;
 }
