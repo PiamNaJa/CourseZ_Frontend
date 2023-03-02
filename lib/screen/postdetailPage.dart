@@ -34,8 +34,6 @@ class _PostdetailPageState extends State<PostdetailPage> {
   String myComment = '';
   final formkey = GlobalKey<FormState>();
 
-  late Future<Post> data;
-
   @override
   void initState() {
     postController.fetchPost(postid);
@@ -97,11 +95,11 @@ class _PostdetailPageState extends State<PostdetailPage> {
               ? IconButton(
                   icon: const Icon(Icons.more_horiz_rounded, color: greyColor),
                   onPressed: () async {
-                    Post postData = await data;
+                    
                     showModalBottomSheet(
                         context: Get.context!,
                         builder: (context) {
-                          return BottomSheetForPost(item: postData);
+                          return BottomSheetForPost(item: postController.post);
                         });
                   },
                 )
