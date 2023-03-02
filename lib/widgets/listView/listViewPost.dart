@@ -23,7 +23,7 @@ class PostList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    postController.fecthPostList(subjectId);
+    postController.fetchPostList(subjectId);
     return StreamBuilder(
         stream: postController.postListStream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {

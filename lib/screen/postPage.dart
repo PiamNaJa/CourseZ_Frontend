@@ -135,117 +135,93 @@ class _PostPageState extends State<PostPage> {
     PostController postController = Get.find<PostController>();
     final formKey = GlobalKey<FormState>();
 
-    return Container(
-      decoration: BoxDecoration(
-        color: whiteColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 0,
-            blurRadius: 5,
-            offset: const Offset(0, 5), // changes position of shadow
-          ),
-        ],
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(20),
-          bottomRight: Radius.circular(20),
-        ),
-      ),
-      child: Column(
-        children: [
-          ListTile(
-            leading: ClipOval(
-              child: authController.isLogin
-                  ? Image.network(
-                      authController.picture,
-                      width: 40,
-                      height: 40,
-                      fit: BoxFit.cover,
-                    )
-                  : Container(
-                      width: 40,
-                      height: 40,
-                      color: greyColor,
-                    ),
+    return Obx((() {
+      return Container(
+        decoration: BoxDecoration(
+          color: whiteColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 0,
+              blurRadius: 5,
+              offset: const Offset(0, 5), // changes position of shadow
             ),
-            title: authController.isLogin
-                ? Title14px(text: authController.username)
-                : const Title14px(text: 'ผู้เข้าชม'),
-            subtitle: authController.isLogin
-                ? authController.role == 'Teacher' ||
-                        authController.role == 'Tutor'
-                    ? const Body14px(text: 'คุณครู')
-                    : const Body14px(text: 'นักเรียน')
-                : const Body14px(text: 'ผู้เข้าชม'),
+          ],
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(20),
+            bottomRight: Radius.circular(20),
           ),
-          Center(
-            child: image != null
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: InkWell(
-                      child: Image.file(
-                        image!,
-                        width: double.infinity,
-                        height: 120,
+        ),
+        child: Column(
+          children: [
+            ListTile(
+              leading: ClipOval(
+                child: authController.isLogin
+                    ? Image.network(
+                        authController.picture,
+                        width: 40,
+                        height: 40,
                         fit: BoxFit.cover,
+                      )
+                    : Container(
+                        width: 40,
+                        height: 40,
+                        color: greyColor,
                       ),
-                      onTap: () {
-                        showDialog(
-                            context: Get.context!,
-                            builder: (_) {
-                              return Dialog(
-                                  insetPadding: const EdgeInsets.all(30),
-                                  backgroundColor: Colors.transparent,
-                                  child: InteractiveViewer(
-                                    minScale: 0.8,
-                                    maxScale: 2,
-                                    child: Image.file(
-                                      image!,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ));
-                            });
-                      },
-                    ),
-                  )
-                : Container(),
-          ),
-          Form(
-            key: formKey,
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    if (authController.isLogin) {
-                      PickImage.pickImage().then((imageTemp) {
-                        setState(() => image = imageTemp);
-                      });
-                    } else {
-                      showDialog(
-                          context: context,
-                          builder: (_) {
-                            return const AlertLogin(
-                              body: 'กรุณาเข้าสู่ระบบเพื่อเขียนโพสต์',
-                              action: 'เข้าสู่ระบบ',
-                            );
-                          });
-                    }
-                  },
-                  icon: const Icon(Icons.image),
-                  color: primaryColor,
-                ),
-                Flexible(
-                  child: TextFormField(
-                    controller: textcontroller,
-                    enabled: authController.isLogin,
-                    decoration: InputDecoration(
-                      hintText: authController.isLogin
-                          ? 'เขียนโพสต์'
-                          : 'กรุณาเข้าสู่ระบบเพื่อเขียนโพสต์',
-                      border: InputBorder.none,
-                    ),
-                    onTap: () {
-                      if (!authController.isLogin) {
+              ),
+              title: authController.isLogin
+                  ? Title14px(text: authController.username)
+                  : const Title14px(text: 'ผู้เข้าชม'),
+              subtitle: authController.isLogin
+                  ? authController.role == 'Teacher' ||
+                          authController.role == 'Tutor'
+                      ? const Body14px(text: 'คุณครู')
+                      : const Body14px(text: 'นักเรียน')
+                  : const Body14px(text: 'ผู้เข้าชม'),
+            ),
+            Center(
+              child: image != null
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: InkWell(
+                        child: Image.file(
+                          image!,
+                          width: double.infinity,
+                          height: 120,
+                          fit: BoxFit.cover,
+                        ),
+                        onTap: () {
+                          showDialog(
+                              context: Get.context!,
+                              builder: (_) {
+                                return Dialog(
+                                    insetPadding: const EdgeInsets.all(30),
+                                    backgroundColor: Colors.transparent,
+                                    child: InteractiveViewer(
+                                      minScale: 0.8,
+                                      maxScale: 2,
+                                      child: Image.file(
+                                        image!,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ));
+                              });
+                        },
+                      ),
+                    )
+                  : Container(),
+            ),
+            Form(
+              key: formKey,
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      if (authController.isLogin) {
+                        PickImage.pickImage().then((imageTemp) {
+                          setState(() => image = imageTemp);
+                        });
+                      } else {
                         showDialog(
                             context: context,
                             builder: (_) {
@@ -256,35 +232,65 @@ class _PostPageState extends State<PostPage> {
                             });
                       }
                     },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'โปรดกรอกข้อความ';
-                      }
-                      return null;
-                    },
+                    icon: const Icon(Icons.image),
+                    color: primaryColor,
                   ),
-                ),
-                IconButton(
-                    onPressed: () {
-                      if (postController.classLevel != 0) {
-                        if (formKey.currentState!.validate()) {
-                          onSubmit();
+                  Flexible(
+                    child: TextFormField(
+                      controller: textcontroller,
+                      enabled: authController.isLogin,
+                      decoration: InputDecoration(
+                        hintStyle: const TextStyle(
+                          fontFamily: 'Athiti',
+                          fontSize: 16,
+                        ),
+                        hintText: authController.isLogin
+                            ? 'เขียนโพสต์'
+                            : 'กรุณาเข้าสู่ระบบเพื่อเขียนโพสต์ที่หน้าโปรไฟล์',
+                        border: InputBorder.none,
+                      ),
+                      onTap: () {
+                        if (!authController.isLogin) {
+                          showDialog(
+                              context: context,
+                              builder: (_) {
+                                return const AlertLogin(
+                                  body: 'กรุณาเข้าสู่ระบบเพื่อเขียนโพสต์',
+                                  action: 'เข้าสู่ระบบ',
+                                );
+                              });
                         }
-                      } else {
-                        Get.snackbar(
-                            'กรุณาเลือกวิชา', 'กรุณาเลือกวิชาที่ต้องการโพสต์',
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: Colors.red,
-                            colorText: whiteColor);
-                      }
-                    },
-                    icon: const Icon(Icons.send),
-                    color: primaryColor),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'โปรดกรอกข้อความ';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        if (postController.classLevel != 0) {
+                          if (formKey.currentState!.validate()) {
+                            onSubmit();
+                          }
+                        } else {
+                          Get.snackbar(
+                              'กรุณาเลือกวิชา', 'กรุณาเลือกวิชาที่ต้องการโพสต์',
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.red,
+                              colorText: whiteColor);
+                        }
+                      },
+                      icon: const Icon(Icons.send),
+                      color: primaryColor),
+                ],
+              ),
+            )
+          ],
+        ),
+      );
+    }));
   }
 }

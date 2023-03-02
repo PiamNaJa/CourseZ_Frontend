@@ -1,7 +1,10 @@
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/model/course.dart';
+import 'package:coursez/model/tutor.dart';
+import 'package:coursez/model/user.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/course_view_model.dart';
+import 'package:coursez/view_model/tutor_view_model.dart';
 import 'package:coursez/widgets/Icon/border_icon.dart';
 import 'package:coursez/widgets/alert/alert.dart';
 import 'package:coursez/widgets/button/button.dart';
@@ -28,13 +31,28 @@ class _CoursePageState extends State<CoursePage> {
   late Future<Course> data;
   final AuthController authController = Get.find();
   final CourseViewModel courseViewModel = CourseViewModel();
+  final TutorViewModel tutorViewModel = TutorViewModel();
   List paidVideo = [];
   int sumVideoPrice = 0;
   bool isCalPrice = false, isLike = false;
+  User teacher = User(
+      picture: '',
+      userId: 0,
+      email: '',
+      fullName: '',
+      nickName: '',
+      history: [],
+      likeCourses: [],
+      likeVideos: [],
+      paidVideos: [],
+      point: 0,
+      role: '',
+      transactions: []);
 
   @override
   void initState() {
     data = courseViewModel.loadCourseById(int.parse(courseId));
+
     if (authController.isLogin) {
       courseViewModel.getPaidVideo().then((value) => setState(
             () => paidVideo.addAll(value),
@@ -60,6 +78,11 @@ class _CoursePageState extends State<CoursePage> {
                   future: data,
                   builder: ((context, snapshot) {
                     if (snapshot.hasData) {
+                      tutorViewModel
+                          .loadTutorById(snapshot.data!.teacherId.toString())
+                          .then((value) => setState(() {
+                                teacher = value;
+                              }));
                       return SizedBox(
                         child: detail(snapshot.data!),
                       );
@@ -163,18 +186,46 @@ class _CoursePageState extends State<CoursePage> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 5),
-                            child: RatingStar(rating: courseData.rating, size: 20,),
+                            child: RatingStar(
+                              rating: courseData.rating,
+                              size: 20,
+                            ),
                           ),
                           Title14px(
                               text: courseData.rating.toStringAsPrecision(2)),
                         ],
                       ),
-                      const Title14px(
-                        text: 'ชื่อครู',
-                        color: greyColor,
-                      ),
-                      const SizedBox(
-                        height: padding,
+                      Row(
+                        children: [
+                          ClipOval(
+                            child: Image.network(
+                              teacher.picture,
+                              width: 30,
+                              height: 30,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          TextButton(
+                              onPressed: () {
+                                Get.toNamed(
+                                    '/tutor/${teacher.userTeacher!.teacherId}');
+                              },
+                              style: ButtonStyle(
+                                padding: MaterialStateProperty.all<EdgeInsets>(
+                                    const EdgeInsets.all(0)),
+                              ),
+                              child: Text(
+                                '${teacher.fullName} (${teacher.nickName})',
+                                style: const TextStyle(
+                                    fontFamily: 'Athiti',
+                                    fontSize: 14,
+                                    color: greyColor,
+                                    decoration: TextDecoration.underline),
+                              )),
+                        ],
                       ),
                     ],
                   )),
@@ -319,8 +370,13 @@ class _CoursePageState extends State<CoursePage> {
                                         });
                                       } else {
                                         Get.toNamed(
-                                            "/course/$courseId/video/${courseData.videos[index].videoId}", parameters: {'video_name': courseData.videos[index].videoName,
-                                            'teacher_id': courseData.teacherId.toString(),});
+                                            "/course/$courseId/video/${courseData.videos[index].videoId}",
+                                            parameters: {
+                                              'video_name': courseData
+                                                  .videos[index].videoName,
+                                              'teacher_id': courseData.teacherId
+                                                  .toString(),
+                                            });
                                       }
                                     }
                                   },

@@ -65,6 +65,7 @@ class PostViewModel {
   Future<void> addComment(String postId, String comment) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token')!;
+    final PostController postController = Get.find<PostController>();
     final bool isPass =
         await _postRepository.addComment(postId, comment, token);
 
@@ -74,6 +75,7 @@ class PostViewModel {
           backgroundColor: Colors.red,
           colorText: whiteColor);
     }
+    postController.fetchPost(postId);
   }
 
   Future<void> deletePost(String postId) async {
@@ -109,7 +111,7 @@ class PostViewModel {
           backgroundColor: Colors.red,
           colorText: whiteColor);
     } else {
-      postController.fecthPostList(postController.subjectid);
+      postController.fetchPostList(postController.subjectid);
     }
   }
 
@@ -134,8 +136,8 @@ class PostViewModel {
           backgroundColor: Colors.red,
           colorText: whiteColor);
     } else {
-      postController.fecthPostList(postController.subjectid);
-      postController.fecthPost(postId);
+      postController.fetchPostList(postController.subjectid);
+      postController.fetchPost(postId);
     }
   }
 }

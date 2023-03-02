@@ -282,7 +282,7 @@ class BottomSheetForPost extends StatelessWidget {
                             await postViewModel
                                 .deletePost(item.postId.toString());
                             await postController
-                                .fecthPostList(postController.subjectid);
+                                .fetchPostList(postController.subjectid);
                           },
                           child: const Title16px(
                             text: 'ตกลง',

@@ -24,8 +24,9 @@ class PostController extends GetxController {
         comments: [],
         createdAt: 0);
   }
+  Stream<Post> get postStream => _post.stream;
 
-  Future<void> fecthPost(String postId) async {
+  Future<void> fetchPost(String postId) async {
     Post post = await postViewModel.loadPostById(postId);
     _post.value = post;
   }
@@ -33,7 +34,7 @@ class PostController extends GetxController {
   final _postList = <Post>[].obs;
   List<Post> get postList => _postList;
   set postList(List<Post> postList) => _postList.value = postList;
-  Future<void> fecthPostList(int subjectId) async =>
+  Future<void> fetchPostList(int subjectId) async =>
       postList = await postViewModel.loadPost(subjectId);
 
   Stream<List<Post>> get postListStream => _postList.stream;

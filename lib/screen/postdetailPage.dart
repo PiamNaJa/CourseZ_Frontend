@@ -1,4 +1,5 @@
 import 'package:coursez/controllers/auth_controller.dart';
+import 'package:coursez/controllers/post_controller.dart';
 import 'package:coursez/model/comment.dart';
 import 'package:coursez/model/post.dart';
 import 'package:coursez/repository/post_repository.dart';
@@ -22,7 +23,8 @@ class PostdetailPage extends StatefulWidget {
 class _PostdetailPageState extends State<PostdetailPage> {
   AuthController authController = Get.find<AuthController>();
   PostViewModel postViewModel = PostViewModel();
-  PostRepository postRepository = PostRepository();
+  PostController postController = Get.find<PostController>();
+  TextEditingController textController = TextEditingController();
   final String postid = Get.parameters['post_id']!;
   String username = Get.parameters['username']!;
   String userid = Get.parameters['user_id']!;
@@ -37,14 +39,17 @@ class _PostdetailPageState extends State<PostdetailPage> {
 
   @override
   void initState() {
-    data = postViewModel.loadPostById(postid);
+    postController.fetchPost(postid);
     super.initState();
   }
 
   Future<void> onComment() async {
     if (authController.isLogin) {
-      data = postViewModel.loadPostById(postid);
       await postViewModel.addComment(postid, myComment);
+      setState(() {
+        myComment = '';
+        textController.clear();
+      });
     } else {
       Get.snackbar('กรุณาเข้าสู่ระบบ',
           'เพื่อใช้งานความสามารถในการแสดงความคิดเห็นได้เต็มที่');
@@ -92,7 +97,7 @@ class _PostdetailPageState extends State<PostdetailPage> {
           (authController.userid == int.parse(userid))
               ? IconButton(
                   icon: const Icon(Icons.more_horiz_rounded, color: greyColor),
-                  onPressed: () async{
+                  onPressed: () async {
                     Post postData = await data;
                     showModalBottomSheet(
                         context: Get.context!,
@@ -105,8 +110,8 @@ class _PostdetailPageState extends State<PostdetailPage> {
         ],
       ),
       body: SingleChildScrollView(
-          child: FutureBuilder(
-        future: data,
+          child: StreamBuilder(
+        stream: postController.postStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return postDetail(snapshot.data!);
@@ -186,6 +191,7 @@ class _PostdetailPageState extends State<PostdetailPage> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: TextField(
+                    controller: textController,
                     autofocus: (autoFocus == '1') ? true : false,
                     decoration: const InputDecoration(
                       focusColor: primaryColor,

@@ -1,3 +1,5 @@
+import 'package:coursez/model/tutor.dart';
+import 'package:coursez/model/user.dart';
 import 'package:coursez/utils/fetchData.dart';
 
 class TutorViewModel {
@@ -11,5 +13,10 @@ class TutorViewModel {
       t.forEach((e) => tutorLevel.add(e));
     }
     return tutorLevel;
+  }
+
+  Future<User> loadTutorById(String teacherId) async {
+    final t = await fecthData('user/teacher/$teacherId');
+    return User.fromJson(t);
   }
 }
