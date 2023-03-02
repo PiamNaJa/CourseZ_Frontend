@@ -25,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final Color _prefixIconColor = greyColor;
   final CourseViewModel courseViewModel = CourseViewModel();
   final TutorViewModel tutorViewModel = TutorViewModel();
-  final LevelController levelController = Get.put(LevelController());
+  final LevelController levelController = Get.find<LevelController>();
   final AuthController _authController = Get.find<AuthController>();
   late final ScrollController _scrollController = ScrollController();
 
@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 centerTitle: true,
                 title: Obx(() => Heading24px(
                     text: _authController.isLogin
-                        ? 'สวัสดีคุณ ${_authController.userid}'
+                        ? 'สวัสดีคุณ ${_authController.username}'
                         : 'ยินดีต้อนรับสู่ CourseZ')),
               ),
             ];
