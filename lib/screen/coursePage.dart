@@ -1,6 +1,5 @@
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/model/course.dart';
-import 'package:coursez/model/tutor.dart';
 import 'package:coursez/model/user.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/course_view_model.dart';

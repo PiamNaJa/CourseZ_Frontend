@@ -1,11 +1,8 @@
-import 'package:coursez/controllers/choice_controller.dart';
 import 'package:coursez/model/choice.dart';
 import 'package:coursez/model/exercise.dart';
 import 'package:coursez/utils/color.dart';
-import 'package:coursez/view_model/exercise_view_model.dart';
 import 'package:coursez/widgets/button/button.dart';
 import 'package:coursez/widgets/text/body14px.dart';
-import 'package:coursez/widgets/text/body16.dart';
 import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:coursez/widgets/text/title16px.dart';

@@ -16,7 +16,6 @@ class ExercisePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ChoiceController choiceController = Get.put(ChoiceController());
     final ExerciseViewModel exerciseViewModel = ExerciseViewModel();
-    final AuthController authController = Get.find<AuthController>();
     onSubmit(List<Exercise> exercise) {
       final userSelectedChoice = Map.fromEntries(
           choiceController.getchoice.entries.toList()
@@ -136,7 +135,10 @@ class _ExerciseListState extends State<ExerciseList> {
     return Column(
       children: [
         ListTile(
-          title: Title16px(text: widget.exercise.question),
+          title: Title16px(
+            text: widget.exercise.question,
+            overflow: TextOverflow.visible,
+          ),
         ),
         if (widget.exercise.image.isNotEmpty)
           Padding(

@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:coursez/controllers/post_controller.dart';
-import 'package:coursez/model/post.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/utils/pickImage.dart';
 import 'package:coursez/view_model/post_view_model.dart';

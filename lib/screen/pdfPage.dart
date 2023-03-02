@@ -31,11 +31,6 @@ class _PDFPageState extends State<PDFPage> {
   @override
   void initState() {
     IsolateNameServer.registerPortWithName(_port.sendPort, 'downloading');
-    _port.listen((message) {
-      setState(() {
-        progess = message[2].toDouble();
-      });
-    });
     FlutterDownloader.registerCallback(downloadingcallback);
     super.initState();
   }
@@ -47,14 +42,6 @@ class _PDFPageState extends State<PDFPage> {
         appBar: AppBar(
           elevation: 0.0,
           title: Heading20px(text: widget.name),
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(0),
-            child: LinearProgressIndicator(
-              value: progess,
-              backgroundColor: Colors.grey[200],
-              valueColor: const AlwaysStoppedAnimation<Color>(primaryColor),
-            ),
-          ),
           backgroundColor: Colors.transparent,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios, color: primaryColor),

@@ -12,7 +12,6 @@ import '../utils/color.dart';
 import '../view_model/course_view_model.dart';
 import '../view_model/search_view_model.dart';
 import '../view_model/tutor_view_model.dart';
-import '../widgets/text/heading1_30px.dart';
 import '../widgets/text/title14px.dart';
 
 class SearchPage extends StatefulWidget {

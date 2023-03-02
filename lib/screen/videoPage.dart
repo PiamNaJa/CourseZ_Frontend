@@ -14,12 +14,10 @@ import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:coursez/widgets/text/title12px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
-import 'package:expandable_text/expandable_text.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:get/get.dart';
-import 'package:jiffy/jiffy.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:video_player/video_player.dart';
 import 'package:coursez/model/user.dart';
@@ -36,7 +34,7 @@ class _VideoPageState extends State<VideoPage> {
   AuthController authController = Get.find<AuthController>();
   bool isFocus = false;
 
-  late double timeToDoQuiz;
+  double timeToDoQuiz = 0;
   final isExpanded = true;
   bool isInitVideo = false;
   late FlickManager flickManager;

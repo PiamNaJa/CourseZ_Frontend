@@ -2,7 +2,6 @@ import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/controllers/post_controller.dart';
 import 'package:coursez/model/comment.dart';
 import 'package:coursez/model/post.dart';
-import 'package:coursez/repository/post_repository.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/post_view_model.dart';
 import 'package:coursez/widgets/bottomSheet/postBottomSheet.dart';

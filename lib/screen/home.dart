@@ -89,6 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         height: 50,
                         child: TextField(
                           style: const TextStyle(fontFamily: 'Athiti'),
+                          readOnly: true,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.zero,
                             prefixIcon: Icon(
@@ -101,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   BorderRadius.all(Radius.circular(25.0)),
                             ),
                             focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: primaryColor),
+                              borderSide: BorderSide(color: greyColor),
                               borderRadius: BorderRadius.all(
                                 Radius.circular(25.0),
                               ),
