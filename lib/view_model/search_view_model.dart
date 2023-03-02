@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:coursez/view_model/course_view_model.dart';
+
 import '../model/course.dart';
 import '../model/search.dart';
 import '../model/tutor.dart';
@@ -10,6 +12,14 @@ class SearchViewModel {
     http.Response response = await http.get(uri);
     final searchAll = jsonDecode(utf8.decode(response.bodyBytes));
     final result = Search.fromJson(searchAll);
+    CourseViewModel courseviewmodel = CourseViewModel();
+    for (int i = 0; i < result.courses.length; i++) {
+      result.courses[i] =
+          courseviewmodel.caculateCourseRating(result.courses[i]);
+    }
+    for (int i = 0; i < result.videos.length; i++) {
+      result.videos[i] = courseviewmodel.caculateCourseRating(result.videos[i]);
+    }
     return result;
   }
 

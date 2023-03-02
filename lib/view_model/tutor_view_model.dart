@@ -4,15 +4,15 @@ import 'package:coursez/utils/fetchData.dart';
 
 class TutorViewModel {
   Future<List<dynamic>> loadTutor(int level) async {
-    List<dynamic> tutorLevel = [];
+    List<Tutor> tutor = [];
     if (level != 0) {
       final t = await fecthData('user/teacher/class/$level');
-      t.map((e) => tutorLevel.add(e)).toList();
+      tutor = List.from(t.map((e) => Tutor.fromJson(e)).toList());
     } else {
       final t = await fecthData('user/teacher');
-      t.forEach((e) => tutorLevel.add(e));
+      tutor = List.from(t.map((e) => Tutor.fromJson(e)).toList());
     }
-    return tutorLevel;
+    return tutor;
   }
 
   Future<User> loadTutorById(String teacherId) async {

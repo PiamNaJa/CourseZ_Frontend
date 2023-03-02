@@ -1,7 +1,7 @@
 
 class Choice {
-  final String choiceId;
-  final String exerciseId;
+  final int choiceId;
+  final int exerciseId;
   final String title;
   final bool correct;
 

@@ -1,13 +1,10 @@
-import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/screen/ProfilePage.dart';
-import 'package:coursez/screen/chatPage.dart';
 import 'package:coursez/screen/home.dart';
-import 'package:coursez/screen/loginPage.dart';
+import 'package:coursez/screen/inboxPage.dart';
 import 'package:coursez/screen/postPage.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/auth_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
@@ -19,8 +16,8 @@ class FirstPage extends StatefulWidget {
 class _FirstPageState extends State<FirstPage> {
   final page = [
     const MyHomePage(),
-    PostPage(),
-    const ChatPage(),
+    const PostPage(),
+    InboxPage(),
     const ProfilePage()
   ];
   final PageController _pageController = PageController();
@@ -35,7 +32,6 @@ class _FirstPageState extends State<FirstPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _pageController.dispose();
     super.dispose();
   }

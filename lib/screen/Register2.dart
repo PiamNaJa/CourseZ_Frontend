@@ -668,8 +668,10 @@ class _RegisterPage2State extends State<RegisterPage2> {
             Heading20px(text: '${index + 1}.ประสบการณ์ที่ผ่านมา'),
             (index > 0)
                 ? IconButton(
-                    onPressed: () =>
-                        setState(() => experiences.removeAt(index)),
+                    onPressed: () => setState(() {
+                      experiences.removeAt(index);
+                      experienceImages.removeAt(index);
+                    }),
                     icon: const Icon(
                       Icons.delete,
                       color: Colors.red,

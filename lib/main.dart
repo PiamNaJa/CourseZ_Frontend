@@ -33,9 +33,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       initialBinding: FirstBinding(),
       title: 'CourseZ',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
+      theme: ThemeData(primarySwatch: Colors.green, fontFamily: 'Athiti'),
       debugShowCheckedModeBanner: false,
       getPages: Routes.getRoutes,
       initialRoute: '/first',

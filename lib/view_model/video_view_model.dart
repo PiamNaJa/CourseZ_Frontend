@@ -7,7 +7,7 @@ import 'package:coursez/view_model/date_view_model.dart';
 import 'package:jiffy/jiffy.dart';
 
 class VideoViewModel {
-  Future<Video> loadVideoById(int courseid, int videoid) async {
+  Future<Video> loadVideoById(String courseid, String videoid) async {
     final v = await fecthData("course/$courseid/video/$videoid");
 
     return Video.fromJson(v);
