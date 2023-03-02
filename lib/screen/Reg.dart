@@ -64,7 +64,7 @@ class _RegisterPageState extends State<RegisterPage> {
           ? Get.toNamed('/register2',
               arguments: user,
               parameters: {'image': image != null ? image!.path : ''})
-          : authViewModel.registerStudent(user, image);
+          : await authViewModel.registerStudent(user, image);
     }
   }
 

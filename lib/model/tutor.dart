@@ -1,5 +1,5 @@
 class Tutor {
-  int classLevel;
+  int? classLevel;
   String fullname;
   String nickname;
   String picture;

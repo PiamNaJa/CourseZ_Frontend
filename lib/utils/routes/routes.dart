@@ -16,6 +16,8 @@ import 'package:coursez/screen/videoPage.dart';
 import 'package:coursez/screen/searchPage.dart';
 import 'package:get/get.dart';
 
+import '../../screen/postdetailPage.dart';
+
 class Routes {
   static final List<GetPage> _getRoutes = [
     GetPage(name: '/login', page: () => const LoginPage()),
@@ -37,6 +39,7 @@ class Routes {
     GetPage(name: '/course/:course_id/video/:video_id', page: () => const VideoPage()),
     GetPage(name: '/course/:course_id/video/:video_id/exercise', page: () => const ExercisePage()),
     GetPage(name: '/course/:course_id/video/:video_id/exercise/result', page: () => const ExerciseResultPage()),
+    GetPage(name: '/post/:post_id', page: () => const PostdetailPage())
   ];
   static List<GetPage> get getRoutes => _getRoutes;
 }

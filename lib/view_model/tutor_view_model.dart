@@ -1,6 +1,5 @@
-import 'dart:math';
-
 import 'package:coursez/model/tutor.dart';
+import 'package:coursez/model/user.dart';
 import 'package:coursez/utils/fetchData.dart';
 
 class TutorViewModel {
@@ -14,5 +13,10 @@ class TutorViewModel {
       tutor = List.from(t.map((e) => Tutor.fromJson(e)).toList());
     }
     return tutor;
+  }
+
+  Future<User> loadTutorById(String teacherId) async {
+    final t = await fecthData('user/teacher/$teacherId');
+    return User.fromJson(t);
   }
 }

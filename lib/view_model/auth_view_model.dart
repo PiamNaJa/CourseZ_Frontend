@@ -23,8 +23,7 @@ class AuthViewModel {
         prefs.setString('token', data['token']);
         prefs.setString('refreshToken', data['refreshToken']);
         final jwtToken = JwtDecoder.decode(data['token']);
-        _authController.userid = jwtToken['user_id'];
-        _authController.isLogin = true;
+        await _authController.fetchUser(jwtToken['user_id']);
         Get.back();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -38,19 +37,18 @@ class AuthViewModel {
   }
 
   Future<void> checkToken(String token) async {
-    final data = JwtDecoder.decode(token);
-    _authController.userid = data['user_id'];
-    final exp = data['exp'];
+    final jwtToken = JwtDecoder.decode(token);
+    await _authController.fetchUser(jwtToken['user_id']);
+    final exp = jwtToken['exp'];
     if (exp < DateTime.now().toUtc().millisecondsSinceEpoch) {
       final String refreshToken = await getRefreshToken();
       AuthRepository().getNewToken(refreshToken).then((response) async {
         final data = json.decode(response.body);
         final jwtToken = JwtDecoder.decode(data['token']);
-        _authController.userid = jwtToken['user_id'];
+        await _authController.fetchUser(jwtToken['user_id']);
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('token', data['token']);
         prefs.setString('refreshToken', data['refreshToken']);
-        token = data['token'];
       });
     }
   }
@@ -65,10 +63,8 @@ class AuthViewModel {
     final token = prefs.getString('token');
     if (token != null) {
       await checkToken(token);
-      _authController.isLogin = true;
       return true;
     } else {
-      _authController.isLogin = false;
       return false;
     }
   }
@@ -84,13 +80,12 @@ class AuthViewModel {
     final res = await _authRepository.registerStudent(user);
     if (res.statusCode == 201) {
       final data = json.decode(res.body);
-      Get.offAndToNamed('/first');
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('token', data['token']);
       prefs.setString('refreshToken', data['refreshToken']);
       final jwtToken = JwtDecoder.decode(data['token']);
-      _authController.userid = jwtToken['user_id'];
-      _authController.isLogin = true;
+      await _authController.fetchUser(jwtToken['user_id']);
+      Get.offAllNamed('/first');
     } else {
       debugPrint(res.body);
       Get.snackbar('Error', 'Something went wrong',
@@ -145,7 +140,8 @@ class AuthViewModel {
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('token', data['token']);
       prefs.setString('refreshToken', data['refreshToken']);
-      _authController.isLogin = true;
+      final jwtToken = JwtDecoder.decode(data['token']);
+      await _authController.fetchUser(jwtToken['user_id']);
       Get.offAllNamed('/first');
     } else {
       debugPrint(res.body);
@@ -198,7 +194,8 @@ class AuthViewModel {
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('token', data['token']);
       prefs.setString('refreshToken', data['refreshToken']);
-      _authController.isLogin = true;
+      final jwtToken = JwtDecoder.decode(data['token']);
+      await _authController.fetchUser(jwtToken['user_id']);
       Get.offAllNamed('/first');
     } else {
       debugPrint(res.body);
