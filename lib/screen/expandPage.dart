@@ -1,4 +1,5 @@
 import 'package:coursez/components/courseList.dart';
+import 'package:coursez/model/tutor.dart';
 
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/widgets/appbar/app_bar.dart';
@@ -81,7 +82,7 @@ class _ExpandPageState extends State<ExpandPage> {
   }
 }
 
-Widget _tutor(dynamic item) {
+Widget _tutor(Tutor item) {
   return GestureDetector(
     onTap: () {},
     child: Container(
@@ -108,7 +109,7 @@ Widget _tutor(dynamic item) {
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image.network(
-                  item['picture'],
+                  item.picture,
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
@@ -124,9 +125,9 @@ Widget _tutor(dynamic item) {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Heading20px(text: item['fullname']),
-                    Title14px(text: item['nickname']),
-                    RatingStar(rating: item['rating'].toDouble(), size: 20,)
+                    Heading20px(text: item.fullname),
+                    Title14px(text: item.nickname),
+                    RatingStar(rating: item.rating.toDouble(), size: 20,)
                   ],
                 ),
               )),
