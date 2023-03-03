@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:coursez/utils/network.dart';
 
 class ExerciseRepository {
   Future<bool> addPoints(
       String courseId, String videoId, int point, String token) async {
     final url =
-        'http://10.0.2.2:5000/api/course/$courseId/video/$videoId/exercise/done';
+        '${Network.baseUrl}/api/course/$courseId/video/$videoId/exercise/done';
     final Map<String, int> data = {
       "point": point,
     };

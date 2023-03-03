@@ -20,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   late TextEditingController emailController;
   late TextEditingController passwordController;
   late AuthViewModel authViewModel;
+  late bool isVisiblePassword;
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _LoginPageState extends State<LoginPage> {
         isEmailEmpty = emailController.text.isEmpty;
       });
     });
+    isVisiblePassword = false;
     passwordController.addListener(() {
       setState(() {
         isPasswordEmpty = passwordController.text.isEmpty;
@@ -147,16 +149,27 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 TextFormField(
                                   cursorColor: primaryColor,
-                                  decoration: const InputDecoration(
-                                      border: OutlineInputBorder(
+                                  decoration: InputDecoration(
+                                      border: const OutlineInputBorder(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
                                       hintText: 'รหัสผ่าน',
-                                      suffixIcon:
-                                          Icon(Icons.visibility_off_outlined)),
+                                      suffixIcon: InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              isVisiblePassword =
+                                                  !isVisiblePassword;
+                                            });
+                                          },
+                                          child: Icon(
+                                            !isVisiblePassword
+                                                ? Icons.visibility_off_outlined
+                                                : Icons.visibility_outlined,
+                                          ))),
                                   controller: passwordController,
                                   keyboardType: TextInputType.visiblePassword,
-                                  obscureText: true,
+                                  obscureText:
+                                      !isVisiblePassword ? true : false,
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                 ),

@@ -82,50 +82,52 @@ class PostList extends StatelessWidget {
           ),
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          ListTile(
-            contentPadding: const EdgeInsets.all(0),
-            leading: ClipOval(
-              child: Image.network(
-                item.user!.picture,
-                width: 40,
-                height: 40,
-                fit: BoxFit.cover,
-              ),
-            ),
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Title16px(text: item.user!.fullName),
-                Row(
-                  children: [
-                    Body14px(
-                      text:
-                          '${postViewModel.formatPostDate(item.createdAt)}, ${item.subject!.subjectTitle}, ${postViewModel.formatLevel(item.subject!.classLevel)}',
-                      color: greyColor,
-                    ),
-                  ],
+          Obx(
+            () => ListTile(
+              contentPadding: const EdgeInsets.all(0),
+              leading: ClipOval(
+                child: Image.network(
+                  item.user!.picture,
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.cover,
                 ),
-              ],
+              ),
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Title16px(text: item.user!.fullName),
+                  Row(
+                    children: [
+                      Body14px(
+                        text:
+                            '${postViewModel.formatPostDate(item.createdAt)}, ${item.subject!.subjectTitle}, ${postViewModel.formatLevel(item.subject!.classLevel)}',
+                        color: greyColor,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              trailing: authController.userid == item.user!.userId
+                  ? IconButton(
+                      icon: const Icon(
+                        Icons.more_horiz_outlined,
+                        color: greyColor,
+                      ),
+                      onPressed: () {
+                        showModalBottomSheet(
+                            context: Get.context!,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20)),
+                            ),
+                            builder: (context) {
+                              return BottomSheetForPost(item: item);
+                            });
+                      })
+                  : const SizedBox(),
             ),
-            trailing: authController.userid == item.user!.userId
-                ? IconButton(
-                    icon: const Icon(
-                      Icons.more_horiz_outlined,
-                      color: greyColor,
-                    ),
-                    onPressed: () {
-                      showModalBottomSheet(
-                          context: Get.context!,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20)),
-                          ),
-                          builder: (context) {
-                            return BottomSheetForPost(item: item);
-                          });
-                    })
-                : const SizedBox(),
           ),
           ExpandableText(
             expandText: 'ดูเพิ่มเติม',
@@ -181,19 +183,21 @@ class PostList extends StatelessWidget {
                 ),
           Row(
             children: [
-              ClipOval(
-                child: authController.isLogin
-                    ? Image.network(
-                        authController.picture,
-                        width: 40,
-                        height: 40,
-                        fit: BoxFit.cover,
-                      )
-                    : Container(
-                        width: 40,
-                        height: 40,
-                        color: greyColor,
-                      ),
+              Obx(
+                () => ClipOval(
+                  child: authController.isLogin
+                      ? Image.network(
+                          authController.picture,
+                          width: 40,
+                          height: 40,
+                          fit: BoxFit.cover,
+                        )
+                      : Container(
+                          width: 40,
+                          height: 40,
+                          color: greyColor,
+                        ),
+                ),
               ),
               Expanded(
                 child: Padding(
