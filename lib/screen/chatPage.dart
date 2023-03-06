@@ -5,6 +5,7 @@ import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/controllers/inboxcontroller.dart';
 import 'package:coursez/model/chat.dart';
 import 'package:coursez/utils/color.dart';
+import 'package:coursez/utils/network.dart';
 import 'package:coursez/view_model/chat_view_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class _ChatPageState extends State<ChatPage> {
           data = value.conversations;
         }));
     socket = WebSocketChannel.connect(
-        Uri.parse('ws://10.0.2.2:5000/ws/$chatRoomId'));
+        Uri.parse('ws://${Network.url}/ws/$chatRoomId'));
     socket.stream.listen((event) {
       final newdata = Conversations.fromJson(json.decode(event));
       setState(() {
