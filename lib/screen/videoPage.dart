@@ -38,16 +38,40 @@ class _VideoPageState extends State<VideoPage> {
   final isExpanded = true;
   bool isInitVideo = false;
   late FlickManager flickManager;
+  late VideoPlayerController videoPlayerController;
   String videoName = Get.parameters["video_name"]!;
   String teacherId = Get.parameters["teacher_id"]!;
   String courseId = Get.parameters["course_id"]!;
   String videoId = Get.parameters["video_id"]!;
   bool isDoneExercise = false;
-  User teacher = User(email: '', fullName: '', likeCourses: [], likeVideos: [], nickName: '', picture: '', paidVideos: [], role: '', history: [], transactions: [], point: 0);
-  
+  User teacher = User(
+      email: '',
+      fullName: '',
+      likeCourses: [],
+      likeVideos: [],
+      nickName: '',
+      picture: '',
+      paidVideos: [],
+      role: '',
+      history: [],
+      transactions: [],
+      point: 0);
+
   void _initVideo(String url) {
+    videoPlayerController = VideoPlayerController.network(url)
+      ..initialize().then((_) {
+        if (authController.isLogin) {
+          videoViewModel
+              .getVideoHistoryDuration(videoId)
+              .then((value) => setState(
+                    () {
+                      videoPlayerController.seekTo(Duration(seconds: value));
+                    },
+                  ));
+        }
+      });
     flickManager = FlickManager(
-      videoPlayerController: VideoPlayerController.network(url),
+      videoPlayerController: videoPlayerController,
     );
     flickManager.flickVideoManager!.videoPlayerController!.addListener(() {
       timeToDoQuiz = flickManager.flickVideoManager!.videoPlayerController!
@@ -76,6 +100,12 @@ class _VideoPageState extends State<VideoPage> {
 
   @override
   void dispose() {
+    if (authController.isLogin) {
+      videoViewModel.addVideoHistory(
+          videoId,
+          flickManager.flickVideoManager!.videoPlayerController!.value.position
+              .inSeconds);
+    }
     flickManager.dispose();
     super.dispose();
   }
