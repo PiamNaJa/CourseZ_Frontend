@@ -19,7 +19,7 @@ class ChatRepository {
     }
   }
 
-  newInbox(int reciverId, String token) async {
+  Future<http.Response> newInbox(int reciverId, String token) async {
     try {
       const url = '${Network.baseUrl}/api/inbox/';
       Map data = {'user2_id': reciverId};

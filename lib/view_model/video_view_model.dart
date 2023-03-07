@@ -1,12 +1,13 @@
-import 'package:coursez/model/course.dart';
 import 'package:coursez/model/user.dart';
 import 'package:coursez/model/userTeacher.dart';
 import 'package:coursez/model/video.dart';
+import 'package:coursez/repository/history_repository.dart';
 import 'package:coursez/utils/fetchData.dart';
 import 'package:coursez/view_model/date_view_model.dart';
-import 'package:jiffy/jiffy.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VideoViewModel {
+  HistoryRepository historyRepository = HistoryRepository();
   Future<Video> loadVideoById(String courseid, String videoid) async {
     final v = await fecthData("course/$courseid/video/$videoid");
 
@@ -75,5 +76,27 @@ class VideoViewModel {
     timeago = timeago.replaceAll(' ago', 'ที่แล้ว');
 
     return timeago;
+  }
+
+  Future<int> getVideoHistoryDuration(String videoId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String token = prefs.getString('token')!;
+    final h = await fecthData("history/$videoId", authorization: token);
+    if (h.runtimeType == String && h.contains("not found")) {
+      return 0;
+    }
+    return h;
+  }
+
+  Future<void> addVideoHistory(String videoId, int duration) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String token = prefs.getString('token')!;
+    final res =
+        await historyRepository.addVideoHistory(videoId, duration, token);
+    if (res.statusCode == 201) {
+      print("add video history success");
+    } else {
+      throw Exception(res.body);
+    }
   }
 }
