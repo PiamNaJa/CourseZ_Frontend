@@ -53,7 +53,7 @@ class _VideoPageState extends State<VideoPage> {
       picture: '',
       paidVideos: [],
       role: '',
-      history: [],
+      videoHistory: [],
       transactions: [],
       point: 0);
 

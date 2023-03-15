@@ -1,27 +1,52 @@
+import 'package:coursez/model/course.dart';
+
 import 'video.dart';
 
-class History {
+class VideoHistory {
   final int historyId;
   final int userId;
   final int videoId;
-  final List<Video> videos;
+  final Video videos;
   final int duration;
 
-  History(
+  VideoHistory(
       {required this.historyId,
       required this.userId,
       required this.videoId,
       required this.videos,
       required this.duration});
 
-  factory History.fromJson(Map<String, dynamic> json) {
-    return History(
+  factory VideoHistory.fromJson(Map<String, dynamic> json) {
+    return VideoHistory(
       historyId: json['history_id'],
       userId: json['user_id'],
       videoId: json['video_id'],
-      videos: json['videos'] != null
-          ? List.from(json['videos'].map((c) => Video.fromJson(c)).toList())
-          : List.empty(),
+      videos: Video.fromJson(json['video']),
+      duration: json['duration'],
+    );
+  }
+}
+
+class CourseHistory {
+  final int historyId;
+  final int userId;
+  final int courseId;
+  final Course courses;
+  final int duration;
+
+  CourseHistory(
+      {required this.historyId,
+      required this.userId,
+      required this.courseId,
+      required this.courses,
+      required this.duration});
+
+  factory CourseHistory.fromJson(Map<String, dynamic> json) {
+    return CourseHistory(
+      historyId: json['history_id'],
+      userId: json['user_id'],
+      courseId: json['course_id'],
+      courses: Course.fromJson(json['course']),
       duration: json['duration'],
     );
   }
