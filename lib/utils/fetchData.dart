@@ -11,6 +11,6 @@ Future<dynamic> fecthData(String route, {String authorization = ''}) async {
     return jsonDecode(utf8.decode(response.bodyBytes));
   } else {
     debugPrint(response.body);
-    throw Exception('Failed to load data');
+    return response.body;
   }
 }

@@ -32,7 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
       likeCourses: [],
       likeVideos: [],
       paidVideos: [],
-      transactions: [], history: []);
+      transactions: [], videoHistory: []);
   File? image;
   Color radioColor = greyColor;
   Color bgRadioColor = whiteColor;

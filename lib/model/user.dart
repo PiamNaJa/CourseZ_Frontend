@@ -13,7 +13,7 @@ class User {
   String role;
   String picture;
   int point;
-  List<History> history;
+  List<VideoHistory> videoHistory;
   UserTeacher? userTeacher;
   List<Video> paidVideos;
   List<Video> likeVideos;
@@ -33,7 +33,7 @@ class User {
     required this.likeCourses,
     required this.transactions,
     this.password,
-    required this.history,
+    required this.videoHistory,
     this.userTeacher,
   });
 
@@ -47,8 +47,8 @@ class User {
       role: json['role'],
       picture: json['picture'],
       point: json['point'],
-      history: json['history'] != null
-          ? List.from(json['history'].map((c) => History.fromJson(c)).toList())
+      videoHistory: json['video_history'] != null
+          ? List.from(json['video_history'].map((c) => VideoHistory.fromJson(c)).toList())
           : List.empty(),
       userTeacher: json['teacher'] != null
           ? UserTeacher.fromJson(json['teacher'])
