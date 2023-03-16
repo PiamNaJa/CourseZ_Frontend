@@ -12,10 +12,11 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../utils/color.dart';
+
 class VideoViewModel {
   final ReviewRepository _reviewRepository = ReviewRepository();
 
-  get whiteColor => null;
   Future<Video> loadVideoById(String courseid, String videoid) async {
     final v = await fecthData("course/$courseid/video/$videoid");
 

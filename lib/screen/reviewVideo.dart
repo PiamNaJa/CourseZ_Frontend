@@ -1,26 +1,13 @@
 import 'package:coursez/controllers/auth_controller.dart';
-import 'package:coursez/model/reviewVideo.dart';
 import 'package:coursez/model/video.dart';
 import 'package:coursez/view_model/video_view_model.dart';
-import 'package:coursez/widgets/rating/rating.dart';
-import 'package:coursez/widgets/text/body10px.dart';
-import 'package:coursez/widgets/text/body12px.dart';
 import 'package:coursez/widgets/text/body14px.dart';
-import 'package:coursez/widgets/text/body16.dart';
 import 'package:coursez/widgets/text/expandableText.dart';
-import 'package:coursez/widgets/text/heading1_24px.dart';
-import 'package:coursez/widgets/text/heading2_20px.dart';
-import 'package:coursez/widgets/text/title12px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:video_player/video_player.dart';
-import 'package:coursez/model/user.dart';
-
 import '../widgets/button/button.dart';
 import '../widgets/text/title14px.dart';
 
