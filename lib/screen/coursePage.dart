@@ -41,7 +41,7 @@ class _CoursePageState extends State<CoursePage> {
       email: '',
       fullName: '',
       nickName: '',
-      history: [],
+      videoHistory: [],
       likeCourses: [],
       likeVideos: [],
       paidVideos: [],
