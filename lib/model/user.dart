@@ -60,6 +60,9 @@ class User {
               .map((c) => CourseHistory.fromJson(c))
               .toList())
           : List.empty(),
+      courseHistory: json['course_history'] != null
+          ? List.from(json['course_history'].map((c) => CourseHistory.fromJson(c)).toList())
+          : List.empty(),
       userTeacher: json['teacher'] != null
           ? UserTeacher.fromJson(json['teacher'])
           : null,
