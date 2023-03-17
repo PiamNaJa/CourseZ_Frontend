@@ -14,6 +14,7 @@ class User {
   String picture;
   int point;
   List<VideoHistory> videoHistory;
+  List<CourseHistory> courseHistory;
   UserTeacher? userTeacher;
   List<Video> paidVideos;
   List<Video> likeVideos;
@@ -35,6 +36,7 @@ class User {
     this.password,
     required this.videoHistory,
     this.userTeacher,
+    required this.courseHistory,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -49,6 +51,9 @@ class User {
       point: json['point'],
       videoHistory: json['video_history'] != null
           ? List.from(json['video_history'].map((c) => VideoHistory.fromJson(c)).toList())
+          : List.empty(),
+      courseHistory: json['course_history'] != null
+          ? List.from(json['course_history'].map((c) => CourseHistory.fromJson(c)).toList())
           : List.empty(),
       userTeacher: json['teacher'] != null
           ? UserTeacher.fromJson(json['teacher'])
