@@ -9,6 +9,7 @@ import 'package:coursez/utils/color.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import '../widgets/button/button.dart';
+import '../widgets/text/heading2_20px.dart';
 import '../widgets/text/title14px.dart';
 
 class ReviewVideoPage extends StatefulWidget {
@@ -38,24 +39,26 @@ class _ReviewVideoPageState extends State<ReviewVideoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('รีวีววิดิโอ'),
+          elevation: 0.0,
+          title: const Heading20px(text: "รีวิววิดิโอ"),
+          backgroundColor: whiteColor,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios, color: primaryColor),
             onPressed: () {
               Get.back();
             },
           ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: IconButton(
-                icon: Icon(Icons.rate_review_outlined),
-                onPressed: () {
-                  // Get.toNamed('/reviewVideo');
-                },
-              ),
-            )
-          ],
+          // actions: [
+          //   Padding(
+          //     padding: EdgeInsets.all(10),
+          //     child: IconButton(
+          //       icon: Icon(Icons.rate_review_outlined),
+          //       onPressed: () {
+          //         // Get.toNamed('/reviewVideo');
+          //       },
+          //     ),
+          //   )
+          // ],
         ),
         body: FutureBuilder(
           future: videoViewModel.loadVideoById(courseId, videoId),
