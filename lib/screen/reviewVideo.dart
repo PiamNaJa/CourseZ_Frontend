@@ -73,8 +73,8 @@ class _ReviewVideoPageState extends State<ReviewVideoPage> {
     return Container(
       padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 10),
       decoration: const BoxDecoration(
-        color: whiteColor,
-      ),
+          // color: whiteColor,
+          ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -131,32 +131,38 @@ class _ReviewVideoPageState extends State<ReviewVideoPage> {
                     : const Body14px(text: 'นักเรียน')
                 : const Body14px(text: 'ผู้เข้าชม'),
           ),
-          SizedBox(height: 15),
-          Center(
-            child: RatingBar.builder(
-              initialRating: rating,
-              minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: true,
-              itemCount: 5,
-              itemSize: 40,
-              itemPadding: const EdgeInsets.symmetric(horizontal: 12),
-              itemBuilder: (context, _) => const Icon(
-                Icons.star,
-                color: Colors.amber,
-              ),
-              onRatingUpdate: (value) {
-                setState(() {
-                  rating = value;
-                });
-              },
-            ),
-          ),
+          SizedBox(height: 10),
+          Padding(
+              padding: const EdgeInsets.only(top: 5, bottom: 5),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10),
+                  (Title14px(text: 'ให้คะเเนนวิดิโอนี้ :')),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: RatingBar.builder(
+                      initialRating: rating,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemSize: 30,
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 8),
+                      itemBuilder: (context, _) => const Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      onRatingUpdate: (value) {
+                        setState(() {
+                          rating = value;
+                        });
+                      },
+                    ),
+                  )
+                ],
+              )),
           SizedBox(height: 20),
-          // Center(
-          //   child: Text('Rating: $rating'),
-          // ),
-          // SizedBox(height: 10),
           Expanded(
             child: TextField(
               controller: textController,
