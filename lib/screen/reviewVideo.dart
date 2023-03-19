@@ -48,17 +48,6 @@ class _ReviewVideoPageState extends State<ReviewVideoPage> {
               Get.back();
             },
           ),
-          // actions: [
-          //   Padding(
-          //     padding: EdgeInsets.all(10),
-          //     child: IconButton(
-          //       icon: Icon(Icons.rate_review_outlined),
-          //       onPressed: () {
-          //         // Get.toNamed('/reviewVideo');
-          //       },
-          //     ),
-          //   )
-          // ],
         ),
         body: FutureBuilder(
           future: videoViewModel.loadVideoById(courseId, videoId),
@@ -75,9 +64,6 @@ class _ReviewVideoPageState extends State<ReviewVideoPage> {
   Widget reviewVideoDetail(Video videoData) {
     return Container(
       padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 10),
-      decoration: const BoxDecoration(
-          // color: whiteColor,
-          ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
