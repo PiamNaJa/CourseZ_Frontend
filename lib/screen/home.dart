@@ -12,6 +12,7 @@ import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/widgets/carousel/carouselLevel.dart';
 import 'package:get/get.dart';
+import '../widgets/button/button.dart';
 import '../widgets/dropdown/dropdown.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -205,6 +206,23 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       ListTileTutor()
                     ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Bt(
+                            text: "Myreward",
+                            color: secondaryColor,
+                            onPressed: () {
+                              Get.toNamed("/reward");
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   )
                 ],
               ),
