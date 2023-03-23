@@ -1,18 +1,18 @@
 class Address {
-  final int? userId;
-  String houseNo;
-  String? lane;
-  String? villageNo;
-  String? village;
-  String? road;
-  String subDistrict;
-  String district;
-  String province;
-  String postal;
+  final int userId;
+  final String houseNo;
+  final String? lane;
+  final String? villageNo;
+  final String? village;
+  final String? road;
+  final String subDistrict;
+  final String district;
+  final String province;
+  final String postal;
 
   Address(
       {
-      this.userId,
+      required this.userId,
       required this.houseNo,
       this.lane,
       this.villageNo,
