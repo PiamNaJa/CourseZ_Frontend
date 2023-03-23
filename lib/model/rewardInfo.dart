@@ -5,9 +5,9 @@ class RewardInfo {
   final int rewardId;
   final int userId;
   final User? user;
-  final String houseNo;
   final int itemId;
   final RewardItem? item;
+  final String houseNo;
   final String lane;
   final String villageNo;
   final String village;

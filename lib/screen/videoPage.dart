@@ -55,6 +55,7 @@ class _VideoPageState extends State<VideoPage> {
       role: '',
       videoHistory: [],
       transactions: [],
+      
       point: 0);
 
   void _initVideo(String url) {

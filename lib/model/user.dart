@@ -1,3 +1,4 @@
+import 'package:coursez/model/address.dart';
 import 'package:coursez/model/course.dart';
 import 'package:coursez/model/payment.dart';
 import 'package:coursez/model/video.dart';
@@ -19,6 +20,7 @@ class User {
   List<Video> likeVideos;
   List<Course> likeCourses;
   List<Payment> transactions;
+  Address? address;
 
   User({
     this.userId,
@@ -35,40 +37,45 @@ class User {
     this.password,
     required this.videoHistory,
     this.userTeacher,
+    this.address,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      userId: json['user_id'],
-      email: json['email'],
-      password: json['password'],
-      fullName: json['fullname'],
-      nickName: json['nickname'],
-      role: json['role'],
-      picture: json['picture'],
-      point: json['point'],
-      videoHistory: json['video_history'] != null
-          ? List.from(json['video_history'].map((c) => VideoHistory.fromJson(c)).toList())
-          : List.empty(),
-      userTeacher: json['teacher'] != null
-          ? UserTeacher.fromJson(json['teacher'])
-          : null,
-      paidVideos: json['paid_videos'] != null
-          ? List.from(
-              json['paid_videos'].map((c) => Video.fromJson(c)).toList())
-          : List.empty(),
-      likeVideos: json['like_videos'] != null
-          ? List.from(
-              json['like_videos'].map((c) => Video.fromJson(c)).toList())
-          : List.empty(),
-      likeCourses: json['like_courses'] != null
-          ? List.from(
-              json['like_courses'].map((c) => Course.fromJson(c)).toList())
-          : List.empty(),
-      transactions: json['payment'] != null
-          ? List.from(json['payment'].map((c) => Payment.fromJson(c)).toList())
-          : List.empty(),
-    );
+        userId: json['user_id'],
+        email: json['email'],
+        password: json['password'],
+        fullName: json['fullname'],
+        nickName: json['nickname'],
+        role: json['role'],
+        picture: json['picture'],
+        point: json['point'],
+        videoHistory: json['video_history'] != null
+            ? List.from(json['video_history']
+                .map((c) => VideoHistory.fromJson(c))
+                .toList())
+            : List.empty(),
+        userTeacher: json['teacher'] != null
+            ? UserTeacher.fromJson(json['teacher'])
+            : null,
+        paidVideos: json['paid_videos'] != null
+            ? List.from(
+                json['paid_videos'].map((c) => Video.fromJson(c)).toList())
+            : List.empty(),
+        likeVideos: json['like_videos'] != null
+            ? List.from(
+                json['like_videos'].map((c) => Video.fromJson(c)).toList())
+            : List.empty(),
+        likeCourses: json['like_courses'] != null
+            ? List.from(
+                json['like_courses'].map((c) => Course.fromJson(c)).toList())
+            : List.empty(),
+        transactions: json['payment'] != null
+            ? List.from(
+                json['payment'].map((c) => Payment.fromJson(c)).toList())
+            : List.empty(),
+        address:
+            json['address'] != null ? Address.fromJson(json['address']) : null);
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
