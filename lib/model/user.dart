@@ -79,7 +79,6 @@ class User {
       transactions: json['payment'] != null
           ? List.from(json['payment'].map((c) => Payment.fromJson(c)).toList())
           : List.empty(),
-      address: json['address'],
     );
   }
   Map<String, dynamic> toJson() {
