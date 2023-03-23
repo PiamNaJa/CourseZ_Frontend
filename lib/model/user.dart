@@ -21,7 +21,6 @@ class User {
   List<Video> likeVideos;
   List<Course> likeCourses;
   List<Payment> transactions;
-  Address? address;
 
   User(
       {this.userId,
@@ -39,7 +38,7 @@ class User {
       required this.videoHistory,
       this.userTeacher,
       required this.courseHistory,
-      this.address});
+      });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
