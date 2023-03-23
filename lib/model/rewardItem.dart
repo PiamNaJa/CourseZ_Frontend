@@ -2,7 +2,7 @@ class RewardItem {
   final int itemId;
   final String itemName;
   final String itemTitle;
-  final String itemCost;
+  final int itemCost;
   final String itempicture;
 
   RewardItem(
