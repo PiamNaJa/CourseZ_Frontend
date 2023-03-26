@@ -1,42 +1,25 @@
+import 'dart:math';
+
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/model/payment.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/dashboard_view_model.dart';
 import 'package:coursez/widgets/appbar/app_bar.dart';
+import 'package:coursez/widgets/text/body12px.dart';
+import 'package:coursez/widgets/text/title14px.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:get/get.dart';
-
-class PricePoint {
-  final double x;
-  final double y;
-
-  PricePoint(this.x, this.y);
-
-  get pricePoints {
-    final List<double> data = [2, 4, 6, 8, 10];
-    final List<PricePoint> pricePoints = [];
-    for (int i = 0; i < data.length; i++) {
-      pricePoints.add(PricePoint(i.toDouble(), data[i]));
-    }
-    return pricePoints;
-  }
-}
 
 class DashBoardPage extends StatelessWidget {
   const DashBoardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    DashboardViewModel dashboardViewModel = DashboardViewModel();
-    AuthController authController = Get.find<AuthController>();
-    final List<double> data = [2, 4, 6, 8, 10];
-    final List<PricePoint> pricePoints = [];
-    for (int i = 0; i < data.length; i++) {
-      pricePoints.add(PricePoint(i.toDouble(), data[i]));
-    }
+    final DashboardViewModel dashboardViewModel = DashboardViewModel();
+    final AuthController authController = Get.find<AuthController>();
     return Scaffold(
-      appBar: const CustomAppBar(title: "Dashboard"),
+      appBar: const CustomAppBar(title: "รายได้ของคุณในช่วง 7 วันที่ผ่านมา"),
       body: Padding(
         padding: const EdgeInsets.only(right: 20),
         child: FutureBuilder(
@@ -44,7 +27,19 @@ class DashBoardPage extends StatelessWidget {
               .getPaymentTransaction(authController.teacherId.toString()),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return barChart(snapshot.data!);
+              return Column(
+                children: [
+                  barChart(snapshot.data!),
+                  Text(
+                    "รายได้ 7 วันที่ผ่านมา : ${dashboardViewModel.totalMoney(snapshot.data!)} บาท",
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  transactionList(snapshot.data!)
+                ],
+              );
             } else {
               return const Center(
                   child: CircularProgressIndicator(
@@ -58,44 +53,76 @@ class DashBoardPage extends StatelessWidget {
   }
 
   Widget barChart(List<Payment> data) {
-    for (var p in data) {
-      print(DateTime.fromMillisecondsSinceEpoch(p.createdAt * 1000)
-          .toString()
-          .substring(0, 11));
-    }
-    return Container();
-    // return AspectRatio(
-    //   aspectRatio: 2,
-    //   child: BarChart(
-    //     BarChartData(
-    //       titlesData: FlTitlesData(
-    //         topTitles: AxisTitles(),
-    //         rightTitles: AxisTitles(),
-    //         bottomTitles: AxisTitles(
-    //             sideTitles: SideTitles(
-    //                 showTitles: true,
-    //                 getTitlesWidget: (double value, meta) => Text(
-    //                       value.toInt() % 1 == 0
-    //                           ? value.toInt().toString()
-    //                           : '',
-    //                     ))),
-    //       ),
-    //       barGroups: pricePoints
-    //           .map(
-    //             (point) => BarChartGroupData(
-    //               x: point.x.toInt(),
-    //               barRods: [
-    //                 BarChartRodData(
-    //                   toY: point.y,
-    //                   color: primaryColor,
-    //                   width: 12,
-    //                 ),
-    //               ],
-    //             ),
-    //           )
-    //           .toList(),
-    //     ),
-    //   ),
-    // );
+    final DashboardViewModel dashboardViewModel = DashboardViewModel();
+    final List<PaymentTransaction> paymentTransaction =
+        dashboardViewModel.test();
+    final List<double> values =
+        paymentTransaction.map((e) => e.money.toDouble()).toList();
+    final double maxValue = values.reduce(max);
+    final double maxY = (maxValue / 100).ceil() * 100;
+    // final List<PaymentTransaction> paymentTransaction =
+    //     dashboardViewModel.paymentDataToInterface(data);
+    // return Container();
+    return AspectRatio(
+      aspectRatio: 2,
+      child: BarChart(
+        BarChartData(
+            titlesData: FlTitlesData(
+              topTitles: AxisTitles(),
+              rightTitles: AxisTitles(),
+              bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (double value, meta) {
+                        final DateTime date =
+                            DateTime.fromMillisecondsSinceEpoch(
+                                value.toInt() * 1000);
+                        return Text(
+                          "${date.day}/${date.month}",
+                        );
+                      })),
+            ),
+            barGroups: paymentTransaction
+                .map(
+                  (e) => BarChartGroupData(
+                    x: e.day,
+                    barRods: [
+                      BarChartRodData(
+                        toY: e.money.toDouble(),
+                        color: primaryColor,
+                        width: 12,
+                      )
+                    ],
+                  ),
+                )
+                .toList(),
+            maxY: maxY),
+      ),
+    );
+  }
+
+  Widget transactionList(List<Payment> data) {
+    return Expanded(
+      child: ListView.separated(
+        separatorBuilder: (context, index) => const Divider(
+          color: Colors.grey,
+        ),
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          final DateTime date =
+              DateTime.fromMillisecondsSinceEpoch(data[index].createdAt * 1000);
+          return ListTile(
+            title: Title14px(text: data[index].video.videoName),
+            subtitle: Body12px(
+                text:
+                    "วันที่ ${date.day}/${date.month}/${date.year} เวลา ${date.hour}:${date.minute}"),
+            trailing: Title14px(
+              text: '+${data[index].money}',
+              color: primaryColor,
+            ),
+          );
+        },
+      ),
+    );
   }
 }

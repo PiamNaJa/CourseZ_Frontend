@@ -35,8 +35,8 @@ class AuthController extends GetxController {
     username = user.nickName;
     picture = user.picture;
     role = user.role;
-    if(user.userTeacher != null){
-      teacherId = user.userTeacher?.teacherId ?? -1;
+    if (user.userTeacher != null) {
+      teacherId = user.userTeacher!.teacherId!;
     }
   }
 }
