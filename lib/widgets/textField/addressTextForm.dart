@@ -7,11 +7,13 @@ class AddressTextForm extends StatelessWidget {
   final String title;
   final Function(String) onChanged;
   final String? Function(String?)? validator;
+  final String? initialValue;
 
   const AddressTextForm(
       {super.key,
       required this.title,
       required this.onChanged,
+      this.initialValue,
       this.validator});
 
   @override
@@ -20,6 +22,7 @@ class AddressTextForm extends StatelessWidget {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: validator,
       onChanged: onChanged,
+      initialValue: initialValue,
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: greyColor),

@@ -23,6 +23,10 @@ class AuthController extends GetxController {
   set role(String value) => _role.value = value;
   String get role => _role.value;
 
+  final _point = 0.obs;
+  set point(int value) => _point.value = value;
+  int get point => _point.value;
+
   fetchUser(int userId) async {
     ProfileViewModel profile = ProfileViewModel();
     User user = await profile.fetchUser(userId);
@@ -31,5 +35,6 @@ class AuthController extends GetxController {
     _username.value = user.nickName;
     _picture.value = user.picture;
     _role.value = user.role;
+    _point.value = user.point;
   }
 }

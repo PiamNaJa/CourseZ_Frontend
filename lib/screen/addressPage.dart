@@ -1,6 +1,11 @@
+import 'dart:ffi';
+
+import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/main.dart';
 import 'package:coursez/model/address.dart';
+import 'package:coursez/repository/address_repository.dart';
 import 'package:coursez/utils/color.dart';
+import 'package:coursez/view_model/address_view_model.dart';
 import 'package:coursez/widgets/button/button.dart';
 import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
@@ -12,6 +17,9 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 
 class AddressPage extends StatelessWidget {
+  AuthController authController = Get.find();
+  AddressViewModel addressViewModel = AddressViewModel();
+
   AddressPage({super.key});
   Address address = Address(
       houseNo: '',
@@ -22,12 +30,11 @@ class AddressPage extends StatelessWidget {
       subDistrict: '',
       district: '',
       province: '',
-      postal: '');
+      postal: 0);
 
-  // onSubmit() {
-  //   postViewModel.createPost(textcontroller.text.trim(), image);
-
-  // }
+  onSubmit(Address address, bool isEdit) {
+    addressViewModel.addAddress(address, authController.userid, isEdit);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +61,9 @@ class AddressPage extends StatelessWidget {
 
   Widget formAddress() {
     final formKey = GlobalKey<FormState>();
+    address = Get.arguments ?? address;
+    bool isEdit = Get.parameters['isEdit'] == 'true';
+
     return Form(
       key: formKey,
       child: Column(
@@ -88,6 +98,7 @@ class AddressPage extends StatelessWidget {
                       onChanged: (String houseNo) {
                         address.houseNo = houseNo;
                       },
+                      initialValue: address.houseNo,
                     ),
                   ],
                 ),
@@ -106,6 +117,7 @@ class AddressPage extends StatelessWidget {
                       onChanged: (String villageNo) {
                         address.villageNo = villageNo;
                       },
+                      initialValue: address.villageNo,
                     ),
                   ],
                 ),
@@ -122,6 +134,7 @@ class AddressPage extends StatelessWidget {
             onChanged: (String lane) {
               address.lane = lane;
             },
+            initialValue: address.lane,
           ),
           const SizedBox(
             height: 12,
@@ -133,6 +146,7 @@ class AddressPage extends StatelessWidget {
             onChanged: (String village) {
               address.village = village;
             },
+            initialValue: address.village,
           ),
           const SizedBox(
             height: 12,
@@ -157,6 +171,7 @@ class AddressPage extends StatelessWidget {
             onChanged: (String road) {
               address.road = road;
             },
+            initialValue: address.road,
           ),
           const SizedBox(
             height: 12,
@@ -181,6 +196,7 @@ class AddressPage extends StatelessWidget {
             onChanged: (String subDistrict) {
               address.subDistrict = subDistrict;
             },
+            initialValue: address.subDistrict,
           ),
           const SizedBox(
             height: 12,
@@ -205,6 +221,7 @@ class AddressPage extends StatelessWidget {
             onChanged: (String district) {
               address.district = district;
             },
+            initialValue: address.district,
           ),
           const SizedBox(
             height: 12,
@@ -237,6 +254,7 @@ class AddressPage extends StatelessWidget {
                       onChanged: (String province) {
                         address.province = province;
                       },
+                      initialValue: address.province,
                     ),
                   ],
                 ),
@@ -257,17 +275,54 @@ class AddressPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    AddressTextForm(
-                      title: 'รหัสไปรษณีย์',
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      keyboardType: TextInputType.number,
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
                           return 'กรุณากรอกรหัสไปรษณีย์';
+                        } else {
+                          if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                            return 'กรุณากรอกรหัสไปรษณีย์ที่ถูกต้อง';
+                          }
+                          if (value.length != 5) {
+                            return 'กรุณากรอกรหัสไปรษณีย์ที่ถูกต้อง';
+                          }
                         }
                         return null;
                       },
                       onChanged: (String postal) {
-                        address.postal = postal;
+                        if (!RegExp(r'^[0-9]+$').hasMatch(postal)) {
+                          return;
+                        }
+                        address.postal = int.parse(postal);
                       },
+                      initialValue: address.postal.toString(),
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: greyColor),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: primaryColor),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.red),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.red),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 20),
+                        hintText: 'รหัสไปรษณีย์',
+                        hintStyle: const TextStyle(
+                          fontFamily: 'Athiti',
+                          fontSize: 16,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -284,7 +339,7 @@ class AddressPage extends StatelessWidget {
                   color: primaryColor,
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
-                      Get.toNamed('/rewardbill', arguments: address);
+                      onSubmit(address, isEdit);
                     }
                   }))
         ],

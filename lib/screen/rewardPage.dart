@@ -1,5 +1,9 @@
+import 'package:coursez/controllers/auth_controller.dart';
+import 'package:coursez/controllers/reward_controller.dart';
 import 'package:coursez/model/rewardItem.dart';
 import 'package:coursez/utils/color.dart';
+import 'package:coursez/view_model/address_view_model.dart';
+import 'package:coursez/view_model/profile_view_model.dart';
 import 'package:coursez/view_model/reward_view_model.dart';
 import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading1_30px.dart';
@@ -15,6 +19,8 @@ class RewardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthController authController = Get.find();
+    ProfileViewModel profileViewModel = ProfileViewModel();
     return Scaffold(
         backgroundColor: primaryLighterColor,
         appBar: AppBar(
@@ -39,15 +45,17 @@ class RewardPage extends StatelessWidget {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 25),
-                  child: Heading30px(
-                    text: '1000 แต้ม',
-                    color: primaryColor,
+              Obx(() {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 25),
+                    child: Heading30px(
+                      text: '${authController.point.toString()} แต้ม',
+                      color: primaryColor,
+                    ),
                   ),
-                ),
-              ),
+                );
+              }),
               Container(
                 constraints: BoxConstraints(
                   minHeight: MediaQuery.of(context).size.height * 0.8,
@@ -132,6 +140,10 @@ class RewardPage extends StatelessWidget {
   }
 
   Widget rewardList(RewardItem item) {
+    AddressViewModel addressViewModel = AddressViewModel();
+    AuthController authController = Get.find();
+    RewardController rewardController = Get.put(RewardController());
+
     return InkWell(
       onTap: () {
         showDialog(
@@ -206,9 +218,41 @@ class RewardPage extends StatelessWidget {
                                     ),
                                   ),
                                   TextButton(
-                                    onPressed: () {
+                                    onPressed: () async {
+                                      if (authController.point <
+                                          item.itemCost) {
+                                        Get.back();
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: const Heading24px(
+                                                  text: 'แจ้งเตือน'),
+                                              content: const Text(
+                                                  'คุณมีแต้มไม่เพียงพอ ต้องไปทำแบบฝึกหัดก่อนนะจ๊ะ'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Get.back();
+                                                  },
+                                                  child: const Title16px(
+                                                    text: 'ตกลง',
+                                                    color: primaryColor,
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                        return;
+                                      }
                                       Get.back();
                                       Get.back();
+                                      rewardController.itemid = item.itemId;
+                                      await (addressViewModel.checkAddress(
+                                              authController.userid))
+                                          ? Get.toNamed('/rewardbill')
+                                          : Get.toNamed('/address');
                                       // Get.toNamed();
                                     },
                                     child: const Title16px(
