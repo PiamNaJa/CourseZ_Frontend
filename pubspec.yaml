@@ -62,7 +62,7 @@ dependencies:
   percent_indicator: ^4.0.1
   expandable_text: 2.3.0
   expandable: ^5.0.1
-  flutter_stripe: ^8.0.0+1
+  flutter_stripe: ^9.0.0+1
   like_button: ^2.0.5
   jiffy: ^5.0.0
   web_socket_channel: ^2.3.0
