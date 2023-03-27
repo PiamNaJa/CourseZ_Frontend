@@ -23,7 +23,11 @@ class AuthController extends GetxController {
   set role(String value) => _role.value = value;
   String get role => _role.value;
 
-  fetchUser(int userId) async {
+  final _teacherId = (-1).obs;
+  set teacherId(int value) => _teacherId.value = value;
+  int get teacherId => _teacherId.value;
+
+  Future<void> fetchUser(int userId) async {
     ProfileViewModel profile = ProfileViewModel();
     User user = await profile.fetchUser(userId);
     _isLogin.value = true;
@@ -31,5 +35,17 @@ class AuthController extends GetxController {
     _username.value = user.nickName;
     _picture.value = user.picture;
     _role.value = user.role;
+    if (user.userTeacher != null) {
+      teacherId = user.userTeacher!.teacherId!;
+    }
+  }
+
+  void logout() {
+    _isLogin.value = false;
+    _userid.value = 0;
+    _username.value = '';
+    _picture.value = '';
+    _role.value = '';
+    _teacherId.value = -1;
   }
 }
