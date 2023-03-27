@@ -44,7 +44,6 @@ class AuthRepository {
       var response = await http.post(Uri.parse(url),
           headers: {"Content-Type": "application/json"},
           body: json.encode(data));
-      print(response.body);
       return response;
     } on SocketException {
       throw Exception('No Internet Connection');

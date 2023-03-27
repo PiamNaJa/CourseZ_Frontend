@@ -36,6 +36,13 @@ class AuthViewModel {
     });
   }
 
+  Future<void> logout() async {
+    _authController.logout();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('token');
+    prefs.remove('refreshToken');
+  }
+
   Future<void> checkToken(String token) async {
     final jwtToken = JwtDecoder.decode(token);
     await _authController.fetchUser(jwtToken['user_id']);
@@ -43,6 +50,10 @@ class AuthViewModel {
     if (exp < DateTime.now().toUtc().millisecondsSinceEpoch) {
       final String refreshToken = await getRefreshToken();
       AuthRepository().getNewToken(refreshToken).then((response) async {
+        if (response.statusCode != 200) {
+          await logout();
+          return;
+        }
         final data = json.decode(response.body);
         final jwtToken = JwtDecoder.decode(data['token']);
         await _authController.fetchUser(jwtToken['user_id']);

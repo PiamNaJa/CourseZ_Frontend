@@ -25,7 +25,7 @@ class CourseViewModel {
     }
 
     for (var i = 0; i < courseLevel.length; i++) {
-      courseLevel[i] = caculateCourseRating(courseLevel[i]);
+      courseLevel[i] = calculateCourseRating(courseLevel[i]);
     }
     final sortedCourses = courseInsertionSort(courseLevel);
     return sortedCourses;
@@ -39,13 +39,13 @@ class CourseViewModel {
         .toList();
     List<Course> courseSubject = List.from(cs);
     for (int i = 0; i < courseSubject.length; i++) {
-      courseSubject[i] = caculateCourseRating(courseSubject[i]);
+      courseSubject[i] = calculateCourseRating(courseSubject[i]);
     }
     final sortedCourses = courseInsertionSort(courseSubject);
     return sortedCourses;
   }
 
-  Course caculateCourseRating(Course course) {
+  Course calculateCourseRating(Course course) {
     double rating = 0;
     int count = 0;
     for (int i = 0; i < course.videos.length; i++) {
