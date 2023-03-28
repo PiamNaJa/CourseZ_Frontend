@@ -54,7 +54,9 @@ class _MyRewardPageState extends State<MyRewardPage> {
                 future: rewardInfoViewModel
                     .getRewardInfoByUser(authController.userid.toString()),
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
+                  if (snapshot.hasData &&
+                      snapshot.data != null &&
+                      snapshot.data!.length != 0) {
                     return myRewardDetail(snapshot.data!);
                   } else {
                     return MyRewardIsEmpty();
@@ -72,6 +74,7 @@ class _MyRewardPageState extends State<MyRewardPage> {
       builder: (BuildContext context, Constraints constraints) {
         return SingleChildScrollView(
           child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             height: 720,
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -145,7 +148,7 @@ class _MyRewardPageState extends State<MyRewardPage> {
       child: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Image.network(
-            'https://flyerbonus.bangkokair.com/images/icons/icon-compare-redeem-awards.png',
+            'https://firebasestorage.googleapis.com/v0/b/coursez-50fb3.appspot.com/o/Images%2Ficon-compare-redeem-awards.png?alt=media&token=2e76f9ec-e732-4f09-937a-ea1495d6a183',
             fit: BoxFit.cover,
             height: 80,
           ),
