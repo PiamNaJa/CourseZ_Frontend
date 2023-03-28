@@ -22,10 +22,10 @@ class RewardBillPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    RewardController rewardController = Get.find();
-    AuthController authController = Get.find();
-    AddressViewModel addressViewModel = AddressViewModel();
-    RewardVIewModel rewardVIewModel = RewardVIewModel();
+    final RewardController rewardController = Get.find();
+    final AuthController authController = Get.find();
+    final AddressViewModel addressViewModel = AddressViewModel();
+    final RewardVIewModel rewardVIewModel = RewardVIewModel();
 
     onSubmit() async {
       rewardVIewModel.addRewardInfo(
@@ -42,7 +42,7 @@ class RewardBillPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back_ios, color: primaryColor),
           onPressed: () {
             showDialog(
-                context: Get.context!,
+                context: context,
                 builder: ((context) {
                   return AlertDialog(
                     title: const Heading20px(text: 'ยืนยันการยกเลิก'),
@@ -149,7 +149,7 @@ class RewardBillPage extends StatelessWidget {
                     color: primaryColor,
                     onPressed: () {
                       showDialog(
-                          context: Get.context!,
+                          context: context,
                           builder: ((context) {
                             return AlertDialog(
                               title:

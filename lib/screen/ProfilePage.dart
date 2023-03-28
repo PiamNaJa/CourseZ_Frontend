@@ -10,8 +10,8 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ProfileViewModel profileViewModel = ProfileViewModel();
-    AuthController authController = Get.find();
+    final ProfileViewModel profileViewModel = ProfileViewModel();
+    final AuthController authController = Get.find();
     return Container(
         decoration: const BoxDecoration(color: whiteColor),
         child: Container(

@@ -3,7 +3,6 @@ import 'package:coursez/controllers/reward_controller.dart';
 import 'package:coursez/model/rewardItem.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/address_view_model.dart';
-import 'package:coursez/view_model/profile_view_model.dart';
 import 'package:coursez/view_model/reward_view_model.dart';
 import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading1_30px.dart';
@@ -15,12 +14,11 @@ import 'package:get/get.dart';
 
 class RewardPage extends StatelessWidget {
   RewardPage({super.key});
-  RewardVIewModel rewardVIewModel = RewardVIewModel();
+  final RewardVIewModel rewardVIewModel = RewardVIewModel();
 
   @override
   Widget build(BuildContext context) {
     AuthController authController = Get.find();
-    ProfileViewModel profileViewModel = ProfileViewModel();
     return Scaffold(
         backgroundColor: primaryLighterColor,
         appBar: AppBar(
@@ -38,7 +36,9 @@ class RewardPage extends StatelessWidget {
           actions: [
             IconButton(
               icon: const Icon(CupertinoIcons.tickets_fill, color: blackColor),
-              onPressed: () {},
+              onPressed: () {
+                Get.toNamed('/myreward');
+              },
             ),
           ],
         ),
@@ -140,9 +140,9 @@ class RewardPage extends StatelessWidget {
   }
 
   Widget rewardList(RewardItem item) {
-    AddressViewModel addressViewModel = AddressViewModel();
-    AuthController authController = Get.find();
-    RewardController rewardController = Get.put(RewardController());
+    final AddressViewModel addressViewModel = AddressViewModel();
+    final AuthController authController = Get.find();
+    final RewardController rewardController = Get.put(RewardController());
 
     return InkWell(
       onTap: () {
