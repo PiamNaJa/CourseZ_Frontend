@@ -47,7 +47,8 @@ class _CoursePageState extends State<CoursePage> {
       paidVideos: [],
       point: 0,
       role: '',
-      transactions: []);
+      transactions: [],
+      courseHistory: []);
 
   @override
   void initState() {

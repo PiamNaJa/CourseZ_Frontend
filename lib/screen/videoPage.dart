@@ -55,7 +55,7 @@ class _VideoPageState extends State<VideoPage> {
       role: '',
       videoHistory: [],
       transactions: [],
-      point: 0);
+      point: 0, courseHistory: []);
 
   void _initVideo(String url) {
     videoPlayerController = VideoPlayerController.network(url)

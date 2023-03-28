@@ -1,3 +1,4 @@
+import 'package:coursez/model/address.dart';
 import 'package:coursez/model/course.dart';
 import 'package:coursez/model/payment.dart';
 import 'package:coursez/model/video.dart';
@@ -14,28 +15,31 @@ class User {
   String picture;
   int point;
   List<VideoHistory> videoHistory;
+  List<CourseHistory> courseHistory;
   UserTeacher? userTeacher;
   List<Video> paidVideos;
   List<Video> likeVideos;
   List<Course> likeCourses;
   List<Payment> transactions;
+  Address? address;
 
-  User({
-    this.userId,
-    required this.email,
-    required this.fullName,
-    required this.nickName,
-    required this.role,
-    required this.picture,
-    required this.point,
-    required this.paidVideos,
-    required this.likeVideos,
-    required this.likeCourses,
-    required this.transactions,
-    this.password,
-    required this.videoHistory,
-    this.userTeacher,
-  });
+  User(
+      {this.userId,
+      required this.email,
+      required this.fullName,
+      required this.nickName,
+      required this.role,
+      required this.picture,
+      required this.point,
+      required this.paidVideos,
+      required this.likeVideos,
+      required this.likeCourses,
+      required this.transactions,
+      this.password,
+      required this.videoHistory,
+      this.userTeacher,
+      required this.courseHistory,
+      });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -48,7 +52,14 @@ class User {
       picture: json['picture'],
       point: json['point'],
       videoHistory: json['video_history'] != null
-          ? List.from(json['video_history'].map((c) => VideoHistory.fromJson(c)).toList())
+          ? List.from(json['video_history']
+              .map((c) => VideoHistory.fromJson(c))
+              .toList())
+          : List.empty(),
+      courseHistory: json['course_history'] != null
+          ? List.from(json['course_history']
+              .map((c) => CourseHistory.fromJson(c))
+              .toList())
           : List.empty(),
       userTeacher: json['teacher'] != null
           ? UserTeacher.fromJson(json['teacher'])
@@ -72,12 +83,12 @@ class User {
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Email'] = email;
-    data['Password'] = password;
-    data['Fullname'] = fullName;
-    data['Nickname'] = nickName;
-    data['Picture'] = picture;
-    data['Role'] = role;
+    data['email'] = email;
+    data['password'] = password;
+    data['fullname'] = fullName;
+    data['nickname'] = nickName;
+    data['picture'] = picture;
+    data['role'] = role;
     return data;
   }
 }
