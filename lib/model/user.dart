@@ -21,6 +21,7 @@ class User {
   List<Video> likeVideos;
   List<Course> likeCourses;
   List<Payment> transactions;
+  Address? address;
 
   User(
       {this.userId,
