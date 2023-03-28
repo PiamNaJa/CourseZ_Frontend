@@ -47,7 +47,7 @@ class Routes {
         name: '/course/:course_id/video/:video_id/exercise/result',
         page: () => const ExerciseResultPage()),
     GetPage(name: '/post/:post_id', page: () => const PostdetailPage()),
-    GetPage(name: '/reward', page: () => const MyRewardPage())
+    // GetPage(name: '/reward', page: () => const MyRewardPage())
   ];
   static List<GetPage> get getRoutes => _getRoutes;
 }
