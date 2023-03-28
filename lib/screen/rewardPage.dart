@@ -18,7 +18,7 @@ class RewardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthController authController = Get.find();
+    final AuthController authController = Get.find();
     return Scaffold(
         backgroundColor: primaryLighterColor,
         appBar: AppBar(
