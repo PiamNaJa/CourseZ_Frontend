@@ -18,6 +18,7 @@ import 'package:coursez/screen/myRewardPage.dart';
 import 'package:get/get.dart';
 
 import '../../screen/postdetailPage.dart';
+import '../../screen/rewardStatusPage.dart';
 
 class Routes {
   static final List<GetPage> _getRoutes = [
@@ -47,7 +48,10 @@ class Routes {
         name: '/course/:course_id/video/:video_id/exercise/result',
         page: () => const ExerciseResultPage()),
     GetPage(name: '/post/:post_id', page: () => const PostdetailPage()),
-    // GetPage(name: '/reward', page: () => const MyRewardPage())
+    GetPage(name: '/reward', page: () => const MyRewardPage()),
+    GetPage(
+        name: '/reward/:reward_id/status',
+        page: () => const RewardStatusPage()),
   ];
   static List<GetPage> get getRoutes => _getRoutes;
 }
