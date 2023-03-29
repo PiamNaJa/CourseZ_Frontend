@@ -20,34 +20,37 @@ class DashBoardPage extends StatelessWidget {
     final AuthController authController = Get.find<AuthController>();
     return Scaffold(
       appBar: const CustomAppBar(title: "รายได้ของคุณในช่วง 7 วันที่ผ่านมา"),
-      body: Padding(
-        padding: const EdgeInsets.only(right: 20),
-        child: FutureBuilder(
-          future: dashboardViewModel
-              .getPaymentTransaction(authController.teacherId.toString()),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Column(
-                children: [
-                  barChart(snapshot.data!),
-                  Text(
-                    "รายได้ 7 วันที่ผ่านมา : ${dashboardViewModel.totalMoney(snapshot.data!)} บาท",
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+      body: FutureBuilder(
+        future: dashboardViewModel
+            .getPaymentTransaction(authController.teacherId.toString()),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: barChart(snapshot.data!),
+                ),
+                Text(
+                  "รายได้ 7 วันที่ผ่านมา : ${dashboardViewModel.totalMoney(snapshot.data!)} บาท",
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                  transactionList(snapshot.data!)
-                ],
-              );
-            } else {
-              return const Center(
-                  child: CircularProgressIndicator(
-                color: primaryColor,
-              ));
-            }
-          },
-        ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                transactionList(snapshot.data!)
+              ],
+            );
+          } else {
+            return const Center(
+                child: CircularProgressIndicator(
+              color: primaryColor,
+            ));
+          }
+        },
       ),
     );
   }
@@ -55,7 +58,7 @@ class DashBoardPage extends StatelessWidget {
   Widget barChart(List<Payment> data) {
     final DashboardViewModel dashboardViewModel = DashboardViewModel();
     final List<PaymentTransaction> paymentTransaction =
-        dashboardViewModel.test();
+        dashboardViewModel.paymentDataToInterface(data);
     final List<double> values =
         paymentTransaction.map((e) => e.money.toDouble()).toList();
     final double maxValue = values.reduce(max);
@@ -105,7 +108,8 @@ class DashBoardPage extends StatelessWidget {
     return Expanded(
       child: ListView.separated(
         separatorBuilder: (context, index) => const Divider(
-          color: Colors.grey,
+          color: Colors.black,
+          height: 0,
         ),
         itemCount: data.length,
         itemBuilder: (context, index) {
