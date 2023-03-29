@@ -1,5 +1,7 @@
+import 'package:coursez/model/reviewVideo.dart';
 import 'package:coursez/screen/Reg.dart';
 import 'package:coursez/screen/Register2.dart';
+import 'package:coursez/screen/addressPage.dart';
 import 'package:coursez/screen/chatPage.dart';
 import 'package:coursez/screen/coursePage.dart';
 import 'package:coursez/screen/courseSubjectPage.dart';
@@ -13,6 +15,9 @@ import 'package:coursez/screen/inboxPage.dart';
 import 'package:coursez/screen/loginPage.dart';
 import 'package:coursez/screen/postPage.dart';
 import 'package:coursez/screen/profilePage.dart';
+import 'package:coursez/screen/reviewVideo.dart';
+import 'package:coursez/screen/rewardBillPage.dart';
+import 'package:coursez/screen/rewardPage.dart';
 import 'package:coursez/screen/videoPage.dart';
 import 'package:coursez/screen/searchPage.dart';
 import 'package:get/get.dart';
@@ -40,7 +45,11 @@ class Routes {
     GetPage(name: '/course/:course_id/video/:video_id', page: () => const VideoPage()),
     GetPage(name: '/course/:course_id/video/:video_id/exercise', page: () => const ExercisePage()),
     GetPage(name: '/course/:course_id/video/:video_id/exercise/result', page: () => const ExerciseResultPage()),
+    GetPage(name: '/course/:course_id/video/:video_id/review', page: () => const ReviewVideoPage()),
     GetPage(name: '/post/:post_id', page: () => const PostdetailPage()),
+    GetPage(name: '/reward', page: () => RewardPage()),
+    GetPage(name: '/address', page: () => AddressPage()),
+    GetPage(name: '/rewardbill', page: () => RewardBillPage()),
     GetPage(name: '/dashboard', page: () => const DashBoardPage())
   ];
   static List<GetPage> get getRoutes => _getRoutes;

@@ -23,6 +23,10 @@ class AuthController extends GetxController {
   set role(String value) => _role.value = value;
   String get role => _role.value;
 
+  final _point = 0.obs;
+  set point(int value) => _point.value = value;
+  int get point => _point.value;
+  
   final _teacherId = (-1).obs;
   set teacherId(int value) => _teacherId.value = value;
   int get teacherId => _teacherId.value;
@@ -35,6 +39,7 @@ class AuthController extends GetxController {
     username = user.nickName;
     picture = user.picture;
     role = user.role;
+    _point.value = user.point;
     if (user.userTeacher != null) {
       teacherId = user.userTeacher!.teacherId!;
     }
