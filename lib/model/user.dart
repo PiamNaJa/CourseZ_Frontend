@@ -20,8 +20,6 @@ class User {
   List<Video> paidVideos;
   List<Video> likeVideos;
   List<Course> likeCourses;
-  List<Payment> transactions;
-  Address? address;
 
   User(
       {this.userId,
@@ -34,7 +32,6 @@ class User {
       required this.paidVideos,
       required this.likeVideos,
       required this.likeCourses,
-      required this.transactions,
       this.password,
       required this.videoHistory,
       this.userTeacher,
@@ -75,9 +72,6 @@ class User {
       likeCourses: json['like_courses'] != null
           ? List.from(
               json['like_courses'].map((c) => Course.fromJson(c)).toList())
-          : List.empty(),
-      transactions: json['payment'] != null
-          ? List.from(json['payment'].map((c) => Payment.fromJson(c)).toList())
           : List.empty(),
     );
   }
