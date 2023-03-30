@@ -65,6 +65,7 @@ dependencies:
   flutter_stripe: ^9.0.0+1
   like_button: ^2.0.5
   jiffy: ^5.0.0
+  fl_chart: ^0.61.0
   web_socket_channel: ^2.3.0
   chat_bubbles: ^1.4.1
 
