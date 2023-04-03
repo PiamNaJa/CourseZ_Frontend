@@ -6,7 +6,6 @@ import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/body16.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import '../widgets/text/title16px.dart';
 
@@ -373,7 +372,6 @@ class _RewardStatusPageState extends State<RewardStatusPage> {
             padding: EdgeInsets.only(
               left: MediaQuery.of(Get.context!).size.width * 0.02,
             ),
-            // color: Colors.red,
             width: MediaQuery.of(Get.context!).size.width * 0.93,
             child: LayoutBuilder(builder: (context, constraints) {
               return Column(
@@ -469,7 +467,6 @@ class _RewardStatusPageState extends State<RewardStatusPage> {
               padding: EdgeInsets.only(
                 left: MediaQuery.of(Get.context!).size.width * 0.02,
               ),
-              // color: Colors.red,
               width: MediaQuery.of(Get.context!).size.width * 0.93,
               child: LayoutBuilder(builder: (context, constraints) {
                 return Row(
@@ -663,7 +660,6 @@ class _RewardStatusPageState extends State<RewardStatusPage> {
             padding: EdgeInsets.only(
               left: MediaQuery.of(Get.context!).size.width * 0.02,
             ),
-            // color: Colors.red,
             width: MediaQuery.of(Get.context!).size.width * 0.93,
             child: LayoutBuilder(builder: (context, constraints) {
               return Column(
@@ -728,7 +724,6 @@ class _RewardStatusPageState extends State<RewardStatusPage> {
             padding: EdgeInsets.only(
               left: MediaQuery.of(Get.context!).size.width * 0.02,
             ),
-            // color: Colors.red,
             width: MediaQuery.of(Get.context!).size.width * 0.93,
             child: LayoutBuilder(builder: (context, constraints) {
               return Column(
@@ -774,4 +769,3 @@ class _RewardStatusPageState extends State<RewardStatusPage> {
     }
   }
 }
-                      // 'เผยแพร่เมื่อ ${rewardInfoViewModel.formatReviewDate(rewardData.createdAt)}',
