@@ -6,6 +6,7 @@ import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/dashboard_view_model.dart';
 import 'package:coursez/widgets/appbar/app_bar.dart';
 import 'package:coursez/widgets/text/body12px.dart';
+import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/title14px.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -41,7 +42,15 @@ class DashBoardPage extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                transactionList(snapshot.data!)
+                if (snapshot.data!.isNotEmpty)
+                  transactionList(snapshot.data!)
+                else
+                  const Center(
+                    child: Heading24px(
+                      color: greyColor,
+                      text: "ไม่มีรายการใน 7 วันล่าสุด",
+                    ),
+                  )
               ],
             );
           } else {
