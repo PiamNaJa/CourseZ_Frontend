@@ -1,18 +1,14 @@
 import 'package:coursez/controllers/auth_controller.dart';
-import 'package:coursez/model/user.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/model/rewardInfo.dart';
 import 'package:coursez/view_model/rewardInfo_view_model.dart';
 import 'package:coursez/widgets/button/button.dart';
-import 'package:coursez/widgets/text/body12px.dart';
-import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
-import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import '../model/rewardItem.dart';
 import '../widgets/text/body10px.dart';
+import '../widgets/text/body16.dart';
 import '../widgets/text/title12px.dart';
 import '../widgets/text/title14px.dart';
 
@@ -43,7 +39,7 @@ class _MyRewardPageState extends State<MyRewardPage> {
                       Get.back();
                     },
                   ),
-                  bottom: PreferredSize(
+                  bottom: const PreferredSize(
                     preferredSize: Size.fromHeight(5.0),
                     child: Divider(
                       height: 1,
@@ -56,10 +52,10 @@ class _MyRewardPageState extends State<MyRewardPage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData &&
                       snapshot.data != null &&
-                      snapshot.data!.length != 0) {
+                      snapshot.data!.isNotEmpty) {
                     return myRewardDetail(snapshot.data!);
                   } else {
-                    return MyRewardIsEmpty();
+                    return myRewardIsEmpty();
                   }
                 },
               ));
@@ -69,7 +65,7 @@ class _MyRewardPageState extends State<MyRewardPage> {
     );
   }
 
-  Widget myRewardDetail(List<RewardItem> rewardData) {
+  Widget myRewardDetail(List<RewardInfo> rewardData) {
     return LayoutBuilder(
       builder: (BuildContext context, Constraints constraints) {
         return SingleChildScrollView(
@@ -77,13 +73,18 @@ class _MyRewardPageState extends State<MyRewardPage> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             height: 720,
             child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),
               itemCount: rewardData.length,
               itemBuilder: (context, index) {
+                final rewardTime = rewardInfoViewModel
+                    .formatReviewDate(rewardData[index].createdAt);
+                final rewardDate = DateTime.parse(rewardTime);
+                final now = DateTime.now();
+                final differenceInDays = now.difference(rewardDate).inDays;
                 return GestureDetector(
                   onTap: () {
                     Get.toNamed('/reward/${rewardData[index].itemId}/status');
@@ -109,7 +110,7 @@ class _MyRewardPageState extends State<MyRewardPage> {
                                 topLeft: Radius.circular(10),
                                 topRight: Radius.circular(10)),
                             child: Image.network(
-                              rewardData[index].itempicture,
+                              rewardData[index].item!.itempicture,
                               width: double.infinity,
                               fit: BoxFit.cover,
                             ),
@@ -122,11 +123,18 @@ class _MyRewardPageState extends State<MyRewardPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Title12px(
-                                text: rewardData[index].itemName,
+                                text: rewardData[index].item!.itemName,
                               ),
-                              Body10px(
-                                text: rewardData[index].itemTitle,
-                              ),
+                              Body10px(text: rewardData[index].item!.itemTitle),
+                              const SizedBox(height: 5),
+                              (differenceInDays > 2)
+                                  ? const Body16px(
+                                      text: "รางวัลจัดส่งสำเร็จแล้ว",
+                                      color: primaryColor,
+                                    )
+                                  : const Body16px(
+                                      text: "กำลังจัดส่งรางวัล",
+                                      color: tertiaryColor),
                             ],
                           ),
                         ),
@@ -142,7 +150,7 @@ class _MyRewardPageState extends State<MyRewardPage> {
     );
   }
 
-  Widget MyRewardIsEmpty() {
+  Widget myRewardIsEmpty() {
     return Container(
       decoration: const BoxDecoration(color: whiteColor),
       child: Center(
@@ -152,8 +160,8 @@ class _MyRewardPageState extends State<MyRewardPage> {
             fit: BoxFit.cover,
             height: 80,
           ),
-          Title14px(text: "ไม่มีรายละเอียดรางวัลของคุณ"),
-          SizedBox(height: 15),
+          const Title14px(text: "ไม่มีรายละเอียดรางวัลของคุณ"),
+          const SizedBox(height: 15),
         ]),
       ),
     );
@@ -163,8 +171,8 @@ class _MyRewardPageState extends State<MyRewardPage> {
     return Container(
       decoration: const BoxDecoration(color: whiteColor),
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Title14px(text: "กรุณาเข้าสู่ระบบเพื่อดูรายละเอียดรางวัลของคุณ"),
-        SizedBox(height: 15),
+        const Title14px(text: "กรุณาเข้าสู่ระบบเพื่อดูรายละเอียดรางวัลของคุณ"),
+        const SizedBox(height: 15),
         Bt(
           onPressed: () {
             Get.toNamed('/login');
