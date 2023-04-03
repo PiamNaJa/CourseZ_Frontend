@@ -27,18 +27,18 @@ class Course {
 
   factory Course.fromJson(Map<String, dynamic> json) {
     return Course(
-      courseId: json['course_id'],
-      subjectId: json['subject_id'],
-      subject:
-          json['subject'] != null ? Subject.fromJson(json['subject']) : null,
-      videos: json['videos'] != null
-          ? List.from(json['videos'].map((c) => Video.fromJson(c)).toList())
-          : List.empty(),
-      teacherId: json['teacher_id'],
-      coursename: json['course_name'],
-      picture: json['picture'],
-      description: json['description'],
-      createdAt: json['created_at'],
-    );
+        courseId: json['course_id'],
+        subjectId: json['subject_id'],
+        subject:
+            json['subject'] != null ? Subject.fromJson(json['subject']) : null,
+        videos: json['videos'] != null
+            ? List.from(json['videos'].map((c) => Video.fromJson(c)).toList())
+            : List.empty(),
+        teacherId: json['teacher_id'],
+        coursename: json['course_name'],
+        picture: json['picture'],
+        description: json['description'],
+        createdAt: json['created_at'],
+        rating: json['rating'].toDouble() ?? 0.0);
   }
 }

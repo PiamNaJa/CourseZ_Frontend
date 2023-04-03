@@ -1,19 +1,16 @@
 class Address {
-  final int userId;
-  final String houseNo;
-  final String? lane;
-  final String? villageNo;
-  final String? village;
-  final String? road;
-  final String subDistrict;
-  final String district;
-  final String province;
-  final String postal;
+  String houseNo;
+  String? lane;
+  String? villageNo;
+  String? village;
+  String? road;
+  String subDistrict;
+  String district;
+  String province;
+  int postal;
 
   Address(
-      {
-      required this.userId,
-      required this.houseNo,
+      {required this.houseNo,
       this.lane,
       this.villageNo,
       this.village,
@@ -25,13 +22,12 @@ class Address {
 
   factory Address.fromJson(Map<String, dynamic> json) {
     return Address(
-      userId: json['user_id'],
       houseNo: json['house_no'],
       lane: json['lane'],
-      villageNo: json['villageNo'],
+      villageNo: json['village_no'],
       village: json['village'],
       road: json['road'],
-      subDistrict: json['subDistrict'],
+      subDistrict: json['sub_district'],
       district: json['district'],
       province: json['province'],
       postal: json['postal'],

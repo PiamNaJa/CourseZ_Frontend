@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:coursez/controllers/level_controller.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/widgets/text/body10px.dart';
@@ -11,52 +11,59 @@ import 'package:coursez/model/course.dart';
 import 'package:get/get.dart';
 
 class ListViewCourse extends StatelessWidget {
-  const ListViewCourse({super.key, required this.level});
+  final bool recommend;
+  const ListViewCourse({super.key, required this.recommend});
 
-  final int level;
   @override
   Widget build(BuildContext context) {
-    CourseViewModel courseViewModel = CourseViewModel();
-    return FutureBuilder(
-      future: courseViewModel.loadCourse(level),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          return SingleChildScrollView(
-            child: SizedBox(
-              height: 170,
-              child: (snapshot.data.length == 0)
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Title16px(
-                            text: 'ขออภัยครับ/ ค่ะ ไม่มีคอร์สเรียนในระดับนี้',
-                            color: greyColor),
-                        Icon(
-                          Icons.sentiment_dissatisfied_outlined,
-                          color: greyColor,
-                          size: 50,
-                        ),
-                      ],
-                    )
-                  : ListView.separated(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount:
-                          (snapshot.data.length > 5) ? 5 : snapshot.data.length,
-                      separatorBuilder: (context, _) => const SizedBox(
-                            width: 20,
+    final CourseViewModel courseViewModel = CourseViewModel();
+    final LevelController levelController = Get.find<LevelController>();
+    return Obx(() {
+      final level = levelController.level;
+      return FutureBuilder(
+        future: recommend
+            ? courseViewModel.loadRecommendCourse()
+            : courseViewModel.loadCourse(level),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return SingleChildScrollView(
+              child: SizedBox(
+                height: 170,
+                child: (snapshot.data.length == 0)
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Title16px(
+                              text: 'ขออภัยครับ/ ค่ะ ไม่มีคอร์สเรียนในระดับนี้',
+                              color: greyColor),
+                          Icon(
+                            Icons.sentiment_dissatisfied_outlined,
+                            color: greyColor,
+                            size: 50,
                           ),
-                      itemBuilder: (context, index) =>
-                          buildCard(snapshot.data[index])),
-            ),
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
+                        ],
+                      )
+                    : ListView.separated(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: (snapshot.data.length > 5)
+                            ? 5
+                            : snapshot.data.length,
+                        separatorBuilder: (context, _) => const SizedBox(
+                              width: 20,
+                            ),
+                        itemBuilder: (context, index) =>
+                            buildCard(snapshot.data[index])),
+              ),
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      );
+    });
   }
 }
 
@@ -108,7 +115,10 @@ Widget buildCard(Course item) {
                     Body10px(
                       text: item.description,
                     ),
-                    RatingStar(rating: item.rating, size: 20,),
+                    RatingStar(
+                      rating: item.rating,
+                      size: 20,
+                    ),
                   ],
                 ),
               ),
