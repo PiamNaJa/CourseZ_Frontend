@@ -18,9 +18,8 @@ class RewardStatusPage extends StatefulWidget {
 
 class _RewardStatusPageState extends State<RewardStatusPage> {
   final authController = Get.find<AuthController>();
-  RewardInfoViewModel rewardInfoViewModel = RewardInfoViewModel();
+  final RewardInfoViewModel rewardInfoViewModel = RewardInfoViewModel();
   String rewardID = Get.parameters["reward_id"]!;
-  late Future<RewardInfo> dataReward;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

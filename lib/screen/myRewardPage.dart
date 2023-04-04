@@ -21,8 +21,7 @@ class MyRewardPage extends StatefulWidget {
 
 class _MyRewardPageState extends State<MyRewardPage> {
   final authController = Get.find<AuthController>();
-  RewardInfoViewModel rewardInfoViewModel = RewardInfoViewModel();
-  late Future<List<RewardInfo>> dataReward;
+  final RewardInfoViewModel rewardInfoViewModel = RewardInfoViewModel();
   @override
   Widget build(BuildContext context) {
     return Obx(
