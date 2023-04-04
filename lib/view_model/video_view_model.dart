@@ -164,7 +164,7 @@ class SmartFocus {
   Future<void> openCamera() async {
     // cameras[0] for rear-camera
     cameraController =
-        CameraController(cameras[0], ResolutionPreset.low, enableAudio: false);
+        CameraController(cameras[1], ResolutionPreset.low, enableAudio: false);
 
     await cameraController!.initialize();
     // Stream of image passed to [onLatestImageAvailable] callback
