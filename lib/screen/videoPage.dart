@@ -34,6 +34,8 @@ class _VideoPageState extends State<VideoPage> {
   final VideoViewModel videoViewModel = VideoViewModel();
   final AuthController authController = Get.find<AuthController>();
   bool isFocus = false;
+  final SmartFocus smartFocus = SmartFocus();
+
   double timeToDoQuiz = 0;
   final isExpanded = true;
   bool isInitVideo = false;
