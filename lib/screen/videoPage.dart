@@ -31,8 +31,8 @@ class VideoPage extends StatefulWidget {
 }
 
 class _VideoPageState extends State<VideoPage> {
-  VideoViewModel videoViewModel = VideoViewModel();
-  AuthController authController = Get.find<AuthController>();
+  final VideoViewModel videoViewModel = VideoViewModel();
+  final AuthController authController = Get.find<AuthController>();
   bool isFocus = false;
   double timeToDoQuiz = 0;
   final isExpanded = true;
@@ -162,6 +162,7 @@ class _VideoPageState extends State<VideoPage> {
       ),
       iconThemeData: const IconThemeData(color: primaryColor),
     );
+    print(smartFocus.isHaveFace());
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -246,8 +247,13 @@ class _VideoPageState extends State<VideoPage> {
                               MaterialTapTargetSize.shrinkWrap,
                           activeColor: primaryColor,
                           onChanged: (bool value) {
+                            isFocus = value;
                             setState(() {
-                              isFocus = value;
+                              if (isFocus == true) {
+                                smartFocus.startFocus((() => setState(() {})));
+                              } else {
+                                smartFocus.stopFocus();
+                              }
                             });
                           })
                     ],

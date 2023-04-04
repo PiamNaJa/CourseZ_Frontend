@@ -68,6 +68,9 @@ dependencies:
   fl_chart: ^0.61.0
   web_socket_channel: ^2.3.0
   chat_bubbles: ^1.4.1
+  camera: ^0.10.3+2
+  tflite_flutter: ^0.9.1
+  tflite_flutter_helper: ^0.3.1
 
 flutter_icons:
   android: true
@@ -85,6 +88,7 @@ dev_dependencies:
   flutter_lints: ^2.0.0
 dependency_overrides:
   intl: ^0.18.0
+  camera: ^0.10.3+2
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -105,6 +109,9 @@ flutter:
     - assets/images/CourseZ_logo.jpg
     - assets/images/math1.png
     - assets/images/math2.png
+    - assets/facenet.tflite
+    - assets/detect.tflite
+    - assets/labelmap.txt
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
