@@ -1,13 +1,22 @@
+import 'dart:isolate';
+
+import 'package:camera/camera.dart';
 import 'package:coursez/model/user.dart';
 import 'package:coursez/model/userTeacher.dart';
 import 'package:coursez/model/video.dart';
 import 'package:coursez/repository/history_repository.dart';
+import 'package:coursez/utils/camera_view_singleton.dart';
+import 'package:coursez/utils/classifier.dart';
 import 'package:coursez/utils/fetchData.dart';
+import 'package:coursez/utils/isolate_utils.dart';
+import 'package:coursez/utils/recognition.dart';
 import 'package:coursez/view_model/date_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tflite_flutter/tflite_flutter.dart';
+import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 import '../repository/review_repository.dart';
 import '../utils/color.dart';
 
@@ -122,5 +131,112 @@ class VideoViewModel {
     } else {
       throw Exception(res.body);
     }
+  }
+}
+
+class SmartFocus {
+  late Classifier classifier;
+  late IsolateUtils isolateUtils;
+  bool predicting = false;
+  List<CameraDescription> cameras = [];
+  CameraController? cameraController;
+  List<Recognition> results = [];
+  SmartFocus() {
+    init();
+  }
+  void init() async {
+    // Spawn a new isolate
+    isolateUtils = IsolateUtils();
+    await isolateUtils.start();
+
+    final interpreter = await Interpreter.fromAsset("detect.tflite",
+        options: InterpreterOptions()..threads = 1);
+    final labels = await FileUtil.loadLabels("assets/labelmap.txt");
+
+    // Create an instance of classifier to load model and labels
+    classifier = Classifier(labels: labels, interpreter: interpreter);
+
+    // Initially predicting = false
+    predicting = false;
+    cameras = await availableCameras();
+  }
+
+  Future<void> openCamera() async {
+    // cameras[0] for rear-camera
+    cameraController =
+        CameraController(cameras[0], ResolutionPreset.low, enableAudio: false);
+
+    await cameraController!.initialize();
+    // Stream of image passed to [onLatestImageAvailable] callback
+    // await cameraController!.startImageStream(onLatestImageAvailable);
+
+    /// previewSize is size of each image frame captured by controller
+    ///
+    /// 352x288 on iOS, 240p (320x240) on Android with ResolutionPreset.low
+    Size previewSize = cameraController!.value.previewSize!;
+
+    /// previewSize is size of raw input image to the model
+    CameraViewSingleton.inputImageSize = previewSize;
+
+    // the display width of image on screen is
+    // same as screenWidth while maintaining the aspectRatio
+    Size screenSize = MediaQuery.of(Get.context!).size;
+    CameraViewSingleton.screenSize = screenSize;
+    CameraViewSingleton.ratio = screenSize.width / previewSize.height;
+  }
+
+  Future<void> startFocus(VoidCallback setStatefunc) async {
+    await openCamera();
+    await cameraController!.startImageStream(
+        (image) => onLatestImageAvailable(image, setStatefunc));
+  }
+
+  Future<void> stopFocus() async {
+    await cameraController!.dispose();
+    cameraController = null;
+  }
+
+  /// Callback to receive each frame [CameraImage] perform inference on it
+  onLatestImageAvailable(
+      CameraImage cameraImage, VoidCallback setStatefunc) async {
+    if (predicting) {
+      return;
+    }
+    setStatefunc();
+    predicting = true;
+
+    // Data to be passed to inference isolate
+    var isolateData = IsolateData(
+        cameraImage, classifier.interpreter.address, classifier.labels);
+
+    // We could have simply used the compute method as well however
+    // it would be as in-efficient as we need to continuously passing data
+    // to another isolate.
+
+    /// perform inference in separate isolate
+    Map<String, dynamic> inferenceResults = await inference(isolateData);
+
+    // pass results to HomeView
+    results = inferenceResults["recognitions"];
+
+    // pass stats to HomeView
+
+    // set predicting to false to allow new frames
+    predicting = false;
+    setStatefunc();
+  }
+
+  Future<Map<String, dynamic>> inference(IsolateData isolateData) async {
+    final ReceivePort responsePort = ReceivePort();
+    isolateUtils.sendPort
+        .send(isolateData..responsePort = responsePort.sendPort);
+    final results = await responsePort.first;
+    responsePort.close();
+    return results;
+  }
+
+  bool isHaveFace() {
+    final f = results.where((element) => element.label == 'person').toList();
+    return f.isNotEmpty;
   }
 }
