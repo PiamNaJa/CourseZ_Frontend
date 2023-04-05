@@ -32,7 +32,6 @@ class User {
     required this.paidVideos,
     required this.likeVideos,
     required this.likeCourses,
-    required this.transactions,
     this.password,
     required this.videoHistory,
     this.userTeacher,

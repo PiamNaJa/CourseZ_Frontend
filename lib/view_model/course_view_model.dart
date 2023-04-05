@@ -55,7 +55,7 @@ class CourseViewModel {
     return courses;
   }
 
-  Course caculateCourseRating(Course course) {
+  Course calculateCourseRating(Course course) {
     double rating = 0;
     int count = 0;
     for (int i = 0; i < course.videos.length; i++) {

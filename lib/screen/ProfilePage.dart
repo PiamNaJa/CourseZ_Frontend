@@ -7,12 +7,10 @@ import 'package:coursez/view_model/auth_view_model.dart';
 import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/view_model/post_view_model.dart';
 import 'package:coursez/view_model/profile_view_model.dart';
-import 'package:coursez/view_model/tutor_view_model.dart';
 import 'package:coursez/widgets/button/button.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_launcher_icons/xml_templates.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,7 +18,6 @@ import 'package:image_picker/image_picker.dart';
 import '../model/course.dart';
 import '../model/user.dart';
 import '../widgets/rating/rating.dart';
-import '../widgets/text/heading1_24px.dart';
 import '../widgets/text/title14px.dart';
 import '../widgets/text/title16px.dart';
 
@@ -82,7 +79,6 @@ class _ProfilePageState extends State<ProfilePage> {
       likeCourses: [],
       likeVideos: [],
       paidVideos: [],
-      transactions: [],
       videoHistory: [],
       courseHistory: []);
 
@@ -143,7 +139,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
                         width: 110,
-                        margin: EdgeInsets.symmetric(horizontal: 2),
+                        margin: const EdgeInsets.symmetric(horizontal: 2),
                         decoration: const BoxDecoration(
                             color: Color.fromARGB(173, 255, 230, 118),
                             borderRadius:
@@ -181,7 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     padding: const EdgeInsets.only(right: 80),
                     child: Container(
                       width: 110,
-                      margin: EdgeInsets.symmetric(horizontal: 2),
+                      margin: const EdgeInsets.symmetric(horizontal: 2),
                       decoration: const BoxDecoration(
                           color: Color.fromARGB(172, 0, 253, 97),
                           borderRadius: BorderRadius.all(Radius.circular(25.0)),
@@ -249,7 +245,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Padding(
                             padding: const EdgeInsets.all(15),
                             child: Container(
-                                decoration: BoxDecoration(boxShadow: [
+                                decoration: const BoxDecoration(boxShadow: [
                                   BoxShadow(
                                       color: Colors.grey,
                                       blurRadius: 10, // shadow radius
@@ -260,7 +256,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ]),
                                 child: ClipRRect(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0)),
+                                      const BorderRadius.all(Radius.circular(10.0)),
                                   child: Image.network(
                                     user.picture,
                                     height: 100,
@@ -335,14 +331,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                       },
                                                                     ));
                                                           }),
-                                                          child: Text(
+                                                          child: const Text(
                                                               "เปลี่ยนรูป")),
                                                     ),
-                                                    Title16px(
+                                                    const Title16px(
                                                         text: "ชื่อที่แสดง"),
                                                     TextFormField(
                                                       decoration:
-                                                          InputDecoration(
+                                                          const InputDecoration(
                                                         border: OutlineInputBorder(
                                                             borderRadius:
                                                                 BorderRadius
@@ -367,13 +363,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                                       initialValue:
                                                           user.nickName,
                                                     ),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       height: 10,
                                                     ),
-                                                    Title16px(text: "ชื่อจริง"),
+                                                    const Title16px(text: "ชื่อจริง"),
                                                     TextFormField(
                                                       decoration:
-                                                          InputDecoration(
+                                                          const InputDecoration(
                                                         border: OutlineInputBorder(
                                                             borderRadius:
                                                                 BorderRadius
@@ -398,13 +394,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                                       initialValue:
                                                           user.fullName,
                                                     ),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       height: 10,
                                                     ),
-                                                    Title16px(text: "อีเมล"),
+                                                    const Title16px(text: "อีเมล"),
                                                     TextFormField(
                                                       decoration:
-                                                          InputDecoration(
+                                                          const InputDecoration(
                                                         border: OutlineInputBorder(
                                                             borderRadius:
                                                                 BorderRadius
@@ -430,7 +426,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                       },
                                                       initialValue: user.email,
                                                     ),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       height: 10,
                                                     ),
                                                     Row(
@@ -461,7 +457,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                 Get.back();
                                                                 image = null;
                                                               }),
-                                                              child: Text(
+                                                              child: const Text(
                                                                   "ยกเลิก")),
                                                         ),
                                                         ElevatedButton(
@@ -484,7 +480,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                               onSubmit(image);
                                                             }),
                                                             child:
-                                                                Text("บันทึก")),
+                                                                const Text("บันทึก")),
                                                       ],
                                                     ),
                                                   ],
@@ -609,7 +605,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ]),
           Expanded(
               child: TabBarView(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   children: [
                 SingleChildScrollView(
                   child: courseprofile(
@@ -623,7 +619,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       return SingleChildScrollView(
                           child: videohistory(snapshot.data!));
                     }
-                    return Center(
+                    return const Center(
                         child: CircularProgressIndicator(
                       color: primaryColor,
                     ));
@@ -639,7 +635,7 @@ class _ProfilePageState extends State<ProfilePage> {
     List<Course> data,
   ) {
     if (data.isEmpty) {
-      return Center(
+      return const Center(
           child: Heading20px(
         text: "คุณยังไม่มีประวัติการดูและสิ่งที่สนใจ",
       ));
@@ -709,7 +705,7 @@ class _ProfilePageState extends State<ProfilePage> {
     List<Video> data,
   ) {
     if (data.isEmpty) {
-      return Center(
+      return const Center(
           child: Heading20px(
         text: "คุณจนมากไม่มีวีดีโอซื้อเลย",
       ));
