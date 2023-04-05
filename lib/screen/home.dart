@@ -224,23 +224,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       ListTileTutor()
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Bt(
-                            text: "Myreward",
-                            color: secondaryColor,
-                            onPressed: () {
-                              Get.toNamed("/reward");
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
                 ],
               ),
             ),

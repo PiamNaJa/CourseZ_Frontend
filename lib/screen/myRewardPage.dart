@@ -4,6 +4,7 @@ import 'package:coursez/model/rewardInfo.dart';
 import 'package:coursez/view_model/rewardInfo_view_model.dart';
 import 'package:coursez/widgets/button/button.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
+import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -29,22 +30,16 @@ class _MyRewardPageState extends State<MyRewardPage> {
         if (authController.isLogin) {
           return Scaffold(
               appBar: AppBar(
-                  elevation: 0.0,
-                  title: const Heading20px(text: "รางวัลของฉัน"),
-                  backgroundColor: whiteColor,
-                  leading: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios, color: primaryColor),
-                    onPressed: () {
-                      Get.back();
-                    },
-                  ),
-                  bottom: const PreferredSize(
-                    preferredSize: Size.fromHeight(5.0),
-                    child: Divider(
-                      height: 1,
-                      color: Colors.black,
-                    ),
-                  )),
+                elevation: 0.0,
+                title: const Heading20px(text: "รางวัลของฉัน"),
+                backgroundColor: whiteColor,
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back_ios, color: primaryColor),
+                  onPressed: () {
+                    Get.back();
+                  },
+                ),
+              ),
               body: FutureBuilder(
                 future: rewardInfoViewModel
                     .getRewardInfoByUser(authController.userid.toString()),
@@ -153,15 +148,16 @@ class _MyRewardPageState extends State<MyRewardPage> {
     return Container(
       decoration: const BoxDecoration(color: whiteColor),
       child: Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Image.network(
-            'https://firebasestorage.googleapis.com/v0/b/coursez-50fb3.appspot.com/o/Images%2Ficon-compare-redeem-awards.png?alt=media&token=2e76f9ec-e732-4f09-937a-ea1495d6a183',
-            fit: BoxFit.cover,
-            height: 80,
-          ),
-          const Title14px(text: "ไม่มีรายละเอียดรางวัลของคุณ"),
-          const SizedBox(height: 15),
-        ]),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(Icons.wallet_giftcard, size: 80, color: greyColor),
+              Title16px(
+                text: "ไม่มีรายละเอียดรางวัลของคุณ",
+                color: greyColor,
+              ),
+              SizedBox(height: 15),
+            ]),
       ),
     );
   }

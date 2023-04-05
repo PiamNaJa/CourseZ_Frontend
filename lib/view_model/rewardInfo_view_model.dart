@@ -8,11 +8,12 @@ class RewardInfoViewModel {
     final String token = prefs.getString('token')!;
     final res =
         await fecthData('reward/info/user/$userID', authorization: token);
-    if (res is String) {
+    if (res is String || res == null) {
       return Future.value([]);
     }
     final List<dynamic> itemList = res;
     final item = itemList.map((e) => RewardInfo.fromJson(e)).toList();
+    item.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return Future.value(item);
   }
 

@@ -2,7 +2,7 @@ import 'user.dart';
 import 'rewardItem.dart';
 
 class RewardInfo {
-  final int rewardId;
+  final int? rewardId;
   final int userId;
   final User? user;
   final int itemId;
