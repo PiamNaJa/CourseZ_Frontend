@@ -20,9 +20,11 @@ import 'package:coursez/screen/rewardBillPage.dart';
 import 'package:coursez/screen/rewardPage.dart';
 import 'package:coursez/screen/videoPage.dart';
 import 'package:coursez/screen/searchPage.dart';
+import 'package:coursez/screen/myRewardPage.dart';
 import 'package:get/get.dart';
 
 import '../../screen/postdetailPage.dart';
+import '../../screen/rewardStatusPage.dart';
 
 class Routes {
   static final List<GetPage> _getRoutes = [
@@ -42,15 +44,27 @@ class Routes {
     GetPage(name: '/search', page: () => const SearchPage()),
     GetPage(name: '/course/:course_id', page: () => const CoursePage()),
     GetPage(name: '/chat/:chatroom_id', page: () => const ChatPage()),
-    GetPage(name: '/course/:course_id/video/:video_id', page: () => const VideoPage()),
-    GetPage(name: '/course/:course_id/video/:video_id/exercise', page: () => const ExercisePage()),
-    GetPage(name: '/course/:course_id/video/:video_id/exercise/result', page: () => const ExerciseResultPage()),
-    GetPage(name: '/course/:course_id/video/:video_id/review', page: () => const ReviewVideoPage()),
+    GetPage(
+        name: '/course/:course_id/video/:video_id',
+        page: () => const VideoPage()),
+    GetPage(
+        name: '/course/:course_id/video/:video_id/exercise',
+        page: () => const ExercisePage()),
+    GetPage(
+        name: '/course/:course_id/video/:video_id/exercise/result',
+        page: () => const ExerciseResultPage()),
+    GetPage(
+        name: '/course/:course_id/video/:video_id/review',
+        page: () => const ReviewVideoPage()),
     GetPage(name: '/post/:post_id', page: () => const PostdetailPage()),
     GetPage(name: '/reward', page: () => RewardPage()),
     GetPage(name: '/address', page: () => AddressPage()),
     GetPage(name: '/rewardbill', page: () => RewardBillPage()),
-    GetPage(name: '/dashboard', page: () => const DashBoardPage())
+    GetPage(name: '/dashboard', page: () => const DashBoardPage()),
+    GetPage(name: '/myreward', page: () => const MyRewardPage()),
+    GetPage(
+        name: '/reward/:reward_id/status',
+        page: () => const RewardStatusPage()),
   ];
   static List<GetPage> get getRoutes => _getRoutes;
 }

@@ -28,8 +28,7 @@ class RewardBillPage extends StatelessWidget {
     final RewardVIewModel rewardVIewModel = RewardVIewModel();
 
     onSubmit() async {
-      rewardVIewModel.addRewardInfo(
-          rewardController.itemid);
+      rewardVIewModel.addRewardInfo(rewardController.itemid);
     }
 
     return Scaffold(
@@ -168,7 +167,6 @@ class RewardBillPage extends StatelessWidget {
                                 TextButton(
                                   onPressed: () {
                                     onSubmit();
-                                    
                                   },
                                   child: const Title14px(
                                       text: 'สั่งซื้อ', color: primaryColor),
@@ -210,7 +208,32 @@ class RewardBillPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Heading20px(text: 'ที่อยู่สำหรับจัดส่ง'),
-                  Body12px(text: 'บ้านเลขที่ ${address.houseNo}'),
+                  Row(
+                    children: [
+                      Body12px(text: 'บ้านเลขที่ ${address.houseNo}'),
+                      const SizedBox(
+                        width: 2,
+                      ),
+                      (address.villageNo == null ||
+                              address.villageNo!.isEmpty ||
+                              address.villageNo == '')
+                          ? const SizedBox()
+                          : Body12px(text: 'หมู่ ${address.villageNo}'),
+                      const SizedBox(
+                        width: 2,
+                      ),
+                      (address.lane == null ||
+                              address.lane!.isEmpty ||
+                              address.lane == '')
+                          ? const SizedBox()
+                          : Body12px(text: 'ซอย ${address.lane}'),
+                    ],
+                  ),
+                  (address.village == null ||
+                          address.village!.isEmpty ||
+                          address.village == '')
+                      ? const SizedBox()
+                      : Body12px(text: 'หมู่บ้าน ${address.village}'),
                   Body12px(
                       text:
                           'ตำบล ${address.subDistrict} อำเภอ ${address.district} '),
