@@ -6,6 +6,7 @@ import 'package:coursez/view_model/withdraw_view_model.dart';
 import 'package:coursez/widgets/button/button.dart';
 import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
+import 'package:coursez/widgets/text/title14px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -58,6 +59,47 @@ class _WithdrawFormState extends State<WithdrawForm> {
             Get.back();
           },
         ),
+      ),
+      bottomNavigationBar: Row(
+        children: [
+          Expanded(
+              child: Bt(
+                  text: 'ถอนเงิน',
+                  color: (moneyController.text.isEmpty ||
+                          bankNumberController.text.isEmpty)
+                      ? primaryLighterColor
+                      : primaryColor,
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('ยืนยันการถอนเงิน'),
+                              content: const Text(
+                                  'คุณต้องการถอนเงินจากบัญชีนี้ใช่หรือไม่'),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                    child: const Title14px(
+                                      text: 'ยกเลิก',
+                                      color: greyColor,
+                                    )),
+                                TextButton(
+                                    onPressed: () {
+                                      Get.back();
+                                      onSubmit();
+                                    },
+                                    child: const Title14px(
+                                        text: 'ยืนยัน', color: primaryColor)),
+                              ],
+                            );
+                          });
+                    }
+                  })),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
@@ -157,50 +199,12 @@ class _WithdrawFormState extends State<WithdrawForm> {
                         return 'กรุณากรอกจำนวนเงินให้ถูกต้อง';
                       } else if (int.parse(value) > authController.money) {
                         return 'จำนวนเงินไม่เพียงพอ';
+                      } else if (int.parse(value) < 100) {
+                        return 'จำนวนเงินที่ต้องการถอนต้องไม่น้อยกว่า 100 บาท';
                       }
                       return null;
                     },
                     decoration: getInputDecoration('กรอกจำนวนเงิน'),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: Bt(
-                              text: 'ถอนเงิน',
-                              color: (moneyController.text.isEmpty ||
-                                      bankNumberController.text.isEmpty)
-                                  ? primaryLighterColor
-                                  : primaryColor,
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: const Text('ยืนยันการถอนเงิน'),
-                                          content: const Text(
-                                              'คุณต้องการถอนเงินจากบัญชีนี้ใช่หรือไม่'),
-                                          actions: [
-                                            TextButton(
-                                                onPressed: () {
-                                                  Get.back();
-                                                },
-                                                child: const Text('ยกเลิก')),
-                                            TextButton(
-                                                onPressed: () {
-                                                  Get.back();
-                                                  onSubmit();
-                                                },
-                                                child: const Text('ยืนยัน')),
-                                          ],
-                                        );
-                                      });
-                                }
-                              })),
-                    ],
                   ),
                 ),
               ],

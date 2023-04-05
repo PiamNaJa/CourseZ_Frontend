@@ -46,6 +46,7 @@ class WithDrawViewModel {
     final token = prefs.getString('token')!;
     final bool isPass = await withdrawRepository.addWithdraw(withdraw, token);
     if (!isPass) {
+
       Get.snackbar('ผิดพลาด', 'มีบางอย่างผิดพลาด',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
@@ -53,7 +54,7 @@ class WithDrawViewModel {
     } else {
       authController.fetchUser(authController.userid);
       Get.back();
-      Get.snackbar('สำเร็จ', 'ส่งคำร้องเรียบร้อย',
+      Get.snackbar('สำเร็จ', 'ส่งคำร้องถอนเงินเรียบร้อย',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: primaryColor,
           colorText: whiteColor);
