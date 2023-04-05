@@ -44,7 +44,6 @@ class AuthRepository {
       var response = await http.post(Uri.parse(url),
           headers: {"Content-Type": "application/json"},
           body: json.encode(data));
-      print(response.body);
       return response;
     } on SocketException {
       throw Exception('No Internet Connection');
@@ -88,5 +87,14 @@ class AuthRepository {
     } on SocketException {
       throw Exception('No Internet Connection');
     }
+  }
+
+  Future<http.Response> updateUser(User user, int userid, String token) async {
+    final data = user.toJson();
+    final url = '${Network.baseUrl}/api/user/${userid}';
+    var response = await http.put(Uri.parse(url),
+        headers: {"Content-Type": "application/json", "Authorization": token},
+        body: json.encode(data));
+    return response;
   }
 }

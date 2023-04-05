@@ -30,17 +30,20 @@ class VideoHistory {
 class CourseHistory {
   final int historyId;
   final int userId;
+  final int courseId;
   final Course courses;
 
   CourseHistory(
       {required this.historyId,
       required this.userId,
+      required this.courseId,
       required this.courses,});
 
   factory CourseHistory.fromJson(Map<String, dynamic> json) {
     return CourseHistory(
       historyId: json['history_id'],
       userId: json['user_id'],
+      courseId: json['course_id'],
       courses: Course.fromJson(json['course']),
     );
   }

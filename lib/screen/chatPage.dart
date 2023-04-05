@@ -4,9 +4,11 @@ import 'dart:io';
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/controllers/inboxcontroller.dart';
 import 'package:coursez/model/chat.dart';
+import 'package:coursez/model/user.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/utils/network.dart';
 import 'package:coursez/view_model/chat_view_model.dart';
+import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,6 +25,7 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  final User user = Get.arguments;
   final chatRoomId = Get.parameters['chatroom_id']!;
   late WebSocketChannel socket;
   List<Conversations> data = List.empty(growable: true);
@@ -146,7 +149,25 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        elevation: 0.0,
+        titleSpacing: 0,
+        title: Row(
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(user.picture),
+            ),
+            const SizedBox(width: 10),
+            Heading24px(text: user.nickName),
+          ],
+        ),
+        backgroundColor: whiteColor,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: primaryColor),
+          onPressed: () {
+            Get.back();
+          },
+        ),
       ),
       body: Column(
         children: [

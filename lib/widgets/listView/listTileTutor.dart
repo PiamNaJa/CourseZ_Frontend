@@ -4,6 +4,7 @@ import 'package:coursez/view_model/tutor_view_model.dart';
 import 'package:coursez/widgets/rating/rating.dart';
 import 'package:coursez/widgets/text/title14px.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ListTileTutor extends StatelessWidget {
   ListTileTutor({super.key});
@@ -36,34 +37,39 @@ class ListTileTutor extends StatelessWidget {
 }
 
 Widget listTile(Tutor item) {
-  return Container(
-    padding: const EdgeInsets.symmetric(vertical: 10),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(10),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.5),
-          spreadRadius: 1,
-          blurRadius: 7,
-          offset: const Offset(0, 3), // changes position of shadow
-        ),
-      ],
-    ),
-    child: ListTile(
-      leading: ClipOval(
-        child: Image.network(item.picture),
-      ),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Title14px(
-            text: '${item.nickname} (${item.fullname})',
+  return InkWell(
+    // onTap: () {
+    //   Get.toNamed('')
+    // },
+    child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 7,
+            offset: const Offset(0, 3), // changes position of shadow
           ),
-          RatingStar(rating: item.rating, size: 15),
         ],
       ),
-      trailing: const Icon(Icons.keyboard_arrow_right),
+      child: ListTile(
+        leading: ClipOval(
+          child: Image.network(item.picture),
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Title14px(
+              text: '${item.nickname} (${item.fullname})',
+            ),
+            RatingStar(rating: item.rating, size: 15),
+          ],
+        ),
+        trailing: const Icon(Icons.keyboard_arrow_right),
+      ),
     ),
   );
 }

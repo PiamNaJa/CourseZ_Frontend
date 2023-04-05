@@ -41,6 +41,7 @@ class _FirstPageState extends State<FirstPage> {
     return Scaffold(
       body: SafeArea(
           child: PageView(
+        physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
         children: page,
         onPageChanged: (value) => setState(() {

@@ -16,6 +16,7 @@ import 'package:coursez/widgets/text/title12px.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/widgets/carousel/carouselLevel.dart';
 import 'package:get/get.dart';
+import '../widgets/button/button.dart';
 import '../widgets/dropdown/dropdown.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -160,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               const SizedBox(
                                 height: 12,
                               ),
-                              const ListViewCourse(recommend: true),
+                              // const ListViewCourse(recommend: true),
                             ]
                           ],
                         ),
@@ -222,7 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       ListTileTutor()
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

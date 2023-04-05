@@ -5,7 +5,7 @@ import 'course.dart';
 class UserTeacher {
   final int? teacherId;
   final int? userId;
-  final String teacherLicense;
+  final String? teacherLicense;
   final String? transcipt;
   final String idCard;
   final String? psychologicalTest;
@@ -14,18 +14,17 @@ class UserTeacher {
   List<Experience>? experiences;
   final List<Course>? courses;
 
-  UserTeacher({
-    this.teacherId,
-    this.userId,
-    required this.teacherLicense,
-    required this.transcipt,
-    required this.idCard,
-    required this.psychologicalTest,
-    required this.money,
-    this.reviews,
-    this.experiences,
-    this.courses,
-  });
+  UserTeacher(
+      {this.teacherId,
+      this.userId,
+      this.teacherLicense,
+      this.transcipt,
+      required this.idCard,
+      this.psychologicalTest,
+      this.money = 0,
+      this.reviews,
+      this.experiences,
+      this.courses,});
 
   factory UserTeacher.fromJson(Map<String, dynamic> json) {
     return UserTeacher(
