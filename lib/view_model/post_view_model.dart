@@ -34,6 +34,14 @@ class PostViewModel {
     return post;
   }
 
+  Future<List<Post>> loadPostByUser() async {
+    final pref = await SharedPreferences.getInstance();
+    final token = pref.getString('token')!;
+    final p = await fecthData('post/user', authorization: token);
+    final List<Post> posts = List.from(p.map((e) => Post.fromJson(e)).toList());
+    return posts;
+  }
+
   String formatPostDate(int createdAt) {
     DateViewModel dateViewModel = DateViewModel();
     String timeago = dateViewModel.formatDate(createdAt);

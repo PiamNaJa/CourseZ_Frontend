@@ -16,17 +16,17 @@ class SearchViewModel {
     CourseViewModel courseviewmodel = CourseViewModel();
     for (int i = 0; i < result.courses.length; i++) {
       result.courses[i] =
-          courseviewmodel.caculateCourseRating(result.courses[i]);
+          courseviewmodel.calculateCourseRating(result.courses[i]);
     }
     for (int i = 0; i < result.videos.length; i++) {
-      result.videos[i] = courseviewmodel.caculateCourseRating(result.videos[i]);
+      result.videos[i] =
+          courseviewmodel.calculateCourseRating(result.videos[i]);
     }
     return result;
   }
 
   Future<List<Course>> searchCourse(String searchText) async {
-    Uri uri =
-        Uri.http(Network.url, '/api/search/course', {'name': searchText});
+    Uri uri = Uri.http(Network.url, '/api/search/course', {'name': searchText});
     http.Response response = await http.get(uri);
     final searchCourse = jsonDecode(utf8.decode(response.bodyBytes));
     final List<Course> courses =
@@ -35,8 +35,7 @@ class SearchViewModel {
   }
 
   Future<List<Tutor>> searchTutor(String searchText) async {
-    Uri uri =
-        Uri.http(Network.url, '/api/search/tutor', {'name': searchText});
+    Uri uri = Uri.http(Network.url, '/api/search/tutor', {'name': searchText});
     http.Response response = await http.get(uri);
     final searchTutor = jsonDecode(utf8.decode(response.bodyBytes));
     final List<Tutor> tutor =
@@ -45,8 +44,7 @@ class SearchViewModel {
   }
 
   Future<List<Course>> searchVideo(String searchText) async {
-    Uri uri =
-        Uri.http(Network.url, '/api/search/video', {'name': searchText});
+    Uri uri = Uri.http(Network.url, '/api/search/video', {'name': searchText});
     http.Response response = await http.get(uri);
     final searchVideo = jsonDecode(utf8.decode(response.bodyBytes));
     final List<Course> video =
