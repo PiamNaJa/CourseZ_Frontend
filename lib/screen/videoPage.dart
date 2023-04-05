@@ -1,5 +1,6 @@
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/model/reviewVideo.dart';
+import 'package:coursez/model/userTeacher.dart';
 import 'package:coursez/model/video.dart';
 import 'package:coursez/screen/pdfPage.dart';
 import 'package:coursez/view_model/exercise_view_model.dart';
@@ -44,6 +45,7 @@ class _VideoPageState extends State<VideoPage> {
   String courseId = Get.parameters["course_id"]!;
   String videoId = Get.parameters["video_id"]!;
   bool isDoneExercise = false;
+  bool loadingTeacher = true;
   User teacher = User(
       email: '',
       fullName: '',
@@ -52,10 +54,14 @@ class _VideoPageState extends State<VideoPage> {
       nickName: '',
       picture: '',
       paidVideos: [],
+      userTeacher: UserTeacher(
+        idCard: '',
+      ),
       role: '',
       videoHistory: [],
       transactions: [],
-      point: 0, courseHistory: []);
+      point: 0,
+      courseHistory: []);
 
   void _initVideo(String url) {
     videoPlayerController = VideoPlayerController.network(url)
@@ -86,27 +92,33 @@ class _VideoPageState extends State<VideoPage> {
     videoViewModel.getTeacherName(int.parse(teacherId)).then((value) {
       setState(() {
         teacher = value;
+        loadingTeacher = false;
       });
-    });
-    if (authController.isLogin) {
-      ExerciseViewModel().isDoneExercise(courseId, videoId).then((value) {
-        setState(() {
-          isDoneExercise = value;
+      if (authController.isLogin) {
+        ExerciseViewModel().isDoneExercise(courseId, videoId).then((value) {
+          setState(() {
+            isDoneExercise = value;
+          });
         });
-      });
-    }
+      }
+    });
+
     super.initState();
   }
 
   @override
   void dispose() {
     if (authController.isLogin) {
-      videoViewModel.addVideoHistory(
-          videoId,
-          flickManager.flickVideoManager!.videoPlayerController!.value.position
-              .inSeconds);
+      videoViewModel
+          .addVideoHistory(
+              videoId,
+              flickManager.flickVideoManager!.videoPlayerController!.value
+                  .position.inSeconds)
+          .then((value) => flickManager.dispose());
+    } else {
+      flickManager.dispose();
     }
-    flickManager.dispose();
+
     super.dispose();
   }
 
@@ -130,7 +142,9 @@ class _VideoPageState extends State<VideoPage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               if (!isInitVideo) _initVideo(snapshot.data!.url);
-              return videoDetail(snapshot.data!, flickManager);
+              return loadingTeacher
+                  ? const Center(child: CircularProgressIndicator())
+                  : videoDetail(snapshot.data!, flickManager);
             } else {
               return const Center(child: CircularProgressIndicator());
             }

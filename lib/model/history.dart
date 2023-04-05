@@ -32,14 +32,12 @@ class CourseHistory {
   final int userId;
   final int courseId;
   final Course courses;
-  final int duration;
 
   CourseHistory(
       {required this.historyId,
       required this.userId,
       required this.courseId,
-      required this.courses,
-      required this.duration});
+      required this.courses,});
 
   factory CourseHistory.fromJson(Map<String, dynamic> json) {
     return CourseHistory(
@@ -47,7 +45,6 @@ class CourseHistory {
       userId: json['user_id'],
       courseId: json['course_id'],
       courses: Course.fromJson(json['course']),
-      duration: json['duration'],
     );
   }
 }

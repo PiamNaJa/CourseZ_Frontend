@@ -1,18 +1,26 @@
 import 'dart:io';
 
 import 'package:coursez/controllers/auth_controller.dart';
+import 'package:coursez/model/video.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/auth_view_model.dart';
+import 'package:coursez/view_model/course_view_model.dart';
+import 'package:coursez/view_model/post_view_model.dart';
 import 'package:coursez/view_model/profile_view_model.dart';
+import 'package:coursez/view_model/tutor_view_model.dart';
 import 'package:coursez/widgets/button/button.dart';
+import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_launcher_icons/xml_templates.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../model/course.dart';
 import '../model/user.dart';
 import '../widgets/rating/rating.dart';
+import '../widgets/text/heading1_24px.dart';
 import '../widgets/text/title14px.dart';
 import '../widgets/text/title16px.dart';
 
@@ -44,19 +52,49 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  final formkey = GlobalKey<FormState>();
+  final AuthViewModel authViewModel = AuthViewModel();
+  CourseViewModel courseViewModel = CourseViewModel();
   ProfileViewModel profileViewModel = ProfileViewModel();
   AuthController authController = Get.find();
-  File? image;
 
-  Future pickImage() async {
+  onSubmit(File? image) async {
+    if (formkey.currentState!.validate()) {
+      formkey.currentState!.save();
+      profileViewModel.updateUser(image, users);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    users.role = authController.role;
+  }
+
+  User users = User(
+      email: '',
+      password: '',
+      fullName: '',
+      nickName: '',
+      role: '',
+      picture: '',
+      point: 0,
+      likeCourses: [],
+      likeVideos: [],
+      paidVideos: [],
+      transactions: [],
+      videoHistory: [],
+      courseHistory: []);
+
+  Future<File?> pickImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
 
-      if (image == null) return;
+      if (image == null) return null;
 
       final imageTemp = File(image.path);
 
-      setState(() => this.image = imageTemp);
+      return imageTemp;
     } on PlatformException catch (e) {
       debugPrint("Fail to pick image : $e");
     }
@@ -65,6 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      authController.picture;
       if (authController.isLogin) {
         return FutureBuilder(
           future: ProfileViewModel().fetchUser(authController.userid),
@@ -72,7 +111,10 @@ class _ProfilePageState extends State<ProfilePage> {
             if (snapshot.hasData) {
               return showprofile(snapshot.data);
             } else {
-              return const Center(child: CircularProgressIndicator(color: primaryColor,));
+              return const Center(
+                  child: CircularProgressIndicator(
+                color: primaryColor,
+              ));
             }
           },
         );
@@ -90,19 +132,81 @@ class _ProfilePageState extends State<ProfilePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(
-                child: InkWell(
-                  onTap: () {
-                    // Get.toNamed('/reward');
-                  },
-                  child: Row(
-                    children: [
-                      const Icon(Icons.star),
-                      Title16px(text: "${user.point}  แต้ม")
-                    ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  child: InkWell(
+                    onTap: () {
+                      Get.toNamed('/reward');
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: 110,
+                        margin: EdgeInsets.symmetric(horizontal: 2),
+                        decoration: const BoxDecoration(
+                            color: Color.fromARGB(173, 255, 230, 118),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(25.0)),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 10, // shadow radius
+                                  offset: Offset(2, 4), // shadow offset
+                                  spreadRadius:
+                                      0.1, // The amount the box should be inflated prior to applying the blur
+                                  blurStyle: BlurStyle.normal)
+                            ]),
+                        child: Center(
+                          child: Row(
+                            children: [
+                              const Icon(Icons.star),
+                              Title16px(
+                                text: "  ${user.point}  แต้ม",
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
+              if (authController.teacherId != -1)
+                InkWell(
+                  onTap: () {
+                    Get.toNamed('/withdraw');
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 80),
+                    child: Container(
+                      width: 110,
+                      margin: EdgeInsets.symmetric(horizontal: 2),
+                      decoration: const BoxDecoration(
+                          color: Color.fromARGB(172, 0, 253, 97),
+                          borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 10, // shadow radius
+                                offset: Offset(2, 4), // shadow offset
+                                spreadRadius:
+                                    0.1, // The amount the box should be inflated prior to applying the blur
+                                blurStyle: BlurStyle.normal)
+                          ]),
+                      child: Center(
+                        child: Row(
+                          children: [
+                            const Icon(Icons.attach_money_outlined),
+                            Title16px(
+                              text: "  ${user.userTeacher!.money}   บาท",
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               IconButton(
                   color: Colors.red,
                   onPressed: (() {
@@ -135,36 +239,271 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
           Container(
-            decoration: const BoxDecoration(color: whiteColor),
+            decoration: const BoxDecoration(
+              color: Colors.transparent,
+            ),
             child: Center(
-                child: image != null
+                child: user.picture.isNotEmpty
                     ? Stack(
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(15),
-                            child: ClipOval(
-                                child: Image.file(
-                              image!,
-                              height: 120,
-                              width: 120,
-                              fit: BoxFit.cover,
-                            )),
+                            child: Container(
+                                decoration: BoxDecoration(boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.grey,
+                                      blurRadius: 10, // shadow radius
+                                      offset: Offset(4, 4), // shadow offset
+                                      spreadRadius:
+                                          0.1, // The amount the box should be inflated prior to applying the blur
+                                      blurStyle: BlurStyle.normal)
+                                ]),
+                                child: ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0)),
+                                  child: Image.network(
+                                    user.picture,
+                                    height: 100,
+                                    width: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )),
                           ),
                           Positioned(
-                            top: 10,
-                            left: 75,
+                            top: 80,
+                            left: 64,
                             child: RawMaterialButton(
                               onPressed: () {
-                                pickImage();
+                                showDialog(
+                                    context: context,
+                                    builder: ((context) {
+                                      File? image;
+                                      return Dialog(
+                                        child: StatefulBuilder(
+                                            builder: (context, ssetState) {
+                                          return SingleChildScrollView(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(20.0),
+                                              child: Form(
+                                                key: formkey,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Center(
+                                                        child: image != null
+                                                            ? Image.file(
+                                                                image!,
+                                                                height: 150,
+                                                                width: 150,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              )
+                                                            : Image.network(
+                                                                user.picture,
+                                                                height: 150,
+                                                                width: 150,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              )),
+                                                    Center(
+                                                      child: ElevatedButton(
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            disabledBackgroundColor:
+                                                                primaryLighterColor,
+                                                            backgroundColor:
+                                                                primaryColor,
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5),
+                                                            ),
+                                                          ),
+                                                          onPressed: (() {
+                                                            pickImage().then(
+                                                                (value) =>
+                                                                    ssetState(
+                                                                      () {
+                                                                        image =
+                                                                            value;
+                                                                      },
+                                                                    ));
+                                                          }),
+                                                          child: Text(
+                                                              "เปลี่ยนรูป")),
+                                                    ),
+                                                    Title16px(
+                                                        text: "ชื่อที่แสดง"),
+                                                    TextFormField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border: OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            20))),
+                                                      ),
+                                                      autovalidateMode:
+                                                          AutovalidateMode
+                                                              .onUserInteraction,
+                                                      validator:
+                                                          MultiValidator([
+                                                        RequiredValidator(
+                                                            errorText:
+                                                                "โปรดกรอกชื่อของคุณ"),
+                                                      ]),
+                                                      onChanged:
+                                                          (String? nickName) {
+                                                        users.nickName =
+                                                            nickName!;
+                                                      },
+                                                      initialValue:
+                                                          user.nickName,
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Title16px(text: "ชื่อจริง"),
+                                                    TextFormField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border: OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            20))),
+                                                      ),
+                                                      autovalidateMode:
+                                                          AutovalidateMode
+                                                              .onUserInteraction,
+                                                      validator:
+                                                          MultiValidator([
+                                                        RequiredValidator(
+                                                            errorText:
+                                                                "โปรดกรอกชื่อของคุณ"),
+                                                      ]),
+                                                      onChanged:
+                                                          (String? fullName) {
+                                                        users.fullName =
+                                                            fullName!;
+                                                      },
+                                                      initialValue:
+                                                          user.fullName,
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Title16px(text: "อีเมล"),
+                                                    TextFormField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border: OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            20))),
+                                                      ),
+                                                      autovalidateMode:
+                                                          AutovalidateMode
+                                                              .onUserInteraction,
+                                                      validator:
+                                                          MultiValidator([
+                                                        RequiredValidator(
+                                                            errorText:
+                                                                "โปรดกรอกอีเมลล์ของคุณ"),
+                                                        EmailValidator(
+                                                            errorText:
+                                                                "อีเมลล์ของคุณผิด")
+                                                      ]),
+                                                      onChanged:
+                                                          (String? email) {
+                                                        users.email = email!;
+                                                      },
+                                                      initialValue: user.email,
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(20.0),
+                                                          child: ElevatedButton(
+                                                              style:
+                                                                  ElevatedButton
+                                                                      .styleFrom(
+                                                                disabledBackgroundColor:
+                                                                    primaryLighterColor,
+                                                                backgroundColor:
+                                                                    Colors.red,
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              5),
+                                                                ),
+                                                              ),
+                                                              onPressed: (() {
+                                                                Get.back();
+                                                                image = null;
+                                                              }),
+                                                              child: Text(
+                                                                  "ยกเลิก")),
+                                                        ),
+                                                        ElevatedButton(
+                                                            style:
+                                                                ElevatedButton
+                                                                    .styleFrom(
+                                                              disabledBackgroundColor:
+                                                                  primaryLighterColor,
+                                                              backgroundColor:
+                                                                  primaryColor,
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                              ),
+                                                            ),
+                                                            onPressed: (() {
+                                                              onSubmit(image);
+                                                            }),
+                                                            child:
+                                                                Text("บันทึก")),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                      );
+                                    }));
                               },
                               elevation: 2.0,
                               fillColor: primaryColor,
-                              padding: const EdgeInsets.all(15),
+                              padding: const EdgeInsets.all(10),
                               shape: const CircleBorder(),
                               child: const Icon(
                                 color: Colors.white,
                                 Icons.edit,
-                                size: 25,
+                                size: 20,
                               ),
                             ),
                           )
@@ -180,7 +519,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               color: greyColor, shape: BoxShape.circle),
                           child: const Center(
                             child: Icon(
-                              Icons.add_a_photo_outlined,
+                              Icons.person,
                               size: 50,
                             ),
                           ),
@@ -188,36 +527,108 @@ class _ProfilePageState extends State<ProfilePage> {
                       )),
           ),
           Title16px(text: authController.username),
-          Title14px(text: user.fullName),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: const <Widget>[
-              Text(
-                "4",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              Text(
-                "Posts",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-            ],
+          Title14px(
+            text: 'ชื่อ: ${user.fullName}',
+            color: greyColor,
+          ),
+          Title14px(
+            text: 'อีเมล: ${user.email}',
+            color: greyColor,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 10,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                if (authController.teacherId != -1)
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Title16px(
+                            text: user.userTeacher!.courses!.length.toString()),
+                        const Title14px(
+                          text: 'คอร์ส',
+                          color: greyColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      FutureBuilder(
+                          future: PostViewModel().loadPostByUser(),
+                          builder: (context, AsyncSnapshot snapshot) {
+                            if (snapshot.hasData) {
+                              return Title16px(
+                                  text: snapshot.data.length.toString());
+                            } else {
+                              return const Center(
+                                  child: CircularProgressIndicator(
+                                color: primaryColor,
+                              ));
+                            }
+                          }),
+                      const Title14px(
+                        text: 'โพสต์',
+                        color: greyColor,
+                      ),
+                    ],
+                  ),
+                ),
+                if (authController.teacherId != -1)
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Title16px(
+                            text: user.userTeacher!.reviews!.length.toString()),
+                        const Title14px(
+                          text: 'รีวิว',
+                          color: greyColor,
+                        )
+                      ],
+                    ),
+                  ),
+              ],
+            ),
           ),
           const TabBar(
+              indicatorColor: primaryColor,
               labelColor: blackColor,
-              labelStyle: TextStyle(fontWeight: FontWeight.bold),
+              labelStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Athiti',
+              ),
               tabs: [
                 Tab(text: "ประวัติ"),
                 Tab(text: "คอร์สที่ถูกใจ"),
-                Tab(text: "ดาวน์โหลด"),
+                Tab(text: "วิดีโอที่ซื้อแล้ว"),
               ]),
           Expanded(
               child: TabBarView(
-                  physics: const NeverScrollableScrollPhysics(),
+                  physics: NeverScrollableScrollPhysics(),
                   children: [
-                const Text("1"),
-                courseprofile(user.likeCourses),
-                const Text("3"),
+                SingleChildScrollView(
+                  child: courseprofile(
+                      user.courseHistory.map((e) => e.courses).toList()),
+                ),
+                SingleChildScrollView(child: courseprofile(user.likeCourses)),
+                FutureBuilder(
+                  future: profileViewModel.getPaidVideoObject(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return SingleChildScrollView(
+                          child: videohistory(snapshot.data!));
+                    }
+                    return Center(
+                        child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ));
+                  },
+                ),
               ])),
         ],
       ),
@@ -227,6 +638,12 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget courseprofile(
     List<Course> data,
   ) {
+    if (data.isEmpty) {
+      return Center(
+          child: Heading20px(
+        text: "คุณยังไม่มีประวัติการดูและสิ่งที่สนใจ",
+      ));
+    }
     return Wrap(
       alignment: WrapAlignment.center,
       children: data
@@ -238,7 +655,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
                 child: Container(
                   width: 160,
-                  height: 150,
+
                   margin: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       color: whiteColor,
@@ -260,6 +677,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         borderRadius: BorderRadius.circular(5),
                         child: Image.network(
                           e.picture,
+                          width: 160,
+                          height: 100,
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -272,9 +691,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Title14px(text: e.coursename),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(
-                          left: 8.0,
-                        ),
+                        padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
                         child: RatingStar(
                           rating: e.rating,
                           size: 20,
@@ -285,6 +702,67 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ))
           .toList(),
+    );
+  }
+
+  Widget videohistory(
+    List<Video> data,
+  ) {
+    if (data.isEmpty) {
+      return Center(
+          child: Heading20px(
+        text: "คุณจนมากไม่มีวีดีโอซื้อเลย",
+      ));
+    }
+    return ListView.separated(
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      itemCount: data.length,
+      separatorBuilder: (context, _) => const SizedBox(
+        height: 0,
+      ),
+      itemBuilder: (context, index) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 7,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: ListTile(
+            onTap: () async {
+              final courseid =
+                  await courseViewModel.loadCourseById(data[index].courseId);
+              Get.toNamed(
+                  '/course/${data[index].courseId}/video/${data[index].videoId}',
+                  parameters: {
+                    'video_name': data[index].videoName,
+                    'teacher_id': courseid.teacherId.toString()
+                  });
+            },
+            leading: ClipOval(
+              child: Image.network(
+                data[index].picture,
+                height: 50,
+                width: 50,
+                fit: BoxFit.cover,
+              ),
+            ),
+            title: Title14px(
+              text: '${data[index].videoName} (${data[index].price})',
+            ),
+            trailing: const Icon(Icons.keyboard_arrow_right),
+          ),
+        ),
+      ),
     );
   }
 }

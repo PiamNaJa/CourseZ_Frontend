@@ -1,5 +1,17 @@
-import 'package:coursez/model/course.dart';
+import 'dart:io';
 
+import 'package:coursez/model/course.dart';
+import 'package:coursez/model/payment.dart';
+import 'package:coursez/model/video.dart';
+import 'package:coursez/repository/auth_repository.dart';
+import 'package:coursez/view_model/auth_view_model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
+
+import '../controllers/auth_controller.dart';
 import '../model/user.dart';
 import '../utils/fetchData.dart';
 
@@ -11,6 +23,10 @@ class ProfileViewModel {
     for (var i = 0; i < user.likeCourses.length; i++) {
       user.likeCourses[i].rating =
           await calRatingByCourseId(user.likeCourses[i].courseId);
+    }
+    for (var i = 0; i < user.courseHistory.length; i++) {
+      user.courseHistory[i].courses.rating =
+          await calRatingByCourseId(user.courseHistory[i].courses.courseId);
     }
     return user;
   }
@@ -32,5 +48,39 @@ class ProfileViewModel {
     }
 
     return course.rating;
+  }
+
+  Future<void> updateUser(File? picture, User user) async {
+    if (picture != null) {
+      final uuid = Uuid();
+      final ref = FirebaseStorage.instance.ref().child("Image/${uuid.v4()}");
+      await ref.putFile(picture);
+      user.picture = await ref.getDownloadURL();
+    }
+    AuthController authController = Get.find();
+    AuthRepository authRepository = AuthRepository();
+    final pref = await SharedPreferences.getInstance();
+    final token = pref.getString('token')!;
+    final res =
+        await authRepository.updateUser(user, authController.userid, token);
+    if (res.statusCode != 200) {
+      Get.snackbar('Error', 'Something went wrong',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
+      return;
+    }
+    authController.fetchUser(authController.userid);
+    Get.back();
+  }
+
+  Future<List<Video>> getPaidVideoObject() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final List<dynamic> c =
+        await fecthData('payment/paid/videos/object', authorization: token!);
+    final List<Video> video =
+        List.from(c.map((e) => Video.fromJson(e)).toList());
+    return video;
   }
 }

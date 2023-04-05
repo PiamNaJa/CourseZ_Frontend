@@ -22,23 +22,23 @@ class User {
   List<Course> likeCourses;
   List<Payment> transactions;
 
-  User(
-      {this.userId,
-      required this.email,
-      required this.fullName,
-      required this.nickName,
-      required this.role,
-      required this.picture,
-      required this.point,
-      required this.paidVideos,
-      required this.likeVideos,
-      required this.likeCourses,
-      required this.transactions,
-      this.password,
-      required this.videoHistory,
-      this.userTeacher,
-      required this.courseHistory,
-      });
+  User({
+    this.userId,
+    required this.email,
+    required this.fullName,
+    required this.nickName,
+    required this.role,
+    required this.picture,
+    required this.point,
+    required this.paidVideos,
+    required this.likeVideos,
+    required this.likeCourses,
+    required this.transactions,
+    this.password,
+    required this.videoHistory,
+    this.userTeacher,
+    required this.courseHistory,
+  });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(

@@ -96,7 +96,7 @@ class VideoViewModel {
     if (res.statusCode == 201) {
       print("add video history success");
     } else {
-      throw Exception(res.body);
+      print(res.body);
     }
   }
 }
