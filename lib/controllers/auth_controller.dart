@@ -26,6 +26,10 @@ class AuthController extends GetxController {
   final _point = 0.obs;
   set point(int value) => _point.value = value;
   int get point => _point.value;
+
+  final _money = (-99).obs;
+  set money (int value) => _money.value = value;
+  int get money => _money.value;
   
   final _teacherId = (-1).obs;
   set teacherId(int value) => _teacherId.value = value;
@@ -42,6 +46,7 @@ class AuthController extends GetxController {
     _point.value = user.point;
     if (user.userTeacher != null) {
       teacherId = user.userTeacher!.teacherId!;
+      money = user.userTeacher!.money;
     }
   }
 }

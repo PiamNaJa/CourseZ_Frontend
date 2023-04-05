@@ -47,8 +47,7 @@ class ProfilePage extends StatelessWidget {
                                       );
                                     })
                                 : Get.toNamed('/withdraw',
-                                    arguments:
-                                        snapshot.data!.userTeacher!.money),
+                                    ),
                           }),
                     ),
                   );

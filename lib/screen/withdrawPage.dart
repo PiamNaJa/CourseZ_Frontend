@@ -1,3 +1,4 @@
+import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/withdraw_view_model.dart';
 import 'package:coursez/widgets/button/bank_button.dart';
@@ -10,16 +11,17 @@ class WithdrawPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int balance = Get.arguments;
-
+    final AuthController authController = Get.find<AuthController>();
     return DefaultTabController(
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            title: Heading20px(text: 'ยอดเงินคงเหลือ $balance บาท'),
+            title: Obx(
+              () => Heading20px(
+                  text: 'ยอดเงินคงเหลือ ${authController.money} บาท'),
+            ),
             centerTitle: true,
             elevation: 0,
-            
             backgroundColor: primaryLighterColor,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios, color: primaryColor),
@@ -52,12 +54,15 @@ class WithdrawPage extends StatelessWidget {
                     mainAxisSpacing: 10,
                   ),
                   children: WithDrawViewModel.bankData
-                      .map((bank) => BankButton(title: bank[0], image: bank[1], onPressed: () {
-                        Get.toNamed('/withdrawForm',arguments: balance, parameters: {
-                          'bank': bank[0],
-                          'bankimage': bank[1],
-                        });
-                      }))
+                      .map((bank) => BankButton(
+                          title: bank[0],
+                          image: bank[1],
+                          onPressed: () {
+                            Get.toNamed('/withdrawForm', parameters: {
+                              'bank': bank[0],
+                              'bankimage': bank[1],
+                            });
+                          }))
                       .toList(),
                 ),
               ),

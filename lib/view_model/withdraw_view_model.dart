@@ -51,12 +51,12 @@ class WithDrawViewModel {
           backgroundColor: Colors.red,
           colorText: whiteColor);
     } else {
+      authController.fetchUser(authController.userid);
+      Get.back();
       Get.snackbar('สำเร็จ', 'ส่งคำร้องเรียบร้อย',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: primaryColor,
           colorText: whiteColor);
-      Get.back();
-      authController.fetchUser(authController.userid);
     }
   }
 }
