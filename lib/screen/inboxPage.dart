@@ -91,22 +91,24 @@ class InboxPage extends StatelessWidget {
   }
 
   Widget notLoginUI() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Text("กรุณาเข้าสู่ระบบเพื่อดูรายละเอียดหน้าแชท"),
-        const SizedBox(
-          height: 15,
-        ),
-        Bt(
-          onPressed: () {
-            Get.toNamed('/login');
-          },
-          text: "ลงทะเบียน / เข้าสู่ระบบ",
-          color: primaryColor,
-        )
-      ],
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text("กรุณาเข้าสู่ระบบเพื่อดูรายละเอียดหน้าแชท"),
+          const SizedBox(
+            height: 15,
+          ),
+          Bt(
+            onPressed: () {
+              Get.toNamed('/login');
+            },
+            text: "ลงทะเบียน / เข้าสู่ระบบ",
+            color: primaryColor,
+          )
+        ],
+      ),
     );
   }
 }
