@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class CourseViewModel {
   final CourseRepository _courseRepository = CourseRepository();
+  final AuthController authController = Get.find<AuthController>();
   Future<List<Course>> loadCourse(int level) async {
     final c = await fecthData('course');
     final course = c.map((e) => Course.fromJson(e)).toList();
@@ -45,7 +46,16 @@ class CourseViewModel {
     return sortedCourses;
   }
 
-  Course calculateCourseRating(Course course) {
+  Future<List<Course>> loadRecommendCourse() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token')!;
+    final c = await fecthData('course/recommend/user/${authController.userid}',
+        authorization: token);
+    final List<Course> courses = List.from(c.map((e) => Course.fromJson(e)));
+    return courses;
+  }
+
+  Course caculateCourseRating(Course course) {
     double rating = 0;
     int count = 0;
     for (int i = 0; i < course.videos.length; i++) {

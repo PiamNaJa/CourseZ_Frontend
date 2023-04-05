@@ -18,42 +18,49 @@ class InboxPage extends StatelessWidget {
     // return Bt(text: "New Inbox", color: primaryColor, onPressed: () {
     //   chatViewModel.newInbox(9);
     // });
-    return Obx(
-      () {
-        if (authController.isLogin) {
-          final inbox = Get.find<InboxController>();
-          inbox.fetchInbox();
-          return StreamBuilder(
-              stream: inbox.inboxStream,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final List<Inbox> data = snapshot.data!;
-                  if (data.isEmpty) {
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0.5,
+        title: const Heading24px(text: "กล่องข้อความ"),
+        backgroundColor: whiteColor,
+      ),
+      body: Obx(
+        () {
+          if (authController.isLogin) {
+            final inbox = Get.find<InboxController>();
+            inbox.fetchInbox();
+            return StreamBuilder(
+                stream: inbox.inboxStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final List<Inbox> data = snapshot.data!;
+                    if (data.isEmpty) {
+                      return const Center(
+                          child: Heading24px(text: "คุณยังไม่มีการสนทนา"));
+                    }
+                    return ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        return inboxList(data[index]);
+                      },
+                    );
+                  } else if (snapshot.hasError) {
                     return const Center(
-                        child: Heading24px(text: "คุณยังไม่มีการสนทนา"));
+                        child: Heading20px(
+                      text: "เกิดข้อผิดพลาด",
+                      color: Colors.red,
+                    ));
+                  } else {
+                    return const Center(
+                        child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ));
                   }
-                  return ListView.builder(
-                    itemCount: data.length,
-                    itemBuilder: (context, index) {
-                      return inboxList(data[index]);
-                    },
-                  );
-                } else if (snapshot.hasError) {
-                  return const Center(
-                      child: Heading20px(
-                    text: "เกิดข้อผิดพลาด",
-                    color: Colors.red,
-                  ));
-                } else {
-                  return const Center(
-                      child: CircularProgressIndicator(
-                    color: primaryColor,
-                  ));
-                }
-              });
-        }
-        return notLoginUI();
-      },
+                });
+          }
+          return notLoginUI();
+        },
+      ),
     );
   }
 
@@ -62,7 +69,8 @@ class InboxPage extends StatelessWidget {
     final bool isMeUser1 = authController.userid == data.user1.userId;
     return InkWell(
       onTap: () {
-        Get.toNamed('/chat/${data.inboxId}');
+        Get.toNamed('/chat/${data.inboxId}',
+            arguments: isMeUser1 ? data.user2 : data.user1);
       },
       child: ListTile(
         leading: CircleAvatar(
@@ -83,22 +91,24 @@ class InboxPage extends StatelessWidget {
   }
 
   Widget notLoginUI() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Text("กรุณาเข้าสู่ระบบเพื่อดูรายละเอียดหน้าแชท"),
-        const SizedBox(
-          height: 15,
-        ),
-        Bt(
-          onPressed: () {
-            Get.toNamed('/login');
-          },
-          text: "ลงทะเบียน / เข้าสู่ระบบ",
-          color: primaryColor,
-        )
-      ],
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text("กรุณาเข้าสู่ระบบเพื่อดูรายละเอียดหน้าแชท"),
+          const SizedBox(
+            height: 15,
+          ),
+          Bt(
+            onPressed: () {
+              Get.toNamed('/login');
+            },
+            text: "ลงทะเบียน / เข้าสู่ระบบ",
+            color: primaryColor,
+          )
+        ],
+      ),
     );
   }
 }
