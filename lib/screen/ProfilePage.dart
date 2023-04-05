@@ -2,7 +2,7 @@ import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/profile_view_model.dart';
 import 'package:coursez/widgets/button/button.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -14,25 +14,51 @@ class ProfilePage extends StatelessWidget {
     final AuthController authController = Get.find();
     return Container(
         decoration: const BoxDecoration(color: whiteColor),
-        child: Container(
-          child: (authController.isLogin)
-              ? FutureBuilder(
-                  future: profileViewModel.fetchUser(authController.userid),
-                  builder: (context, snapshot) {
-                    return SizedBox(
-                      width: 200,
-                      height: 100,
-                      child: Bt(
-                        text: 'rewards',
-                        color: primaryColor,
-                        onPressed: (() => {Get.toNamed('/reward')}),
-                      ),
-                    );
-                  },
-                )
-              : const Center(
-                  child: Text('Please Login'),
-                ),
-        ));
+        child: (authController.isLogin)
+            ? FutureBuilder(
+                future: profileViewModel.fetchUser(authController.userid),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return SizedBox(
+                    width: 200,
+                    height: 100,
+                    child: Bt(
+                      text: 'withdraw',
+                      color: primaryColor,
+                      onPressed: (() => {
+                            (snapshot.data!.userTeacher == null)
+                                ? showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('ไม่ใช่ครูจ้า'),
+                                        content:
+                                            const Text('ไปล็อคอินเป็นครูเนาะ'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Get.back();
+                                            },
+                                            child: const Text('โอเคเลอ'),
+                                          ),
+                                        ],
+                                      );
+                                    })
+                                : Get.toNamed('/withdraw',
+                                    arguments:
+                                        snapshot.data!.userTeacher!.money),
+                          }),
+                    ),
+                  );
+                },
+              )
+            : Center(
+                child: Bt(
+                    text: 'login',
+                    color: primaryColor,
+                    onPressed: (() => {Get.toNamed('/login')})),
+              ));
   }
 }

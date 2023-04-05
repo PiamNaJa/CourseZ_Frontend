@@ -14,17 +14,18 @@ class UserTeacher {
   List<Experience>? experiences;
   final List<Course>? courses;
 
-  UserTeacher(
-      {this.teacherId,
-      this.userId,
-      required this.teacherLicense,
-      required this.transcipt,
-      required this.idCard,
-      required this.psychologicalTest,
-      required this.money,
-      this.reviews,
-      this.experiences,
-      this.courses,});
+  UserTeacher({
+    this.teacherId,
+    this.userId,
+    required this.teacherLicense,
+    required this.transcipt,
+    required this.idCard,
+    required this.psychologicalTest,
+    required this.money,
+    this.reviews,
+    this.experiences,
+    this.courses,
+  });
 
   factory UserTeacher.fromJson(Map<String, dynamic> json) {
     return UserTeacher(
@@ -36,7 +37,8 @@ class UserTeacher {
       psychologicalTest: json['psychologicalTest'],
       money: json['money'],
       reviews: json['reviews'] != null
-          ? List.from(json['reviews'].map((c) => ReviewTutor.fromJson(c)).toList())
+          ? List.from(
+              json['reviews'].map((c) => ReviewTutor.fromJson(c)).toList())
           : List.empty(),
       experiences: json['experiences'] != null
           ? json['experiences'].map((c) => Experience.fromJson(c)).toList()

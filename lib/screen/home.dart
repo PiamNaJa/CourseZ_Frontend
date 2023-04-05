@@ -160,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               const SizedBox(
                                 height: 12,
                               ),
-                              const ListViewCourse(recommend: true),
+                              // const ListViewCourse(recommend: true),
                             ]
                           ],
                         ),
