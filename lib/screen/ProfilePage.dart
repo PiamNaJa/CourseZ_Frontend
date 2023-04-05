@@ -14,7 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:coursez/utils/inputDecoration.dart';
 import '../model/course.dart';
 import '../model/user.dart';
 import '../widgets/rating/rating.dart';
@@ -255,8 +255,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                       blurStyle: BlurStyle.normal)
                                 ]),
                                 child: ClipRRect(
-                                  borderRadius:
-                                      const BorderRadius.all(Radius.circular(10.0)),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10.0)),
                                   child: Image.network(
                                     user.picture,
                                     height: 100,
@@ -337,15 +337,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     const Title16px(
                                                         text: "ชื่อที่แสดง"),
                                                     TextFormField(
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        border: OutlineInputBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(Radius
-                                                                        .circular(
-                                                                            20))),
-                                                      ),
+                                                      decoration: getInputDecoration('ชื่อที่แสดง'),
                                                       autovalidateMode:
                                                           AutovalidateMode
                                                               .onUserInteraction,
@@ -366,17 +358,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     const SizedBox(
                                                       height: 10,
                                                     ),
-                                                    const Title16px(text: "ชื่อจริง"),
+                                                    const Title16px(
+                                                        text: "ชื่อจริง"),
                                                     TextFormField(
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        border: OutlineInputBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(Radius
-                                                                        .circular(
-                                                                            20))),
-                                                      ),
+                                                      decoration: getInputDecoration('ชื่อจริง-นามสกุล'),
                                                       autovalidateMode:
                                                           AutovalidateMode
                                                               .onUserInteraction,
@@ -397,28 +382,21 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     const SizedBox(
                                                       height: 10,
                                                     ),
-                                                    const Title16px(text: "อีเมล"),
+                                                    const Title16px(
+                                                        text: "อีเมล"),
                                                     TextFormField(
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        border: OutlineInputBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(Radius
-                                                                        .circular(
-                                                                            20))),
-                                                      ),
-                                                      autovalidateMode:
+                                                      decoration: getInputDecoration('อีเมล'),
+                                                      autovalidateMode: 
                                                           AutovalidateMode
                                                               .onUserInteraction,
                                                       validator:
                                                           MultiValidator([
                                                         RequiredValidator(
                                                             errorText:
-                                                                "โปรดกรอกอีเมลล์ของคุณ"),
+                                                                "โปรดกรอกอีเมลของคุณ"),
                                                         EmailValidator(
                                                             errorText:
-                                                                "อีเมลล์ของคุณผิด")
+                                                                "อีเมลของคุณผิด")
                                                       ]),
                                                       onChanged:
                                                           (String? email) {
@@ -479,8 +457,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                             onPressed: (() {
                                                               onSubmit(image);
                                                             }),
-                                                            child:
-                                                                const Text("บันทึก")),
+                                                            child: const Text(
+                                                                "บันทึก")),
                                                       ],
                                                     ),
                                                   ],
@@ -607,17 +585,20 @@ class _ProfilePageState extends State<ProfilePage> {
               child: TabBarView(
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
-                SingleChildScrollView(
+                Padding(
+                  padding: const EdgeInsets.all(5),
                   child: courseprofile(
                       user.courseHistory.map((e) => e.courses).toList()),
                 ),
-                SingleChildScrollView(child: courseprofile(user.likeCourses)),
+                Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: courseprofile(user.likeCourses),
+                ),
                 FutureBuilder(
                   future: profileViewModel.getPaidVideoObject(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      return SingleChildScrollView(
-                          child: videohistory(snapshot.data!));
+                      return videohistory(snapshot.data!);
                     }
                     return const Center(
                         child: CircularProgressIndicator(
@@ -640,8 +621,11 @@ class _ProfilePageState extends State<ProfilePage> {
         text: "คุณยังไม่มีประวัติการดูและสิ่งที่สนใจ",
       ));
     }
-    return Wrap(
-      alignment: WrapAlignment.center,
+    return GridView(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 16 / 14.5,
+      ),
       children: data
           .map((e) => InkWell(
                 onTap: () {
@@ -651,7 +635,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
                 child: Container(
                   width: 160,
-
                   margin: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       color: whiteColor,
@@ -673,7 +656,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         borderRadius: BorderRadius.circular(5),
                         child: Image.network(
                           e.picture,
-                          width: 160,
+                          width: double.infinity,
                           height: 100,
                           fit: BoxFit.cover,
                         ),
@@ -707,7 +690,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (data.isEmpty) {
       return const Center(
           child: Heading20px(
-        text: "คุณจนมากไม่มีวีดีโอซื้อเลย",
+        text: "ยังไม่มีวิดีโอที่ซื้อแล้ว",
       ));
     }
     return ListView.separated(
