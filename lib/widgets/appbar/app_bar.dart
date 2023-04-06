@@ -1,5 +1,6 @@
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/widgets/text/heading1_24px.dart';
+import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,7 +13,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       elevation: 0.0,
       titleSpacing: 0.0,
-      title: Heading24px(text: title),
+      title: Heading20px(text: title),
       backgroundColor: Colors.transparent,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios, color: primaryColor),

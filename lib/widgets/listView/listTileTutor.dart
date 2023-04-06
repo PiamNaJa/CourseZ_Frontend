@@ -2,6 +2,7 @@ import 'package:coursez/model/tutor.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/tutor_view_model.dart';
 import 'package:coursez/widgets/rating/rating.dart';
+import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/title14px.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -59,13 +60,16 @@ Widget listTile(Tutor item) {
         leading: ClipOval(
           child: Image.network(item.picture),
         ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        title: Title14px(
+          text: '${item.nickname} (${item.fullname})',
+        ),
+        subtitle: Row(
           children: [
-            Title14px(
-              text: '${item.nickname} (${item.fullname})',
-            ),
             RatingStar(rating: item.rating, size: 15),
+            const SizedBox(
+              width: 5,
+            ),
+            Body14px(text: item.rating.toStringAsPrecision(2)),
           ],
         ),
         trailing: const Icon(Icons.keyboard_arrow_right),
