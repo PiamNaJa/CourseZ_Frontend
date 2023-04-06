@@ -119,7 +119,7 @@ class _VideoPageState extends State<VideoPage> {
     } else {
       flickManager.dispose();
     }
-
+    smartFocus.stopFocus();
     super.dispose();
   }
 
