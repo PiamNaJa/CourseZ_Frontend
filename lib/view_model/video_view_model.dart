@@ -202,7 +202,6 @@ class SmartFocus {
     if (predicting) {
       return;
     }
-    setStatefunc();
     predicting = true;
 
     // Data to be passed to inference isolate

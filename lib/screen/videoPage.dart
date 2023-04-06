@@ -164,7 +164,6 @@ class _VideoPageState extends State<VideoPage> {
       ),
       iconThemeData: const IconThemeData(color: primaryColor),
     );
-    print(smartFocus.isHaveFace());
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -201,6 +200,10 @@ class _VideoPageState extends State<VideoPage> {
               ],
             ),
           ),
+          Heading24px(
+              text: smartFocus.isHaveFace()
+                  ? 'พบใบหน้า'
+                  : 'ไม่พบใบหน้า'), // ตรวจสอบใบหน้า------------------------------------------
           SizedBox(
             height: 70,
             child: Row(
