@@ -157,7 +157,7 @@ class _PostPageState extends State<PostPage> {
               leading: ClipOval(
                 child: authController.isLogin
                     ? Image.network(
-                        authController.picture,
+                        authController.picture ,
                         width: 40,
                         height: 40,
                         fit: BoxFit.cover,

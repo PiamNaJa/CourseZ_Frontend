@@ -15,7 +15,7 @@ class AuthController extends GetxController {
   set username(String value) => _username.value = value;
   String get username => _username.value;
 
-  final _picture = ''.obs;
+  final _picture = 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'.obs;
   set picture(String value) => _picture.value = value;
   String get picture => _picture.value;
 
@@ -26,27 +26,29 @@ class AuthController extends GetxController {
   final _point = 0.obs;
   set point(int value) => _point.value = value;
   int get point => _point.value;
+
   final _money = (-99).obs;
   set money (int value) => _money.value = value;
   int get money => _money.value;
+
   final _teacherId = (-1).obs;
   set teacherId(int value) => _teacherId.value = value;
   int get teacherId => _teacherId.value;
 
   Future<void> fetchUser(int userId) async {
-    picture = '';
+    picture = 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png';
     final ProfileViewModel profile = ProfileViewModel();
     final User user = await profile.fetchUser(userId);
-    isLogin = true;
     userid = user.userId!;
     username = user.nickName;
     picture = user.picture;
     role = user.role;
-    _point.value = user.point;
+    point = user.point;
     if (user.userTeacher != null) {
       teacherId = user.userTeacher!.teacherId!;
       money = user.userTeacher!.money;
     }
+    isLogin = true;
   }
 
   void logout() {

@@ -15,6 +15,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:coursez/utils/inputDecoration.dart';
+import 'package:intl/intl.dart';
 import '../model/course.dart';
 import '../model/user.dart';
 import '../widgets/rating/rating.dart';
@@ -30,36 +31,62 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   Widget notLoginUI() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Text("กรุณาเข้าสู่ระบบเพื่อดูรายละเอียดโปรไฟล์"),
-        const SizedBox(
-          height: 15,
-        ),
-        Bt(
-          onPressed: () {
-            Get.toNamed('/login');
-          },
-          text: "ลงทะเบียน / เข้าสู่ระบบ",
-          color: primaryColor,
-        )
-      ],
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text("กรุณาเข้าสู่ระบบเพื่อดูรายละเอียดโปรไฟล์"),
+          const SizedBox(
+            height: 15,
+          ),
+          Bt(
+            onPressed: () {
+              Get.toNamed('/login');
+            },
+            text: "ลงทะเบียน / เข้าสู่ระบบ",
+            color: primaryColor,
+          )
+        ],
+      ),
     );
   }
 
   final formkey = GlobalKey<FormState>();
   final AuthViewModel authViewModel = AuthViewModel();
-  CourseViewModel courseViewModel = CourseViewModel();
-  ProfileViewModel profileViewModel = ProfileViewModel();
-  AuthController authController = Get.find();
+  final CourseViewModel courseViewModel = CourseViewModel();
+  final ProfileViewModel profileViewModel = ProfileViewModel();
+  final AuthController authController = Get.find();
+  final _globalKey = GlobalKey<ScaffoldState>();
 
   onSubmit(File? image) async {
     if (formkey.currentState!.validate()) {
       formkey.currentState!.save();
       profileViewModel.updateUser(image, users);
     }
+  }
+
+  logOutDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("ออกจากระบบ"),
+            content: const Text("คุณต้องการออกจากระบบใช่หรือไม่"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: const Title14px(text: 'ยกเลิก', color: greyColor)),
+              TextButton(
+                  onPressed: () {
+                    AuthViewModel().logout();
+                    Get.offAllNamed('/first');
+                  },
+                  child: const Title14px(text: "ออกจากระบบ", color: Colors.red))
+            ],
+          );
+        });
   }
 
   @override
@@ -98,50 +125,143 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      authController.picture;
-      if (authController.isLogin) {
-        return FutureBuilder(
-          future: ProfileViewModel().fetchUser(authController.userid),
-          builder: (context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              return showprofile(snapshot.data);
-            } else {
-              return const Center(
-                  child: CircularProgressIndicator(
-                color: primaryColor,
-              ));
-            }
-          },
-        );
-      } else {
-        return notLoginUI();
-      }
-    });
+    return Scaffold(
+      key: _globalKey,
+      endDrawer: Drawer(
+        width: MediaQuery.of(context).size.width * 0.6,
+        child: ListView(
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.grey,
+                    width: 0.7,
+                  ),
+                ),
+              ),
+              padding: const EdgeInsets.all(30),
+              margin: const EdgeInsets.all(0),
+              child: Image.asset(
+                "assets/images/CourseZ_logo.png",
+                fit: BoxFit.contain,
+              ),
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.bar_chart_rounded,
+              ),
+              title: const Text("ประวัติรายรับ"),
+              onTap: () {
+                Get.toNamed('/dashboard');
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.add_box_outlined,
+              ),
+              title: const Text("สร้างคอร์ส"),
+              onTap: () {
+                Get.toNamed('/dashboard');
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.logout,
+                color: Colors.red,
+              ),
+              title:
+                  const Text("ออกจากระบบ", style: TextStyle(color: Colors.red)),
+              onTap: () {
+                logOutDialog();
+              },
+            ),
+          ],
+        ),
+      ),
+      body: Obx(() {
+        authController.picture;
+        if (authController.isLogin) {
+          return FutureBuilder(
+            future: ProfileViewModel().fetchUser(authController.userid),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                return showprofile(snapshot.data);
+              } else {
+                return const Center(
+                    child: CircularProgressIndicator(
+                  color: primaryColor,
+                ));
+              }
+            },
+          );
+        } else {
+          return notLoginUI();
+        }
+      }),
+    );
   }
 
   Widget showprofile(User user) {
     return DefaultTabController(
-      length: 3,
+      length: (authController.teacherId != -1) ? 4 : 3,
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  child: InkWell(
-                    onTap: () {
-                      Get.toNamed('/reward');
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      child: InkWell(
+                        onTap: () {
+                          Get.toNamed('/reward');
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 2),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            decoration: const BoxDecoration(
+                                color: Color.fromARGB(173, 255, 230, 118),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(25.0)),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.grey,
+                                      blurRadius: 10, // shadow radius
+                                      offset: Offset(2, 4), // shadow offset
+                                      spreadRadius:
+                                          0.1, // The amount the box should be inflated prior to applying the blur
+                                      blurStyle: BlurStyle.normal)
+                                ]),
+                            child: Center(
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.star),
+                                  Title16px(
+                                    text: "  ${user.point}  แต้ม",
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (authController.teacherId != -1)
+                    InkWell(
+                      onTap: () {
+                        Get.toNamed('/withdraw');
+                      },
                       child: Container(
-                        width: 110,
                         margin: const EdgeInsets.symmetric(horizontal: 2),
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
                         decoration: const BoxDecoration(
-                            color: Color.fromARGB(173, 255, 230, 118),
+                            color: primaryLightColor,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(25.0)),
                             boxShadow: [
@@ -156,82 +276,31 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Center(
                           child: Row(
                             children: [
-                              const Icon(Icons.star),
+                              const Icon(Icons.attach_money_outlined),
                               Title16px(
-                                text: "  ${user.point}  แต้ม",
+                                text:
+                                    "  ${NumberFormat.currency(name: '', decimalDigits: 0).format(authController.money)}   บาท",
                               )
                             ],
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ),
+                ],
               ),
-              if (authController.teacherId != -1)
-                InkWell(
-                  onTap: () {
-                    Get.toNamed('/withdraw');
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 80),
-                    child: Container(
-                      width: 110,
-                      margin: const EdgeInsets.symmetric(horizontal: 2),
-                      decoration: const BoxDecoration(
-                          color: Color.fromARGB(172, 0, 253, 97),
-                          borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 10, // shadow radius
-                                offset: Offset(2, 4), // shadow offset
-                                spreadRadius:
-                                    0.1, // The amount the box should be inflated prior to applying the blur
-                                blurStyle: BlurStyle.normal)
-                          ]),
-                      child: Center(
-                        child: Row(
-                          children: [
-                            const Icon(Icons.attach_money_outlined),
-                            Title16px(
-                              text: "  ${user.userTeacher!.money}   บาท",
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              IconButton(
-                  color: Colors.red,
-                  onPressed: (() {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text("ออกจากระบบ"),
-                            content:
-                                const Text("คุณต้องการออกจากระบบใช่หรือไม่"),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    Get.back();
-                                  },
-                                  child: const Title14px(
-                                      text: 'ยกเลิก', color: greyColor)),
-                              TextButton(
-                                  onPressed: () {
-                                    AuthViewModel().logout();
-                                    Get.offAllNamed('/first');
-                                  },
-                                  child: const Title14px(
-                                      text: "ออกจากระบบ", color: Colors.red))
-                            ],
-                          );
-                        });
-                  }),
-                  icon: const Icon(Icons.logout))
+              if (authController.teacherId == -1)
+                IconButton(
+                    color: Colors.red,
+                    onPressed: (() {
+                      logOutDialog();
+                    }),
+                    icon: const Icon(Icons.logout))
+              else
+                IconButton(
+                    onPressed: () {
+                      _globalKey.currentState!.openEndDrawer();
+                    },
+                    icon: const Icon(Icons.menu))
             ],
           ),
           Container(
@@ -247,9 +316,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             child: Container(
                                 decoration: const BoxDecoration(boxShadow: [
                                   BoxShadow(
-                                      color: Colors.grey,
+                                      color: greyColor,
                                       blurRadius: 10, // shadow radius
-                                      offset: Offset(4, 4), // shadow offset
+                                      offset: Offset(4, 1), // shadow offset
                                       spreadRadius:
                                           0.1, // The amount the box should be inflated prior to applying the blur
                                       blurStyle: BlurStyle.normal)
@@ -337,7 +406,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     const Title16px(
                                                         text: "ชื่อที่แสดง"),
                                                     TextFormField(
-                                                      decoration: getInputDecoration('ชื่อที่แสดง'),
+                                                      decoration:
+                                                          getInputDecoration(
+                                                              'ชื่อที่แสดง'),
                                                       autovalidateMode:
                                                           AutovalidateMode
                                                               .onUserInteraction,
@@ -361,7 +432,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     const Title16px(
                                                         text: "ชื่อจริง"),
                                                     TextFormField(
-                                                      decoration: getInputDecoration('ชื่อจริง-นามสกุล'),
+                                                      decoration:
+                                                          getInputDecoration(
+                                                              'ชื่อจริง-นามสกุล'),
                                                       autovalidateMode:
                                                           AutovalidateMode
                                                               .onUserInteraction,
@@ -385,8 +458,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     const Title16px(
                                                         text: "อีเมล"),
                                                     TextFormField(
-                                                      decoration: getInputDecoration('อีเมล'),
-                                                      autovalidateMode: 
+                                                      decoration:
+                                                          getInputDecoration(
+                                                              'อีเมล'),
+                                                      autovalidateMode:
                                                           AutovalidateMode
                                                               .onUserInteraction,
                                                       validator:
@@ -569,30 +644,38 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           ),
-          const TabBar(
+          TabBar(
+              isScrollable: (authController.teacherId != -1) ? true : false,
               indicatorColor: primaryColor,
               labelColor: blackColor,
-              labelStyle: TextStyle(
+              labelStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Athiti',
               ),
               tabs: [
-                Tab(text: "ประวัติ"),
-                Tab(text: "คอร์สที่ถูกใจ"),
-                Tab(text: "วิดีโอที่ซื้อแล้ว"),
+                if (authController.teacherId != -1)
+                  const Tab(text: "คอร์สของฉัน"),
+                const Tab(text: "ประวัติ"),
+                const Tab(text: "คอร์สที่ถูกใจ"),
+                const Tab(text: "วิดีโอที่ซื้อแล้ว"),
               ]),
           Expanded(
               child: TabBarView(
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
+                if (authController.teacherId != -1)
+                  courseprofile(
+                      user.userTeacher!.courses ?? [], 'คุณยังไม่มีคอร์ส'),
                 Padding(
                   padding: const EdgeInsets.all(5),
                   child: courseprofile(
-                      user.courseHistory.map((e) => e.courses).toList()),
+                      user.courseHistory.map((e) => e.courses).toList(),
+                      'คุณยังไม่มีประวัติการดูคอร์ส'),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(5),
-                  child: courseprofile(user.likeCourses),
+                  child: courseprofile(
+                      user.likeCourses, 'คุณยังไม่มีคอร์สที่ถูกใจ'),
                 ),
                 FutureBuilder(
                   future: profileViewModel.getPaidVideoObject(),
@@ -612,13 +695,12 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget courseprofile(
-    List<Course> data,
-  ) {
+  Widget courseprofile(List<Course> data, String type) {
     if (data.isEmpty) {
-      return const Center(
-          child: Heading20px(
-        text: "คุณยังไม่มีประวัติการดูและสิ่งที่สนใจ",
+      return Center(
+          child: Title16px(
+        text: type,
+        color: greyColor,
       ));
     }
     return GridView(
@@ -722,10 +804,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   await courseViewModel.loadCourseById(data[index].courseId);
               Get.toNamed(
                   '/course/${data[index].courseId}/video/${data[index].videoId}',
-                  parameters: {
-                    'video_name': data[index].videoName,
-                    'teacher_id': courseid.teacherId.toString()
-                  });
+                  arguments: data[index],
+                  parameters: {'teacher_id': courseid.teacherId.toString()});
             },
             leading: ClipOval(
               child: Image.network(
