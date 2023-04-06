@@ -31,7 +31,14 @@ class _ReviewVideoPageState extends State<ReviewVideoPage> {
 
   final formkey = GlobalKey<FormState>();
 
-  onSubmit() async {
+  onSubmit() {
+    if (rating == 0.0 || comment.trim().isEmpty) {
+      Get.snackbar('ผิดพลาด', 'กรุณาใส่คะแนนและความคิดเห็น',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent,
+          colorText: whiteColor);
+      return;
+    }
     videoViewModel.createReviewVideo(videoId, rating, comment);
   }
 
@@ -40,6 +47,7 @@ class _ReviewVideoPageState extends State<ReviewVideoPage> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0.0,
+          titleSpacing: 0,
           title: const Heading20px(text: "รีวิววิดิโอ"),
           backgroundColor: whiteColor,
           leading: IconButton(
@@ -53,7 +61,8 @@ class _ReviewVideoPageState extends State<ReviewVideoPage> {
           future: videoViewModel.loadVideoById(courseId, videoId),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return reviewVideoDetail(snapshot.data!);
+              return SingleChildScrollView(
+                  child: reviewVideoDetail(snapshot.data!));
             } else {
               return const Center(child: CircularProgressIndicator());
             }
@@ -75,11 +84,14 @@ class _ReviewVideoPageState extends State<ReviewVideoPage> {
             ),
           ),
           const SizedBox(height: 10),
-          Image.network(
-            videoData.picture,
-            fit: BoxFit.cover,
-            height: 200,
+          Center(
+            child: Image.network(
+              videoData.picture,
+              fit: BoxFit.cover,
+              height: 200,
+            ),
           ),
+          const SizedBox(height: 10),
           const Title16px(text: 'รายละเอียด'),
           ExpandText(
             text: videoData.description,
@@ -89,7 +101,7 @@ class _ReviewVideoPageState extends State<ReviewVideoPage> {
             ),
             maxLines: 2,
           ),
-          Divider(
+          const Divider(
             height: 20,
             thickness: 2,
             color: Color.fromARGB(255, 199, 197, 197),
@@ -120,14 +132,14 @@ class _ReviewVideoPageState extends State<ReviewVideoPage> {
                     : const Body14px(text: 'นักเรียน')
                 : const Body14px(text: 'ผู้เข้าชม'),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Padding(
               padding: const EdgeInsets.only(top: 5, bottom: 5),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10),
-                  (Title14px(text: 'ให้คะเเนนวิดิโอนี้ :')),
+                  const SizedBox(height: 10),
+                  const Title14px(text: 'ให้คะเเนนวิดิโอนี้ :'),
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: RatingBar.builder(
@@ -151,56 +163,44 @@ class _ReviewVideoPageState extends State<ReviewVideoPage> {
                   )
                 ],
               )),
-          SizedBox(height: 20),
-          Expanded(
-            child: TextField(
-              controller: textController,
-              decoration: const InputDecoration(
-                focusColor: primaryColor,
-                contentPadding: EdgeInsets.only(left: 10, right: 10),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: greyColor),
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                ),
-                hintText: 'เขียนรีวิวของคุณ',
-                hintStyle: TextStyle(
-                    fontFamily: 'Athiti', fontSize: 14, color: greyColor),
+          const SizedBox(height: 20),
+          TextField(
+            decoration: const InputDecoration(
+              focusColor: primaryColor,
+              contentPadding: EdgeInsets.only(left: 10, right: 10),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: greyColor),
+                borderRadius: BorderRadius.all(Radius.circular(15)),
               ),
-              style: const TextStyle(
-                  fontFamily: 'Athiti', fontSize: 14, color: blackColor),
-              onChanged: (value) {
-                setState(() {
-                  comment = value;
-                });
-              },
+              hintText: 'เขียนรีวิวของคุณ',
+              hintStyle: TextStyle(
+                  fontFamily: 'Athiti', fontSize: 14, color: greyColor),
             ),
+            style: const TextStyle(
+                fontFamily: 'Athiti', fontSize: 14, color: blackColor),
+            onChanged: (value) {
+              comment = value;
+            },
           ),
           const Divider(
             color: secondaryColor,
             thickness: 1.5,
           ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Bt(
-                    text: "ยกเลิก",
-                    color: greyColor,
-                    onPressed: () {
-                      Get.back();
-                      Get.back();
-                      Get.back();
-                    },
+          Container(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Bt(
+                        text: "ยืนยัน",
+                        color: primaryColor,
+                        onPressed: onSubmit),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Bt(
-                      text: "ยืนยัน", color: primaryColor, onPressed: onSubmit),
-                ),
-              ],
+                ],
+              ),
             ),
           )
         ],

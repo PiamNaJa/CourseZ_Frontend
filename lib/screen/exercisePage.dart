@@ -135,10 +135,9 @@ class _ExerciseListState extends State<ExerciseList> {
     return Column(
       children: [
         ListTile(
-          title: Title16px(
-            text: widget.exercise.question,
-            overflow: TextOverflow.visible,
-          ),
+          title: Text(widget.exercise.question,
+              style:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
         if (widget.exercise.image.isNotEmpty)
           Padding(
@@ -154,7 +153,8 @@ class _ExerciseListState extends State<ExerciseList> {
           itemBuilder: ((context, index) {
             return RadioListTile(
               activeColor: secondaryColor,
-              title: Body14px(text: widget.exercise.choices[index].title),
+              title: Text(widget.exercise.choices[index].title,
+                  style: const TextStyle(fontSize: 16)),
               value: widget.exercise.choices[index],
               groupValue: _selectedChoice,
               onChanged: (value) {

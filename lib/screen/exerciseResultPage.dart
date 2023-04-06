@@ -5,7 +5,6 @@ import 'package:coursez/widgets/button/button.dart';
 import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
-import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -23,14 +22,10 @@ class ExerciseResultPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
+        titleSpacing: 0,
+        centerTitle: true,
         title: const Heading20px(text: "แบบทดสอบหลังเรียน"),
         backgroundColor: whiteColor,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: primaryColor),
-          onPressed: () {
-            Get.back();
-          },
-        ),
       ),
       body: Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
@@ -73,17 +68,6 @@ class ExerciseResultPage extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Bt(
-                          text: "กลับไปหน้าคอร์ส",
-                          color: primaryColor,
-                          onPressed: () {
-                            Get.back();
-                            Get.back();
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Bt(
                           text: "รีวิววิดีโอ",
                           color: secondaryColor,
                           onPressed: () {
@@ -110,7 +94,13 @@ class ExerciseResultPage extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          title: Title16px(text: exercise.question),
+          title: Text(
+            exercise.question,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
         ),
         if (exercise.image.isNotEmpty)
           Padding(

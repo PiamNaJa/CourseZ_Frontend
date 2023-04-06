@@ -34,15 +34,14 @@ class _VideoPageState extends State<VideoPage> {
   VideoViewModel videoViewModel = VideoViewModel();
   AuthController authController = Get.find<AuthController>();
   bool isFocus = false;
-  final Video _video = Get.arguments;
   double timeToDoQuiz = 0;
   final isExpanded = true;
   bool isInitVideo = false;
   late FlickManager flickManager;
   String videoName = '';
-  String teacherId = Get.parameters["teacher_id"]!;
-  String courseId = Get.parameters["course_id"]!;
-  String videoId = Get.parameters["video_id"]!;
+  String teacherId = Get.parameters["teacher_id"] ?? '6';
+  String courseId = Get.parameters["course_id"] ?? '9';
+  String videoId = Get.parameters["video_id"] ?? '25';
   bool isDoneExercise = false;
   bool loadingTeacher = true;
   User teacher = User(
@@ -61,12 +60,12 @@ class _VideoPageState extends State<VideoPage> {
       point: 0,
       courseHistory: []);
 
-  void _initVideo(String url) {
+  void _initVideo(String url, String videoName) {
     flickManager = FlickManager(
-      videoPlayerController: VideoPlayerController.network(_video.url),
+      videoPlayerController: VideoPlayerController.network(url),
     );
     if (authController.isLogin) {
-      final videoController = VideoPlayerController.network(_video.url);
+      final videoController = VideoPlayerController.network(url);
 
       videoController.initialize().then((value) {
         videoViewModel.getVideoHistoryDuration(videoId).then((value) {
@@ -84,12 +83,11 @@ class _VideoPageState extends State<VideoPage> {
               .value.duration.inSeconds *
           0.9;
     });
+    videoName = videoName;
   }
 
   @override
   void initState() {
-    videoName = _video.videoName;
-    _initVideo(_video.url);
     isInitVideo = true;
     videoViewModel.getTeacherName(int.parse(teacherId)).then((value) {
       setState(() {
@@ -104,7 +102,6 @@ class _VideoPageState extends State<VideoPage> {
         });
       }
     });
-
     super.initState();
   }
 
@@ -130,6 +127,7 @@ class _VideoPageState extends State<VideoPage> {
         backgroundColor: whiteColor.withOpacity(0.95),
         appBar: AppBar(
           elevation: 0.0,
+          titleSpacing: 0,
           title: Heading20px(text: videoName),
           backgroundColor: whiteColor,
           leading: IconButton(
@@ -141,7 +139,15 @@ class _VideoPageState extends State<VideoPage> {
         ),
         body: loadingTeacher || !isInitVideo
             ? const Center(child: CircularProgressIndicator())
-            : videoDetail(_video));
+            : FutureBuilder(
+                future: videoViewModel.loadVideoById(courseId, videoId),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    _initVideo(snapshot.data!.url, snapshot.data!.videoName);
+                    return videoDetail(snapshot.data!);
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                }));
   }
 
   Widget videoDetail(Video video) {

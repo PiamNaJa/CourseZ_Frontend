@@ -8,6 +8,7 @@ import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/view_model/post_view_model.dart';
 import 'package:coursez/view_model/profile_view_model.dart';
 import 'package:coursez/widgets/button/button.dart';
+import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -161,9 +162,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Icons.add_box_outlined,
               ),
               title: const Text("สร้างคอร์ส"),
-              onTap: () {
-                Get.toNamed('/dashboard');
-              },
+              onTap: () {},
             ),
             ListTile(
               leading: const Icon(
@@ -276,7 +275,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Center(
                           child: Row(
                             children: [
-                              const Icon(Icons.attach_money_outlined),
+                              const Icon(
+                                Icons.attach_money_rounded,
+                              ),
                               Title16px(
                                 text:
                                     "  ${NumberFormat.currency(name: '', decimalDigits: 0).format(authController.money)}   บาท",
@@ -816,7 +817,10 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             title: Title14px(
-              text: '${data[index].videoName} (${data[index].price})',
+              text: data[index].videoName,
+            ),
+            subtitle: Body14px(
+              text: 'ราคา ${data[index].price.toString()} บาท',
             ),
             trailing: const Icon(Icons.keyboard_arrow_right),
           ),
