@@ -374,9 +374,9 @@ class _CoursePageState extends State<CoursePage> {
                                       } else {
                                         Get.toNamed(
                                             "/course/$courseId/video/${courseData.videos[index].videoId}",
+                                            arguments: courseData
+                                                  .videos[index],
                                             parameters: {
-                                              'video_name': courseData
-                                                  .videos[index].videoName,
                                               'teacher_id': courseData.teacherId
                                                   .toString(),
                                             });

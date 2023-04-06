@@ -34,13 +34,12 @@ class _VideoPageState extends State<VideoPage> {
   VideoViewModel videoViewModel = VideoViewModel();
   AuthController authController = Get.find<AuthController>();
   bool isFocus = false;
-
+  final Video _video = Get.arguments;
   double timeToDoQuiz = 0;
   final isExpanded = true;
   bool isInitVideo = false;
   late FlickManager flickManager;
-  late VideoPlayerController videoPlayerController;
-  String videoName = Get.parameters["video_name"]!;
+  String videoName = '';
   String teacherId = Get.parameters["teacher_id"]!;
   String courseId = Get.parameters["course_id"]!;
   String videoId = Get.parameters["video_id"]!;
@@ -63,31 +62,35 @@ class _VideoPageState extends State<VideoPage> {
       courseHistory: []);
 
   void _initVideo(String url) {
-    videoPlayerController = VideoPlayerController.network(url)
-      ..initialize().then((_) {
-        if (authController.isLogin) {
-          videoViewModel
-              .getVideoHistoryDuration(videoId)
-              .then((value) => setState(
-                    () {
-                      videoPlayerController.seekTo(Duration(seconds: value));
-                    },
-                  ));
-        }
-      });
     flickManager = FlickManager(
-      videoPlayerController: videoPlayerController,
+      videoPlayerController: VideoPlayerController.network(_video.url),
     );
+    if (authController.isLogin) {
+      final videoController = VideoPlayerController.network(_video.url);
+
+      videoController.initialize().then((value) {
+        videoViewModel.getVideoHistoryDuration(videoId).then((value) {
+          if (value !=
+              flickManager.flickVideoManager!.videoPlayerController!.value
+                  .duration.inSeconds) {
+            videoController.seekTo(Duration(seconds: value));
+            flickManager.handleChangeVideo(videoController);
+          }
+        });
+      });
+    }
     flickManager.flickVideoManager!.videoPlayerController!.addListener(() {
       timeToDoQuiz = flickManager.flickVideoManager!.videoPlayerController!
               .value.duration.inSeconds *
           0.9;
     });
-    isInitVideo = true;
   }
 
   @override
   void initState() {
+    videoName = _video.videoName;
+    _initVideo(_video.url);
+    isInitVideo = true;
     videoViewModel.getTeacherName(int.parse(teacherId)).then((value) {
       setState(() {
         teacher = value;
@@ -136,22 +139,12 @@ class _VideoPageState extends State<VideoPage> {
             },
           ),
         ),
-        body: FutureBuilder(
-          future: videoViewModel.loadVideoById(courseId, videoId),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              if (!isInitVideo) _initVideo(snapshot.data!.url);
-              return loadingTeacher
-                  ? const Center(child: CircularProgressIndicator())
-                  : videoDetail(snapshot.data!, flickManager);
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          },
-        ));
+        body: loadingTeacher || !isInitVideo
+            ? const Center(child: CircularProgressIndicator())
+            : videoDetail(_video));
   }
 
-  Widget videoDetail(Video video, FlickManager flickManager) {
+  Widget videoDetail(Video video) {
     double tutorRating = videoViewModel.getTutorRating(teacher.userTeacher!);
     FlickVideoWithControls flickVideoWithControls = FlickVideoWithControls(
       controls: FlickPortraitControls(
@@ -289,90 +282,100 @@ class _VideoPageState extends State<VideoPage> {
                       border: Border.all(color: greyColor),
                       borderRadius: BorderRadius.circular(10)),
                   child: !isDoneExercise
-                      ? authController.isLogin
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                    child: Title12px(text: video.videoName)),
-                                TextButton(
-                                    onPressed: () {
-                                      if (flickManager
-                                              .flickVideoManager!
-                                              .videoPlayerController!
-                                              .value
-                                              .position
-                                              .inSeconds >=
-                                          timeToDoQuiz) {
-                                        debugPrint('pass');
-                                        flickManager.flickControlManager!
-                                            .pause();
-                                        Get.toNamed(
-                                            '/course/${Get.parameters["course_id"]!}/video/${video.videoId}/exercise');
-                                      } else {
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                title: const Heading24px(
-                                                    text: 'แจ้งเตือน'),
-                                                content: const Text(
-                                                  'คุณยังไม่ได้เรียนคลิปให้จบ กรุณาเรียนคลิปให้จบก่อนทำแบบทดสอบ',
-                                                  style: TextStyle(
-                                                    fontFamily: 'Athiti',
-                                                    fontSize: 16,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                actions: [
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: const Title12px(
-                                                        text: 'ตกลง',
-                                                        color: primaryColor,
-                                                      ))
-                                                ],
-                                              );
-                                            });
-                                      }
-                                    },
-                                    child: const Text(
-                                      'ทำแบบทดสอบ',
-                                      style: TextStyle(
-                                          fontFamily: 'Athiti',
-                                          fontSize: 12,
-                                          color: blackColor,
-                                          fontWeight: FontWeight.bold,
-                                          height: 1.5,
-                                          decoration: TextDecoration.underline),
-                                    ))
-                              ],
-                            )
-                          : Center(
-                              child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Title12px(
-                                    text: "เข้าสู่ระบบเพื่อทำแบบทดสอบ"),
-                                TextButton(
-                                    onPressed: () {
-                                      flickManager.flickControlManager!.pause();
-                                      Get.toNamed('/login');
-                                    },
-                                    child: const Text(
-                                      'คลิกที่นี่เพื่อเข้าสู่ระบบ',
-                                      style: TextStyle(
-                                          fontFamily: 'Athiti',
-                                          fontSize: 12,
-                                          color: blackColor,
-                                          fontWeight: FontWeight.bold,
-                                          height: 1.5,
-                                          decoration: TextDecoration.underline),
-                                    )),
-                              ],
-                            ))
+                      ? Obx(() {
+                          return authController.isLogin
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                        child:
+                                            Title12px(text: video.videoName)),
+                                    TextButton(
+                                        onPressed: () {
+                                          if (flickManager
+                                                  .flickVideoManager!
+                                                  .videoPlayerController!
+                                                  .value
+                                                  .position
+                                                  .inSeconds >=
+                                              timeToDoQuiz) {
+                                            debugPrint('pass');
+                                            flickManager.flickControlManager!
+                                                .pause();
+                                            Get.toNamed(
+                                                '/course/${Get.parameters["course_id"]!}/video/${video.videoId}/exercise');
+                                          } else {
+                                            showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: const Heading24px(
+                                                        text: 'แจ้งเตือน'),
+                                                    content: const Text(
+                                                      'คุณยังไม่ได้เรียนคลิปให้จบ กรุณาเรียนคลิปให้จบก่อนทำแบบทดสอบ',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Athiti',
+                                                        fontSize: 16,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child:
+                                                              const Title12px(
+                                                            text: 'ตกลง',
+                                                            color: primaryColor,
+                                                          ))
+                                                    ],
+                                                  );
+                                                });
+                                          }
+                                        },
+                                        child: const Text(
+                                          'ทำแบบทดสอบ',
+                                          style: TextStyle(
+                                              fontFamily: 'Athiti',
+                                              fontSize: 12,
+                                              color: blackColor,
+                                              fontWeight: FontWeight.bold,
+                                              height: 1.5,
+                                              decoration:
+                                                  TextDecoration.underline),
+                                        ))
+                                  ],
+                                )
+                              : Center(
+                                  child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Title12px(
+                                        text: "เข้าสู่ระบบเพื่อทำแบบทดสอบ"),
+                                    TextButton(
+                                        onPressed: () {
+                                          flickManager.flickControlManager!
+                                              .pause();
+                                          Get.toNamed('/login');
+                                        },
+                                        child: const Text(
+                                          'คลิกที่นี่เพื่อเข้าสู่ระบบ',
+                                          style: TextStyle(
+                                              fontFamily: 'Athiti',
+                                              fontSize: 12,
+                                              color: blackColor,
+                                              fontWeight: FontWeight.bold,
+                                              height: 1.5,
+                                              decoration:
+                                                  TextDecoration.underline),
+                                        )),
+                                  ],
+                                ));
+                        })
                       : const Center(
                           child:
                               Title12px(text: "คุณทำแบบทดสอบหลังเรียนนี้แล้ว")),

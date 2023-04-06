@@ -1,4 +1,3 @@
-import 'package:coursez/model/reviewVideo.dart';
 import 'package:coursez/screen/Reg.dart';
 import 'package:coursez/screen/Register2.dart';
 import 'package:coursez/screen/addressPage.dart';
@@ -11,7 +10,6 @@ import 'package:coursez/screen/exerciseResultPage.dart';
 import 'package:coursez/screen/expandPage.dart';
 import 'package:coursez/screen/firstPage.dart';
 import 'package:coursez/screen/home.dart';
-import 'package:coursez/screen/inboxPage.dart';
 import 'package:coursez/screen/loginPage.dart';
 import 'package:coursez/screen/postPage.dart';
 import 'package:coursez/screen/profilePage.dart';
@@ -20,6 +18,8 @@ import 'package:coursez/screen/rewardBillPage.dart';
 import 'package:coursez/screen/rewardPage.dart';
 import 'package:coursez/screen/videoPage.dart';
 import 'package:coursez/screen/searchPage.dart';
+import 'package:coursez/screen/withdrawPage.dart';
+import 'package:coursez/screen/withdrawFormPage.dart';
 import 'package:coursez/screen/myRewardPage.dart';
 import 'package:get/get.dart';
 
@@ -29,11 +29,7 @@ import '../../screen/rewardStatusPage.dart';
 class Routes {
   static final List<GetPage> _getRoutes = [
     GetPage(name: '/login', page: () => const LoginPage()),
-    GetPage(
-      name: '/home',
-      page: () => const MyHomePage(),
-      // middlewares: [AuthMiddleware()]
-    ),
+    GetPage(name: '/home',page: () => const MyHomePage(),),
     GetPage(name: '/register', page: () => const RegisterPage()),
     GetPage(name: '/register2', page: () => const RegisterPage2()),
     GetPage(name: '/first', page: () => const FirstPage()),
@@ -59,12 +55,14 @@ class Routes {
     GetPage(name: '/post/:post_id', page: () => const PostdetailPage()),
     GetPage(name: '/reward', page: () => RewardPage()),
     GetPage(name: '/address', page: () => AddressPage()),
-    GetPage(name: '/rewardbill', page: () => RewardBillPage()),
-    GetPage(name: '/dashboard', page: () => const DashBoardPage()),
+    GetPage(name: '/withdraw', page: () =>  const WithdrawPage()),
+    GetPage(name: '/withdrawForm', page: () => WithdrawForm()),
     GetPage(name: '/myreward', page: () => const MyRewardPage()),
     GetPage(
         name: '/reward/:reward_id/status',
         page: () => const RewardStatusPage()),
+    GetPage(name: '/rewardbill', page: () => RewardBillPage()),
+    GetPage(name: '/dashboard', page: () => const DashBoardPage()),
   ];
   static List<GetPage> get getRoutes => _getRoutes;
 }

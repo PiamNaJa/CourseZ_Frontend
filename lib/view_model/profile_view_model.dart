@@ -52,7 +52,7 @@ class ProfileViewModel {
 
   Future<void> updateUser(File? picture, User user) async {
     if (picture != null) {
-      final uuid = Uuid();
+      const uuid = Uuid();
       final ref = FirebaseStorage.instance.ref().child("Image/${uuid.v4()}");
       await ref.putFile(picture);
       user.picture = await ref.getDownloadURL();
@@ -83,4 +83,5 @@ class ProfileViewModel {
         List.from(c.map((e) => Video.fromJson(e)).toList());
     return video;
   }
+
 }

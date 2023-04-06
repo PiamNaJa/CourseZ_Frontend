@@ -36,7 +36,8 @@ class UserTeacher {
       psychologicalTest: json['psychologicalTest'],
       money: json['money'],
       reviews: json['reviews'] != null
-          ? List.from(json['reviews'].map((c) => ReviewTutor.fromJson(c)).toList())
+          ? List.from(
+              json['reviews'].map((c) => ReviewTutor.fromJson(c)).toList())
           : List.empty(),
       experiences: json['experiences'] != null
           ? json['experiences'].map((c) => Experience.fromJson(c)).toList()
