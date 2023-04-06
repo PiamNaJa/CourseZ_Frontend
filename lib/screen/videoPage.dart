@@ -320,6 +320,7 @@ class _VideoPageState extends State<VideoPage> {
                                             debugPrint('pass');
                                             flickManager.flickControlManager!
                                                 .pause();
+                                                smartFocus.stopFocus();
                                             Get.toNamed(
                                                 '/course/${Get.parameters["course_id"]!}/video/${video.videoId}/exercise');
                                           } else {
