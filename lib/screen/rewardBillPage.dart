@@ -1,7 +1,6 @@
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/controllers/reward_controller.dart';
 import 'package:coursez/model/address.dart';
-import 'package:coursez/model/rewardInfo.dart';
 import 'package:coursez/model/rewardItem.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/address_view_model.dart';

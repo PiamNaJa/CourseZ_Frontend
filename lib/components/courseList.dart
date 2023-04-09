@@ -2,6 +2,8 @@ import 'package:coursez/model/course.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/widgets/rating/rating.dart';
+import 'package:coursez/widgets/text/body12px.dart';
+import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/title14px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/material.dart';
@@ -73,20 +75,26 @@ class CourseList extends StatelessWidget {
                                         fontSize: 10,
                                         fontWeight: FontWeight.w400),
                                   ),
-                                  Row(
-                                    children: [
-                                      RatingStar(
-                                        rating: item.rating,
-                                        size: 20,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 5),
-                                        child: Title14px(
-                                            text: item.rating
-                                                .toStringAsPrecision(2)),
-                                      )
-                                    ],
-                                  )
+                                  (item.rating != 0)
+                                      ? Row(
+                                          children: [
+                                            RatingStar(
+                                              rating: item.rating,
+                                              size: 20,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 5),
+                                              child: Title14px(
+                                                  text: item.rating
+                                                      .toStringAsPrecision(2)),
+                                            )
+                                          ],
+                                        )
+                                      : const Body14px(
+                                          text: 'ยังไม่มีคะแนน',
+                                          color: greyColor,
+                                        ),
                                 ],
                               )),
                         ),

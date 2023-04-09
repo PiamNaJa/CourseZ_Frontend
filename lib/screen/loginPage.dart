@@ -1,4 +1,3 @@
-import 'package:coursez/screen/Reg.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/auth_view_model.dart';
 import 'package:flutter/material.dart';

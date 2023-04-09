@@ -1,6 +1,7 @@
 import 'package:coursez/model/course.dart';
 import 'package:coursez/widgets/rating/rating.dart';
 import 'package:coursez/widgets/text/body12px.dart';
+import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -180,10 +181,11 @@ class _SearchPageState extends State<SearchPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Body12px(text: data[index].coursename),
+                        (data[index].rating != 0)?
                         RatingStar(
                           rating: data[index].rating,
                           size: 20,
-                        ),
+                        ): const Body14px(text: 'ยังไม่มีคะแนน', color: greyColor),
                       ],
                     ),
                     title: Title16px(text: data[index].coursename),
@@ -254,10 +256,11 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
                 title: Title16px(text: item[index].nickname),
-                subtitle: RatingStar(
+                subtitle: (item[index].rating != 0)?
+                RatingStar(
                   rating: item[index].rating.toDouble(),
                   size: 20,
-                ),
+                ) : const Body14px(text: 'ยังไม่มีคะแนน', color: greyColor),
                 trailing: const Icon(Icons.keyboard_arrow_right),
               ),
             ));

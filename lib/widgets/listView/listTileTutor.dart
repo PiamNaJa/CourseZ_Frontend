@@ -2,10 +2,10 @@ import 'package:coursez/model/tutor.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/tutor_view_model.dart';
 import 'package:coursez/widgets/rating/rating.dart';
+import 'package:coursez/widgets/text/body12px.dart';
 import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/title14px.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ListTileTutor extends StatelessWidget {
   ListTileTutor({super.key});
@@ -63,7 +63,8 @@ Widget listTile(Tutor item) {
         title: Title14px(
           text: '${item.nickname} (${item.fullname})',
         ),
-        subtitle: Row(
+        subtitle: (item.rating != 0)?
+        Row(
           children: [
             RatingStar(rating: item.rating, size: 15),
             const SizedBox(
@@ -71,7 +72,7 @@ Widget listTile(Tutor item) {
             ),
             Body14px(text: item.rating.toStringAsPrecision(2)),
           ],
-        ),
+        ): const Body12px(text: 'ยังไม่มีคะแนน', color: greyColor,),
         trailing: const Icon(Icons.keyboard_arrow_right),
       ),
     ),

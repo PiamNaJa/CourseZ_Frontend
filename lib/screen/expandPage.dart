@@ -1,12 +1,10 @@
 import 'package:coursez/components/courseList.dart';
 import 'package:coursez/model/tutor.dart';
-
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/widgets/appbar/app_bar.dart';
 import 'package:coursez/widgets/rating/rating.dart';
-
+import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
-
 import 'package:coursez/widgets/text/title14px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/material.dart';
@@ -127,7 +125,15 @@ Widget _tutor(Tutor item) {
                   children: [
                     Heading20px(text: item.fullname),
                     Title14px(text: item.nickname),
-                    RatingStar(rating: item.rating.toDouble(), size: 20,)
+                    (item.rating != 0)
+                        ? RatingStar(
+                            rating: item.rating.toDouble(),
+                            size: 20,
+                          )
+                        : const Body14px(
+                            text: 'ยังไม่มีคะแนน',
+                            color: greyColor,
+                          ),
                   ],
                 ),
               )),
