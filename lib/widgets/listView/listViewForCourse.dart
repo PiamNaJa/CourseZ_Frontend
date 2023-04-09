@@ -2,6 +2,7 @@ import 'package:coursez/controllers/level_controller.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/widgets/text/body10px.dart';
+import 'package:coursez/widgets/text/body12px.dart';
 import 'package:coursez/widgets/text/title12px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/rendering.dart';
@@ -115,10 +116,15 @@ Widget buildCard(Course item) {
                     Body10px(
                       text: item.description,
                     ),
-                    RatingStar(
-                      rating: item.rating,
-                      size: 20,
-                    ),
+                    (item.rating != 0)
+                        ? RatingStar(
+                            rating: item.rating,
+                            size: 20,
+                          )
+                        : const Body12px(
+                            text: 'ยังไม่มีคะแนน',
+                            color: greyColor,
+                          ),
                   ],
                 ),
               ),

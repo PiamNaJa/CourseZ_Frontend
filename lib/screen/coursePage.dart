@@ -8,6 +8,7 @@ import 'package:coursez/widgets/Icon/border_icon.dart';
 import 'package:coursez/widgets/alert/alert.dart';
 import 'package:coursez/widgets/button/button.dart';
 import 'package:coursez/widgets/rating/rating.dart';
+import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:coursez/widgets/text/title14px.dart';
@@ -185,6 +186,7 @@ class _CoursePageState extends State<CoursePage> {
                       Heading24px(
                         text: courseData.coursename,
                       ),
+                      (courseData.rating != 0)?
                       Row(
                         children: [
                           Padding(
@@ -197,7 +199,7 @@ class _CoursePageState extends State<CoursePage> {
                           Title14px(
                               text: courseData.rating.toStringAsPrecision(2)),
                         ],
-                      ),
+                      ): const Body14px(text: 'ยังไม่มีคะแนน', color: greyColor),
                       Row(
                         children: [
                           ClipOval(

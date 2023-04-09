@@ -152,6 +152,7 @@ class _VideoPageState extends State<VideoPage> {
 
   Widget videoDetail(Video video) {
     double tutorRating = videoViewModel.getTutorRating(teacher.userTeacher!);
+    double videoRating = videoViewModel.loadVideoRating(video);
     FlickVideoWithControls flickVideoWithControls = FlickVideoWithControls(
       controls: FlickPortraitControls(
         progressBarSettings: FlickProgressBarSettings(
@@ -427,16 +428,23 @@ class _VideoPageState extends State<VideoPage> {
                           ],
                         ),
                         Expanded(
-                            child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            RatingStar(rating: tutorRating, size: 17),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Body14px(text: tutorRating.toStringAsPrecision(2)),
-                          ],
-                        ))
+                            child: (tutorRating != 0)
+                                ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      RatingStar(rating: tutorRating, size: 17),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Body14px(
+                                          text: tutorRating
+                                              .toStringAsPrecision(2)),
+                                    ],
+                                  )
+                                : const Body12px(
+                                    text: 'ยังไม่มีคะแนน',
+                                    color: tertiaryColor,
+                                  )),
                       ],
                     ),
                   ),
@@ -474,21 +482,31 @@ class _VideoPageState extends State<VideoPage> {
                                           color: primaryColor, width: 2),
                                       shape: BoxShape.circle),
                                   child: Center(
-                                    child: Heading24px(
-                                      text: videoViewModel
-                                          .loadVideoRating(video)
-                                          .toStringAsPrecision(2),
-                                      color: primaryColor,
-                                    ),
+                                    child: (videoRating != 0)
+                                        ? Heading24px(
+                                            text: videoRating
+                                                .toStringAsPrecision(2),
+                                            color: primaryColor,
+                                          )
+                                        : const Heading24px(
+                                            text: '-',
+                                            color: primaryColor,
+                                          ),
                                   ),
                                 ),
-                                Body12px(
-                                    text:
-                                        '${video.reviews.length.toString()} รีวิว'),
-                                RatingStar(
-                                  rating: videoViewModel.loadVideoRating(video),
-                                  size: 15,
-                                )
+                                (video.reviews.isNotEmpty)
+                                    ? Body12px(
+                                        text:
+                                            '${video.reviews.length.toString()} รีวิว')
+                                    : const Body12px(text: 'ยังไม่มีรีวิว'),
+                                (videoRating != 0)
+                                    ? RatingStar(
+                                        rating: videoRating,
+                                        size: 15,
+                                      )
+                                    : const Body12px(
+                                        text: 'ยังไม่มีคะแนน',
+                                        color: greyColor),
                               ],
                             ),
                             Column(

@@ -56,12 +56,12 @@ class Routes {
     GetPage(name: '/reward', page: () => RewardPage()),
     GetPage(name: '/address', page: () => AddressPage()),
     GetPage(name: '/withdraw', page: () =>  const WithdrawPage()),
-    GetPage(name: '/withdrawForm', page: () => WithdrawForm()),
+    GetPage(name: '/withdrawForm', page: () => const WithdrawForm()),
     GetPage(name: '/myreward', page: () => const MyRewardPage()),
     GetPage(
         name: '/reward/:reward_id/status',
         page: () => const RewardStatusPage()),
-    GetPage(name: '/rewardbill', page: () => RewardBillPage()),
+    GetPage(name: '/rewardbill', page: () => const RewardBillPage()),
     GetPage(name: '/dashboard', page: () => const DashBoardPage()),
   ];
   static List<GetPage> get getRoutes => _getRoutes;

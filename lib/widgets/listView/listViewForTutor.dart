@@ -1,6 +1,7 @@
 import 'package:coursez/model/tutor.dart';
 import 'package:coursez/view_model/tutor_view_model.dart';
 import 'package:coursez/widgets/text/body10px.dart';
+import 'package:coursez/widgets/text/body12px.dart';
 import 'package:coursez/widgets/text/title12px.dart';
 import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/rendering.dart';
@@ -88,10 +89,13 @@ Widget buildCard(Tutor item) {
                   children: [
                     Title12px(text: item.nickname),
                     Body10px(text: item.fullname),
-                    RatingStar(
-                      rating: item.rating.toDouble(),
-                      size: 20,
-                    ),
+                    (item.rating != 0)
+                        ? RatingStar(
+                            rating: item.rating.toDouble(),
+                            size: 20,
+                          )
+                        : const Body12px(
+                            text: 'ยังไม่มีคะแนน', color: greyColor)
                   ],
                 ),
               ),
@@ -110,34 +114,3 @@ Widget buildCard(Tutor item) {
         ));
   });
 }
-
-
-// SizedBox(
-//         width: 140,
-//         height: 180,
-//         child: Column(
-//           children: [
-//             Expanded(
-//               child: ClipOval(
-//                 child: Image.network(
-//                   item['picture'],
-//                   fit: BoxFit.fitHeight,
-//                 ),
-//               ),
-//             ),
-//             Padding(
-//               padding: const EdgeInsets.fromLTRB(5, 3, 5, 3),
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.center,
-//                 children: [
-//                   Title12px(
-//                     text: '${item['nickname']} (${item['fullname']})',
-//                     overflow: TextOverflow.ellipsis,
-//                   ),
-//                   ratingStar(rating: item['rating'].toDouble()),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
