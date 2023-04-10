@@ -152,7 +152,6 @@ class _VideoPageState extends State<VideoPage> {
 
   Widget videoDetail(Video video) {
     double tutorRating = videoViewModel.getTutorRating(teacher.userTeacher!);
-    double videoRating = videoViewModel.loadVideoRating(video);
     FlickVideoWithControls flickVideoWithControls = FlickVideoWithControls(
       controls: FlickPortraitControls(
         progressBarSettings: FlickProgressBarSettings(
@@ -445,124 +444,122 @@ class _VideoPageState extends State<VideoPage> {
                                     text: 'ยังไม่มีคะแนน',
                                     color: tertiaryColor,
                                   )),
+                        
                       ],
                     ),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                reviewsIndicator(video.reviews, video)
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget reviewsIndicator(List<ReviewVideo> reviews, Video video) {
+    double videoRating = videoViewModel.loadVideoRating(video);
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(right: 5),
+                child: Heading20px(text: 'รีวิว'),
+              ),
+              Body16px(
+                text: '(${reviews.length})',
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.15,
+                      height: MediaQuery.of(context).size.width * 0.15,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: primaryColor, width: 2),
+                          shape: BoxShape.circle),
+                      child: Center(
+                        child: (videoRating != 0)
+                            ? Heading24px(
+                                text: videoRating.toStringAsPrecision(2),
+                                color: primaryColor,
+                              )
+                            : const Heading24px(
+                                text: '-',
+                                color: primaryColor,
+                              ),
+                      ),
+                    ),
+                    (video.reviews.isNotEmpty)
+                        ? Body12px(
+                            text: '${video.reviews.length.toString()} รีวิว')
+                        : const Body12px(text: 'ยังไม่มีรีวิว'),
+                    (videoRating != 0)
+                        ? RatingStar(
+                            rating: videoRating,
+                            size: 15,
+                          )
+                        : const Body12px(
+                            text: 'ยังไม่มีคะแนน', color: greyColor),
+                  ],
+                ),
+                Column(
+                  children: [
+                    for (int i = 0; i < 5; i++)
                       Row(
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.only(right: 5),
-                            child: Heading20px(text: 'รีวิว'),
+                          RatingStar(
+                            rating: 5 - i.toDouble(),
+                            size: 15,
                           ),
-                          Body16px(
-                            text: '(${video.reviews.length})',
+                          LinearPercentIndicator(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            lineHeight: 6,
+                            percent:
+                                videoViewModel.loadPercentRating(video, 5 - i),
+                            backgroundColor: greyColor,
+                            progressColor: primaryColor,
+                            barRadius: const Radius.circular(15),
                           ),
+                          Body12px(
+                              text:
+                                  '${videoViewModel.loadVideoRatingByStar(video, 5 - i)}')
                         ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              children: [
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.15,
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.15,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: primaryColor, width: 2),
-                                      shape: BoxShape.circle),
-                                  child: Center(
-                                    child: (videoRating != 0)
-                                        ? Heading24px(
-                                            text: videoRating
-                                                .toStringAsPrecision(2),
-                                            color: primaryColor,
-                                          )
-                                        : const Heading24px(
-                                            text: '-',
-                                            color: primaryColor,
-                                          ),
-                                  ),
-                                ),
-                                (video.reviews.isNotEmpty)
-                                    ? Body12px(
-                                        text:
-                                            '${video.reviews.length.toString()} รีวิว')
-                                    : const Body12px(text: 'ยังไม่มีรีวิว'),
-                                (videoRating != 0)
-                                    ? RatingStar(
-                                        rating: videoRating,
-                                        size: 15,
-                                      )
-                                    : const Body12px(
-                                        text: 'ยังไม่มีคะแนน',
-                                        color: greyColor),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                for (int i = 0; i < 5; i++)
-                                  Row(
-                                    children: [
-                                      RatingStar(
-                                        rating: 5 - i.toDouble(),
-                                        size: 15,
-                                      ),
-                                      LinearPercentIndicator(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.4,
-                                        lineHeight: 6,
-                                        percent: videoViewModel
-                                            .loadPercentRating(video, 5 - i),
-                                        backgroundColor: greyColor,
-                                        progressColor: primaryColor,
-                                        barRadius: const Radius.circular(15),
-                                      ),
-                                      Body12px(
-                                          text:
-                                              '${videoViewModel.loadVideoRatingByStar(video, 5 - i)}')
-                                    ],
-                                  )
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      (video.reviews.isEmpty)
-                          ? const Center(
-                              child: Title16px(
-                                text: 'ยังไม่มีรีวิว',
-                                color: greyColor,
-                              ),
-                            )
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: video.reviews.length,
-                              itemBuilder: (context, index) {
-                                return reviewCard(video.reviews[index]);
-                              },
-                            ),
-                    ],
-                  ),
+                      )
+                  ],
                 )
               ],
             ),
           ),
+          const SizedBox(
+            height: 10,
+          ),
+          (video.reviews.isEmpty)
+              ? const Center(
+                  child: Title16px(
+                    text: 'ยังไม่มีรีวิว',
+                    color: greyColor,
+                  ),
+                )
+              : ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: video.reviews.length,
+                  itemBuilder: (context, index) {
+                    return reviewCard(video.reviews[index]);
+                  },
+                ),
         ],
       ),
     );
