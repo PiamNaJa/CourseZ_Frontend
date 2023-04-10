@@ -58,13 +58,16 @@ class _CoursePageState extends State<CoursePage> {
       courseViewModel.getPaidVideo().then((value) => setState(
             () => paidVideo.addAll(value),
           ));
-    }
-    if (authController.isLogin) {
       courseViewModel
           .checkIsLikeCourse(courseId)
           .then((value) => setState(() => isLike = value));
     }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -186,8 +189,76 @@ class _CoursePageState extends State<CoursePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Heading24px(
-                        text: courseData.coursename,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: (courseData.teacherId ==
+                                        authController.teacherId)
+                                    ? (size.width * 0.8) - (padding * 2)
+                                    : size.width - padding * 2,
+                                child: Heading24px(
+                                  text: courseData.coursename,
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ),
+                              if (courseData.teacherId ==
+                                  authController.teacherId)
+                                IconButton(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    color: tertiaryDarkColor,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                            ],
+                          ),
+                          if (courseData.teacherId == authController.teacherId)
+                            IconButton(
+                                constraints: const BoxConstraints(),
+                                padding: EdgeInsets.zero,
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Heading20px(
+                                            text: "ยืนยันการลบคอร์สนี้",
+                                          ),
+                                          content: const Body14px(
+                                              text:
+                                                  "หากคุณลบจะไม่สามารถกู้คืนได้"),
+                                          actions: [
+                                            TextButton(
+                                              child: const Body14px(
+                                                  text: "ยกเลิก"),
+                                              onPressed: () {
+                                                Get.back();
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: const Body14px(
+                                                text: "ยืนยัน",
+                                                color: Colors.red,
+                                              ),
+                                              onPressed: () {
+                                                courseViewModel.deleteCourse(
+                                                    courseData.courseId);
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      });
+                                })
+                        ],
                       ),
                       (courseData.rating != 0)
                           ? Row(
@@ -310,20 +381,18 @@ class _CoursePageState extends State<CoursePage> {
                                       );
                                     });
                               } else {
-                                courseViewModel
-                                    .buyAllVideoInCourse(courseData)
-                                    .then((value) {
-                                  setState(() {
+                                setState(() {
+                                  courseViewModel
+                                      .buyAllVideoInCourse(courseData)
+                                      .then((value) {
                                     courseViewModel
                                         .allVideoPriceInCourse(courseData)
                                         .then((value) =>
                                             sumVideoPrice = value.first);
+                                    courseViewModel.getPaidVideo().then(
+                                          (value) => paidVideo = value,
+                                        );
                                   });
-                                  courseViewModel
-                                      .getPaidVideo()
-                                      .then((value) => setState(
-                                            () => paidVideo = value,
-                                          ));
                                 });
                               }
                             },

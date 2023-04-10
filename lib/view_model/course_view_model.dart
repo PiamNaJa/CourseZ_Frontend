@@ -104,6 +104,25 @@ class CourseViewModel {
     return course;
   }
 
+  Future<void> deleteCourse(int courseId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token')!;
+    final isPass = await _courseRepository.deleteCourse(courseId, token);
+    if (!isPass) {
+      Get.snackbar('ผิดพลาด', 'มีบางอย่างผิดพลาด',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: whiteColor);
+    } else {
+      Get.back();
+      Get.back();
+      Get.snackbar('สำเร็จ', 'ลบคอร์สเรียบร้อย',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: primaryColor,
+          colorText: whiteColor);
+    }
+  }
+
   Future<List> allVideoPriceInCourse(Course course) async {
     num price = 0;
     List<int> videosId = [];
