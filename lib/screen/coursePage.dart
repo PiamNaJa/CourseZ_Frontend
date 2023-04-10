@@ -88,16 +88,19 @@ class _CoursePageState extends State<CoursePage> {
                                 }));
                       }
                       return SizedBox(
-                        child: detail(snapshot.data!),
+                        child: detail(snapshot.data!, context),
                       );
                     }
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(
+                        child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ));
                   }),
                 ))));
   }
 
-  Widget detail(Course courseData) {
-    final Size size = MediaQuery.of(Get.context!).size;
+  Widget detail(Course courseData, BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     const double padding = 15;
     const sidePadding = EdgeInsets.symmetric(horizontal: padding);
     if (!isCalPrice) {
@@ -157,7 +160,7 @@ class _CoursePageState extends State<CoursePage> {
                                     return !isLiked;
                                   } else {
                                     showDialog(
-                                        context: Get.context!,
+                                        context: context,
                                         builder: (BuildContext context) {
                                           return const AlertLogin(
                                             body:
@@ -186,20 +189,23 @@ class _CoursePageState extends State<CoursePage> {
                       Heading24px(
                         text: courseData.coursename,
                       ),
-                      (courseData.rating != 0)?
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 5),
-                            child: RatingStar(
-                              rating: courseData.rating,
-                              size: 20,
-                            ),
-                          ),
-                          Title14px(
-                              text: courseData.rating.toStringAsPrecision(2)),
-                        ],
-                      ): const Body14px(text: 'ยังไม่มีคะแนน', color: greyColor),
+                      (courseData.rating != 0)
+                          ? Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 5),
+                                  child: RatingStar(
+                                    rating: courseData.rating,
+                                    size: 20,
+                                  ),
+                                ),
+                                Title14px(
+                                    text: courseData.rating
+                                        .toStringAsPrecision(2)),
+                              ],
+                            )
+                          : const Body14px(
+                              text: 'ยังไม่มีคะแนน', color: greyColor),
                       Row(
                         children: [
                           ClipOval(
@@ -296,7 +302,7 @@ class _CoursePageState extends State<CoursePage> {
                             onPressed: () {
                               if (!authController.isLogin) {
                                 showDialog(
-                                    context: Get.context!,
+                                    context: context,
                                     builder: (BuildContext context) {
                                       return const AlertLogin(
                                         body: 'กรุณาเข้าสู่ระบบเพื่อซื้อวีดิโอ',
@@ -339,6 +345,7 @@ class _CoursePageState extends State<CoursePage> {
                                     .contains(courseData.videos[index].videoId);
                                 return VideoCard(
                                   videoId: courseData.videos[index].videoId,
+                                  teacherId: courseData.teacherId,
                                   image: courseData.videos[index].picture,
                                   name: courseData.videos[index].videoName,
                                   width: constraints.maxWidth * 0.3,
@@ -359,8 +366,18 @@ class _CoursePageState extends State<CoursePage> {
                                             );
                                           });
                                     } else {
-                                      if (courseData.videos[index].price > 0 &&
-                                          !isPaid) {
+                                      if (courseData.teacherId ==
+                                              authController.teacherId ||
+                                          courseData.videos[index].price == 0 ||
+                                          isPaid) {
+                                        Get.toNamed(
+                                            "/course/$courseId/video/${courseData.videos[index].videoId}",
+                                            arguments: courseData.videos[index],
+                                            parameters: {
+                                              'teacher_id': courseData.teacherId
+                                                  .toString(),
+                                            });
+                                      } else {
                                         await courseViewModel.buyVideo(
                                             courseData.videos[index].price,
                                             courseData.videos[index].videoId);
@@ -373,15 +390,6 @@ class _CoursePageState extends State<CoursePage> {
                                           sumVideoPrice = price.first;
                                           paidVideo = video;
                                         });
-                                      } else {
-                                        Get.toNamed(
-                                            "/course/$courseId/video/${courseData.videos[index].videoId}",
-                                            arguments: courseData
-                                                  .videos[index],
-                                            parameters: {
-                                              'teacher_id': courseData.teacherId
-                                                  .toString(),
-                                            });
                                       }
                                     }
                                   },

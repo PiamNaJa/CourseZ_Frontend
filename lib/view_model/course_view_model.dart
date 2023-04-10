@@ -109,7 +109,9 @@ class CourseViewModel {
     List<int> videosId = [];
     final AuthController authController = Get.find<AuthController>();
     for (var element in course.videos) {
-      if (element.price == 0) continue;
+      if (element.price == 0 || authController.teacherId == course.teacherId) {
+        continue;
+      }
       price += element.price;
       videosId.add(element.videoId);
     }
