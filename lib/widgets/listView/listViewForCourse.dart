@@ -1,4 +1,5 @@
 import 'package:coursez/controllers/level_controller.dart';
+import 'package:coursez/controllers/refresh_controller.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/widgets/text/body10px.dart';
@@ -19,8 +20,10 @@ class ListViewCourse extends StatelessWidget {
   Widget build(BuildContext context) {
     final CourseViewModel courseViewModel = CourseViewModel();
     final LevelController levelController = Get.find<LevelController>();
+    final RefreshController refreshController = Get.find<RefreshController>();
     return Obx(() {
       final level = levelController.level;
+      refreshController.trigerRefresh;
       return FutureBuilder(
         future: recommend
             ? courseViewModel.loadRecommendCourse()
@@ -59,7 +62,9 @@ class ListViewCourse extends StatelessWidget {
             );
           } else {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: primaryColor,
+              ),
             );
           }
         },

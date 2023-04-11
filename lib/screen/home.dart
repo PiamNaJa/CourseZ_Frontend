@@ -1,5 +1,6 @@
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/controllers/level_controller.dart';
+import 'package:coursez/controllers/refresh_controller.dart';
 import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/view_model/tutor_view_model.dart';
 import 'package:coursez/widgets/button/textbutton.dart';
@@ -27,7 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final TutorViewModel tutorViewModel = TutorViewModel();
   final LevelController levelController = Get.find<LevelController>();
   final AuthController _authController = Get.find<AuthController>();
-  late final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -127,15 +128,14 @@ class _MyHomePageState extends State<MyHomePage> {
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Heading20px(text: 'คอร์สเรียนยอดนิยม'),
+                              children: const [
+                                Heading20px(text: 'คอร์สเรียนยอดนิยม'),
                                 ButtonText(
                                   text: 'ดูเพิ่มเติม >',
                                   color: greyColor,
                                   size: 16,
                                   position: TextAlign.right,
-                                  data: courseViewModel
-                                      .loadCourse(levelController.level),
+                                  isloadcourse: true,
                                   route: '/expand',
                                 ),
                               ],
@@ -156,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               const SizedBox(
                                 height: 12,
                               ),
-                              // const ListViewCourse(recommend: true),
+                              const ListViewCourse(recommend: true),
                             ]
                           ],
                         ),
@@ -179,18 +179,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Heading20px(text: 'ติวเตอร์ยอดนิยม'),
-                            Obx(
-                              () => ButtonText(
-                                text: 'ดูเพิ่มเติม >',
-                                color: greyColor,
-                                size: 16,
-                                position: TextAlign.right,
-                                data: tutorViewModel
-                                    .loadTutor(levelController.level),
-                                route: '/expand',
-                              ),
+                          children: const [
+                            Heading20px(text: 'ติวเตอร์ยอดนิยม'),
+                            ButtonText(
+                              text: 'ดูเพิ่มเติม >',
+                              color: greyColor,
+                              size: 16,
+                              position: TextAlign.right,
+                              isloadcourse: false,
+                              route: '/expand',
                             )
                           ],
                         ),

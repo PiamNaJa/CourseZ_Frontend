@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:coursez/controllers/auth_controller.dart';
+import 'package:coursez/controllers/refresh_controller.dart';
 import 'package:coursez/model/video.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/auth_view_model.dart';
@@ -52,12 +53,13 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  final formkey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   final AuthViewModel authViewModel = AuthViewModel();
   final CourseViewModel courseViewModel = CourseViewModel();
   final ProfileViewModel profileViewModel = ProfileViewModel();
-  final AuthController authController = Get.find();
-  final _globalKey = GlobalKey<ScaffoldState>();
+  final AuthController authController = Get.find<AuthController>();
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+  final RefreshController refreshController = Get.find<RefreshController>();
 
   onSubmit(File? image) async {
     if (formkey.currentState!.validate()) {
@@ -66,7 +68,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  logOutDialog() {
+  void logOutDialog() {
     showDialog(
         context: context,
         builder: (context) {
@@ -179,10 +181,10 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       body: Obx(() {
-        authController.picture;
+        refreshController.trigerRefresh;
         if (authController.isLogin) {
           return FutureBuilder(
-            future: ProfileViewModel().fetchUser(authController.userid),
+            future: profileViewModel.fetchUser(authController.userid),
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 return showprofile(snapshot.data);
@@ -730,8 +732,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           offset: Offset(0, 1),
                         )
                       ]),
-                  // visualDensity: const VisualDensity(vertical: 4),
-                  // contentPadding: const EdgeInsets.all(15),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

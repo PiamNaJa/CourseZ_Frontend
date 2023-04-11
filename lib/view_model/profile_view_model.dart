@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:coursez/controllers/refresh_controller.dart';
 import 'package:coursez/model/course.dart';
 import 'package:coursez/model/payment.dart';
 import 'package:coursez/model/video.dart';
@@ -57,8 +58,9 @@ class ProfileViewModel {
       await ref.putFile(picture);
       user.picture = await ref.getDownloadURL();
     }
-    AuthController authController = Get.find();
-    AuthRepository authRepository = AuthRepository();
+    final AuthController authController = Get.find<AuthController>();
+    final RefreshController refreshController = Get.find<RefreshController>();
+    final AuthRepository authRepository = AuthRepository();
     final pref = await SharedPreferences.getInstance();
     final token = pref.getString('token')!;
     final res =
@@ -71,6 +73,7 @@ class ProfileViewModel {
       return;
     }
     authController.fetchUser(authController.userid);
+    refreshController.toggleRefresh();
     Get.back();
   }
 
@@ -83,5 +86,4 @@ class ProfileViewModel {
         List.from(c.map((e) => Video.fromJson(e)).toList());
     return video;
   }
-
 }

@@ -1,4 +1,5 @@
 import 'package:coursez/controllers/auth_controller.dart';
+import 'package:coursez/controllers/refresh_controller.dart';
 import 'package:coursez/model/course.dart';
 import 'package:coursez/repository/course_repository.dart';
 import 'package:flutter/material.dart';
@@ -114,6 +115,8 @@ class CourseViewModel {
           backgroundColor: Colors.red,
           colorText: whiteColor);
     } else {
+      final RefreshController refreshController = Get.find<RefreshController>();
+      refreshController.toggleRefresh();
       Get.back();
       Get.back();
       Get.snackbar('สำเร็จ', 'ลบคอร์สเรียบร้อย',
