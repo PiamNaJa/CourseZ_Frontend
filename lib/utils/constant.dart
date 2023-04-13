@@ -1,0 +1,1 @@
+typedef LevelCallback = void Function(int? level);
