@@ -1,7 +1,6 @@
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/course_view_model.dart';
-import 'package:coursez/widgets/alert/alert.dart';
 import 'package:coursez/widgets/text/body12px.dart';
 import 'package:coursez/widgets/text/title12px.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import 'package:get/get.dart';
 class VideoCard extends StatelessWidget {
   final String image;
   final int videoId;
+  final int teacherId;
   final String name;
   final double width;
   final double height;
@@ -28,6 +28,7 @@ class VideoCard extends StatelessWidget {
     required this.onTap,
     required this.isPaid,
     required this.videoId,
+    required this.teacherId,
   });
 
   @override
@@ -49,7 +50,7 @@ class VideoCard extends StatelessWidget {
                   height: 70,
                   fit: BoxFit.cover,
                 )),
-                (price > 0 && !isPaid)
+                (price > 0 && !isPaid && teacherId != authController.teacherId)
                     ? Positioned(
                         child: ClipOval(
                         child: Container(

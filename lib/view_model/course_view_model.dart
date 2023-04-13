@@ -1,4 +1,5 @@
 import 'package:coursez/controllers/auth_controller.dart';
+import 'package:coursez/controllers/refresh_controller.dart';
 import 'package:coursez/model/course.dart';
 import 'package:coursez/repository/course_repository.dart';
 import 'package:flutter/material.dart';
@@ -104,12 +105,35 @@ class CourseViewModel {
     return course;
   }
 
+  Future<void> deleteCourse(int courseId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token')!;
+    final isPass = await _courseRepository.deleteCourse(courseId, token);
+    if (!isPass) {
+      Get.snackbar('ผิดพลาด', 'มีบางอย่างผิดพลาด',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: whiteColor);
+    } else {
+      final RefreshController refreshController = Get.find<RefreshController>();
+      refreshController.toggleRefresh();
+      Get.back();
+      Get.back();
+      Get.snackbar('สำเร็จ', 'ลบคอร์สเรียบร้อย',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: primaryColor,
+          colorText: whiteColor);
+    }
+  }
+
   Future<List> allVideoPriceInCourse(Course course) async {
     num price = 0;
     List<int> videosId = [];
     final AuthController authController = Get.find<AuthController>();
     for (var element in course.videos) {
-      if (element.price == 0) continue;
+      if (element.price == 0 || authController.teacherId == course.teacherId) {
+        continue;
+      }
       price += element.price;
       videosId.add(element.videoId);
     }

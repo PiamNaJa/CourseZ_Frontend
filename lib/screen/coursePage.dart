@@ -58,13 +58,16 @@ class _CoursePageState extends State<CoursePage> {
       courseViewModel.getPaidVideo().then((value) => setState(
             () => paidVideo.addAll(value),
           ));
-    }
-    if (authController.isLogin) {
       courseViewModel
           .checkIsLikeCourse(courseId)
           .then((value) => setState(() => isLike = value));
     }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -88,16 +91,19 @@ class _CoursePageState extends State<CoursePage> {
                                 }));
                       }
                       return SizedBox(
-                        child: detail(snapshot.data!),
+                        child: detail(snapshot.data!, context),
                       );
                     }
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(
+                        child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ));
                   }),
                 ))));
   }
 
-  Widget detail(Course courseData) {
-    final Size size = MediaQuery.of(Get.context!).size;
+  Widget detail(Course courseData, BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     const double padding = 15;
     const sidePadding = EdgeInsets.symmetric(horizontal: padding);
     if (!isCalPrice) {
@@ -157,7 +163,7 @@ class _CoursePageState extends State<CoursePage> {
                                     return !isLiked;
                                   } else {
                                     showDialog(
-                                        context: Get.context!,
+                                        context: context,
                                         builder: (BuildContext context) {
                                           return const AlertLogin(
                                             body:
@@ -183,23 +189,94 @@ class _CoursePageState extends State<CoursePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Heading24px(
-                        text: courseData.coursename,
-                      ),
-                      (courseData.rating != 0)?
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 5),
-                            child: RatingStar(
-                              rating: courseData.rating,
-                              size: 20,
-                            ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: (courseData.teacherId ==
+                                        authController.teacherId)
+                                    ? (size.width * 0.8) - (padding * 2)
+                                    : size.width - padding * 2,
+                                child: Heading24px(
+                                  text: courseData.coursename,
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ),
+                              if (courseData.teacherId ==
+                                  authController.teacherId)
+                                IconButton(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    color: tertiaryDarkColor,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                            ],
                           ),
-                          Title14px(
-                              text: courseData.rating.toStringAsPrecision(2)),
+                          if (courseData.teacherId == authController.teacherId)
+                            IconButton(
+                                constraints: const BoxConstraints(),
+                                padding: EdgeInsets.zero,
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Heading20px(
+                                            text: "ยืนยันการลบคอร์สนี้",
+                                          ),
+                                          content: const Body14px(
+                                              text:
+                                                  "หากคุณลบจะไม่สามารถกู้คืนได้"),
+                                          actions: [
+                                            TextButton(
+                                              child: const Body14px(
+                                                  text: "ยกเลิก"),
+                                              onPressed: () {
+                                                Get.back();
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: const Body14px(
+                                                text: "ยืนยัน",
+                                                color: Colors.red,
+                                              ),
+                                              onPressed: () {
+                                                courseViewModel.deleteCourse(
+                                                    courseData.courseId);
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      });
+                                })
                         ],
-                      ): const Body14px(text: 'ยังไม่มีคะแนน', color: greyColor),
+                      ),
+                      (courseData.rating != 0)
+                          ? Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 5),
+                                  child: RatingStar(
+                                    rating: courseData.rating,
+                                    size: 20,
+                                  ),
+                                ),
+                                Title14px(
+                                    text: courseData.rating
+                                        .toStringAsPrecision(2)),
+                              ],
+                            )
+                          : const Body14px(
+                              text: 'ยังไม่มีคะแนน', color: greyColor),
                       Row(
                         children: [
                           ClipOval(
@@ -296,7 +373,7 @@ class _CoursePageState extends State<CoursePage> {
                             onPressed: () {
                               if (!authController.isLogin) {
                                 showDialog(
-                                    context: Get.context!,
+                                    context: context,
                                     builder: (BuildContext context) {
                                       return const AlertLogin(
                                         body: 'กรุณาเข้าสู่ระบบเพื่อซื้อวีดิโอ',
@@ -304,20 +381,18 @@ class _CoursePageState extends State<CoursePage> {
                                       );
                                     });
                               } else {
-                                courseViewModel
-                                    .buyAllVideoInCourse(courseData)
-                                    .then((value) {
-                                  setState(() {
+                                setState(() {
+                                  courseViewModel
+                                      .buyAllVideoInCourse(courseData)
+                                      .then((value) {
                                     courseViewModel
                                         .allVideoPriceInCourse(courseData)
                                         .then((value) =>
                                             sumVideoPrice = value.first);
+                                    courseViewModel.getPaidVideo().then(
+                                          (value) => paidVideo = value,
+                                        );
                                   });
-                                  courseViewModel
-                                      .getPaidVideo()
-                                      .then((value) => setState(
-                                            () => paidVideo = value,
-                                          ));
                                 });
                               }
                             },
@@ -339,6 +414,7 @@ class _CoursePageState extends State<CoursePage> {
                                     .contains(courseData.videos[index].videoId);
                                 return VideoCard(
                                   videoId: courseData.videos[index].videoId,
+                                  teacherId: courseData.teacherId,
                                   image: courseData.videos[index].picture,
                                   name: courseData.videos[index].videoName,
                                   width: constraints.maxWidth * 0.3,
@@ -359,8 +435,18 @@ class _CoursePageState extends State<CoursePage> {
                                             );
                                           });
                                     } else {
-                                      if (courseData.videos[index].price > 0 &&
-                                          !isPaid) {
+                                      if (courseData.teacherId ==
+                                              authController.teacherId ||
+                                          courseData.videos[index].price == 0 ||
+                                          isPaid) {
+                                        Get.toNamed(
+                                            "/course/$courseId/video/${courseData.videos[index].videoId}",
+                                            arguments: courseData.videos[index],
+                                            parameters: {
+                                              'teacher_id': courseData.teacherId
+                                                  .toString(),
+                                            });
+                                      } else {
                                         await courseViewModel.buyVideo(
                                             courseData.videos[index].price,
                                             courseData.videos[index].videoId);
@@ -373,15 +459,6 @@ class _CoursePageState extends State<CoursePage> {
                                           sumVideoPrice = price.first;
                                           paidVideo = video;
                                         });
-                                      } else {
-                                        Get.toNamed(
-                                            "/course/$courseId/video/${courseData.videos[index].videoId}",
-                                            arguments: courseData
-                                                  .videos[index],
-                                            parameters: {
-                                              'teacher_id': courseData.teacherId
-                                                  .toString(),
-                                            });
                                       }
                                     }
                                   },

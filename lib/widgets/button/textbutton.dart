@@ -9,7 +9,7 @@ class ButtonText extends StatelessWidget {
   final TextAlign position;
   final TextOverflow overflow;
   final String route;
-  final dynamic data;
+  final bool isloadcourse;
 
   const ButtonText(
       {super.key,
@@ -18,14 +18,14 @@ class ButtonText extends StatelessWidget {
       required this.size,
       required this.position,
       required this.route,
-      required this.data,
+      required this.isloadcourse,
       this.overflow = TextOverflow.ellipsis});
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
         onPressed: () {
-          Get.toNamed(route, arguments: data);
+          Get.toNamed(route, arguments: isloadcourse);
         },
         child: Text(text,
             style: TextStyle(

@@ -36,7 +36,6 @@ class AuthController extends GetxController {
   int get teacherId => _teacherId.value;
 
   Future<void> fetchUser(int userId) async {
-    picture = 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png';
     final ProfileViewModel profile = ProfileViewModel();
     final User user = await profile.fetchUser(userId);
     userid = user.userId!;
