@@ -52,6 +52,11 @@ class CourseViewModel {
     final token = prefs.getString('token')!;
     final c = await fecthData('course/recommend/user/${authController.userid}',
         authorization: token);
+    if (c is String) {
+      final AuthController authController = Get.find<AuthController>();
+      authController.logout();
+      return [];
+    }
     final List<Course> courses = List.from(c.map((e) => Course.fromJson(e)));
     return courses;
   }

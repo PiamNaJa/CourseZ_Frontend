@@ -1,19 +1,21 @@
+import 'package:coursez/controllers/refresh_controller.dart';
 import 'package:coursez/model/user.dart';
 import 'package:coursez/model/userTeacher.dart';
 import 'package:coursez/model/video.dart';
 import 'package:coursez/repository/history_repository.dart';
+import 'package:coursez/repository/video_repository.dart';
 import 'package:coursez/utils/fetchData.dart';
 import 'package:coursez/view_model/date_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../repository/review_repository.dart';
 import '../utils/color.dart';
 
 class VideoViewModel {
   final ReviewRepository _reviewRepository = ReviewRepository();
-  HistoryRepository historyRepository = HistoryRepository();
+  final HistoryRepository historyRepository = HistoryRepository();
+  final VideoRepository videoRepository = VideoRepository();
   Future<Video> loadVideoById(String courseid, String videoid) async {
     final v = await fecthData("course/$courseid/video/$videoid");
 
@@ -118,9 +120,25 @@ class VideoViewModel {
     final res =
         await historyRepository.addVideoHistory(videoId, duration, token);
     if (res.statusCode == 201) {
-      print("add video history success");
+      debugPrint("add video history success");
     } else {
-      print(res.body);
+      debugPrint(res.body);
+    }
+  }
+
+  Future<void> deleteVideo(String courseId, String videoId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String token = prefs.getString('token')!;
+    final isPass = await videoRepository.deleteVideo(courseId, videoId, token);
+    if (isPass) {
+      Get.find<RefreshController>().toggleRefresh();
+      Get.back();
+      Get.back();
+    } else {
+      Get.snackbar('ผิดพลาด', 'มีบางอย่างผิดพลาด',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: whiteColor);
     }
   }
 }

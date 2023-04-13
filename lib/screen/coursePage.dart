@@ -1,4 +1,5 @@
 import 'package:coursez/controllers/auth_controller.dart';
+import 'package:coursez/controllers/refresh_controller.dart';
 import 'package:coursez/model/course.dart';
 import 'package:coursez/model/user.dart';
 import 'package:coursez/utils/color.dart';
@@ -28,8 +29,8 @@ class CoursePage extends StatefulWidget {
 class _CoursePageState extends State<CoursePage> {
   final Icon fav = const Icon(Icons.favorite_border);
   final String courseId = Get.parameters['course_id']!;
-  late Future<Course> data;
-  final AuthController authController = Get.find();
+  final AuthController authController = Get.find<AuthController>();
+  final RefreshController refreshController = Get.find<RefreshController>();
   final CourseViewModel courseViewModel = CourseViewModel();
   final TutorViewModel tutorViewModel = TutorViewModel();
   List paidVideo = [];
@@ -52,8 +53,6 @@ class _CoursePageState extends State<CoursePage> {
 
   @override
   void initState() {
-    data = courseViewModel.loadCourseById(int.parse(courseId));
-
     if (authController.isLogin) {
       courseViewModel.getPaidVideo().then((value) => setState(
             () => paidVideo.addAll(value),
@@ -78,27 +77,34 @@ class _CoursePageState extends State<CoursePage> {
             child: SizedBox(
                 width: size.width,
                 height: size.height,
-                child: FutureBuilder(
-                  future: data,
-                  builder: ((context, snapshot) {
-                    if (snapshot.hasData) {
-                      if (!isFetchTeacher) {
-                        tutorViewModel
-                            .loadTutorById(snapshot.data!.teacherId.toString())
-                            .then((value) => setState(() {
-                                  teacher = value;
-                                  isFetchTeacher = true;
-                                }));
-                      }
-                      return SizedBox(
-                        child: detail(snapshot.data!, context),
-                      );
-                    }
-                    return const Center(
-                        child: CircularProgressIndicator(
-                      color: primaryColor,
-                    ));
-                  }),
+                child: Obx(
+                  () {
+                    refreshController.trigerRefresh;
+                    return FutureBuilder(
+                      future:
+                          courseViewModel.loadCourseById(int.parse(courseId)),
+                      builder: ((context, snapshot) {
+                        if (snapshot.hasData) {
+                          if (!isFetchTeacher) {
+                            tutorViewModel
+                                .loadTutorById(
+                                    snapshot.data!.teacherId.toString())
+                                .then((value) => setState(() {
+                                      teacher = value;
+                                      isFetchTeacher = true;
+                                    }));
+                          }
+                          return SizedBox(
+                            child: detail(snapshot.data!, context),
+                          );
+                        }
+                        return const Center(
+                            child: CircularProgressIndicator(
+                          color: primaryColor,
+                        ));
+                      }),
+                    );
+                  },
                 ))));
   }
 
