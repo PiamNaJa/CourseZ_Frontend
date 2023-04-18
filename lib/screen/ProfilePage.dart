@@ -810,7 +810,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   await courseViewModel.loadCourseById(data[index].courseId);
               Get.toNamed(
                   '/course/${data[index].courseId}/video/${data[index].videoId}',
-                  arguments: data[index],
                   parameters: {'teacher_id': courseid.teacherId.toString()});
             },
             leading: ClipOval(

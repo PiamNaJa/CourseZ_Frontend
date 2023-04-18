@@ -31,17 +31,17 @@ class VideoPage extends StatefulWidget {
 }
 
 class _VideoPageState extends State<VideoPage> {
-  VideoViewModel videoViewModel = VideoViewModel();
-  AuthController authController = Get.find<AuthController>();
+  final VideoViewModel videoViewModel = VideoViewModel();
+  final AuthController authController = Get.find<AuthController>();
   bool isFocus = false;
   double timeToDoQuiz = 0;
   final isExpanded = true;
   bool isInitVideo = false;
   late FlickManager flickManager;
   String videoName = '';
-  String teacherId = Get.parameters["teacher_id"] ?? '6';
-  String courseId = Get.parameters["course_id"] ?? '9';
-  String videoId = Get.parameters["video_id"] ?? '25';
+  final String teacherId = Get.parameters["teacher_id"]!;
+  final String courseId = Get.parameters["course_id"]!;
+  final String videoId = Get.parameters["video_id"]!;
   bool isDoneExercise = false;
   bool loadingTeacher = true;
   User teacher = User(
@@ -136,6 +136,48 @@ class _VideoPageState extends State<VideoPage> {
               Get.back();
             },
           ),
+          actions: [
+            if (int.parse(teacherId) == authController.teacherId) ...[
+              IconButton(
+                icon: const Icon(Icons.edit, color: tertiaryDarkColor),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                onPressed: () {
+                  flickManager.flickControlManager!.pause();
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Heading20px(
+                            text: "ยืนยันการวิดีโอนี้",
+                          ),
+                          content: const Body14px(
+                              text: "หากคุณลบจะไม่สามารถกู้คืนได้"),
+                          actions: [
+                            TextButton(
+                              child: const Body14px(text: "ยกเลิก"),
+                              onPressed: () {
+                                Get.back();
+                              },
+                            ),
+                            TextButton(
+                              child: const Body14px(
+                                text: "ยืนยัน",
+                                color: Colors.red,
+                              ),
+                              onPressed: () {
+                                videoViewModel.deleteVideo(courseId, videoId);
+                              },
+                            ),
+                          ],
+                        );
+                      });
+                },
+              ),
+            ]
+          ],
         ),
         body: loadingTeacher || !isInitVideo
             ? const Center(child: CircularProgressIndicator())
@@ -444,7 +486,6 @@ class _VideoPageState extends State<VideoPage> {
                                     text: 'ยังไม่มีคะแนน',
                                     color: tertiaryColor,
                                   )),
-                        
                       ],
                     ),
                   ),
