@@ -102,12 +102,6 @@ class _CoursePageState extends State<CoursePage> {
   }
 
   Widget detail(Course courseData, BuildContext context) {
-    if (courseData.videos.isEmpty) {
-      Get.back();
-      return const Center(
-        child: Text('ไม่มีวิดีโอในคอร์สนี้'),
-      );
-    }
     final Size size = MediaQuery.of(context).size;
     const double padding = 15;
     const sidePadding = EdgeInsets.symmetric(horizontal: padding);
@@ -446,15 +440,25 @@ class _CoursePageState extends State<CoursePage> {
                                           isPaid) {
                                         Get.toNamed(
                                                 "/course/$courseId/video/${courseData.videos[index].videoId}",
-                                                arguments:
-                                                    courseData.videos[index],
                                                 parameters: {
+                                                  "video_name":
+                                                      courseData.videos[index]
+                                                          .videoName,
                                               'teacher_id': courseData.teacherId
                                                   .toString(),
                                             })!
-                                            .then((value) => setState(
-                                                  () {},
-                                                ));
+                                            .then((value) {
+                                          if (courseData.videos.length != 1) {
+                                            setState(
+                                              () {},
+                                            );
+                                          }
+                                          if (value != null &&
+                                              value == true &&
+                                              courseData.videos.length == 1) {
+                                            Get.back();
+                                          }
+                                        });
                                       } else {
                                         await courseViewModel.buyVideo(
                                             courseData.videos[index].price,
