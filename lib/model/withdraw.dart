@@ -19,7 +19,7 @@ class Withdraw {
       money: json['money'],
       bankName: json['bank_name'],
       bankNumber: json['bank_number'],
-      createAt: json['create_at'],
+      createAt: json['created_at'],
     );
   }
   Map<String, dynamic> toJson() {
