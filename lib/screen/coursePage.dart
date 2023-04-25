@@ -77,34 +77,27 @@ class _CoursePageState extends State<CoursePage> {
             child: SizedBox(
                 width: size.width,
                 height: size.height,
-                child: Obx(
-                  () {
-                    refreshController.trigerRefresh;
-                    return FutureBuilder(
-                      future:
-                          courseViewModel.loadCourseById(int.parse(courseId)),
-                      builder: ((context, snapshot) {
-                        if (snapshot.hasData) {
-                          if (!isFetchTeacher) {
-                            tutorViewModel
-                                .loadTutorById(
-                                    snapshot.data!.teacherId.toString())
-                                .then((value) => setState(() {
-                                      teacher = value;
-                                      isFetchTeacher = true;
-                                    }));
-                          }
-                          return SizedBox(
-                            child: detail(snapshot.data!, context),
-                          );
-                        }
-                        return const Center(
-                            child: CircularProgressIndicator(
-                          color: primaryColor,
-                        ));
-                      }),
-                    );
-                  },
+                child: FutureBuilder(
+                  future: courseViewModel.loadCourseById(int.parse(courseId)),
+                  builder: ((context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (!isFetchTeacher) {
+                        tutorViewModel
+                            .loadTutorById(snapshot.data!.teacherId.toString())
+                            .then((value) => setState(() {
+                                  teacher = value;
+                                  isFetchTeacher = true;
+                                }));
+                      }
+                      return SizedBox(
+                        child: detail(snapshot.data!, context),
+                      );
+                    }
+                    return const Center(
+                        child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ));
+                  }),
                 ))));
   }
 
@@ -446,12 +439,26 @@ class _CoursePageState extends State<CoursePage> {
                                           courseData.videos[index].price == 0 ||
                                           isPaid) {
                                         Get.toNamed(
-                                            "/course/$courseId/video/${courseData.videos[index].videoId}",
-                                            arguments: courseData.videos[index],
-                                            parameters: {
+                                                "/course/$courseId/video/${courseData.videos[index].videoId}",
+                                                parameters: {
+                                                  "video_name":
+                                                      courseData.videos[index]
+                                                          .videoName,
                                               'teacher_id': courseData.teacherId
                                                   .toString(),
-                                            });
+                                            })!
+                                            .then((value) {
+                                          if (courseData.videos.length != 1) {
+                                            setState(
+                                              () {},
+                                            );
+                                          }
+                                          if (value != null &&
+                                              value == true &&
+                                              courseData.videos.length == 1) {
+                                            Get.back();
+                                          }
+                                        });
                                       } else {
                                         await courseViewModel.buyVideo(
                                             courseData.videos[index].price,

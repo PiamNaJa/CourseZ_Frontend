@@ -133,7 +133,7 @@ class VideoViewModel {
     if (isPass) {
       Get.find<RefreshController>().toggleRefresh();
       Get.back();
-      Get.back();
+      Get.back(result: true);
     } else {
       Get.snackbar('ผิดพลาด', 'มีบางอย่างผิดพลาด',
           snackPosition: SnackPosition.BOTTOM,

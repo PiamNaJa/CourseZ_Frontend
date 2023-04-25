@@ -38,7 +38,7 @@ class _VideoPageState extends State<VideoPage> {
   final isExpanded = true;
   bool isInitVideo = false;
   late FlickManager flickManager;
-  String videoName = '';
+  final String videoName = Get.parameters["video_name"]!;
   final String teacherId = Get.parameters["teacher_id"]!;
   final String courseId = Get.parameters["course_id"]!;
   final String videoId = Get.parameters["video_id"]!;
@@ -83,7 +83,6 @@ class _VideoPageState extends State<VideoPage> {
               .value.duration.inSeconds *
           0.9;
     });
-    videoName = videoName;
   }
 
   @override
