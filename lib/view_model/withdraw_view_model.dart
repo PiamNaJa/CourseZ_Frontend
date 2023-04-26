@@ -2,6 +2,7 @@ import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/model/withdraw.dart';
 import 'package:coursez/repository/withdraw_repository.dart';
 import 'package:coursez/utils/color.dart';
+import 'package:coursez/utils/fetchData.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -46,7 +47,6 @@ class WithDrawViewModel {
     final token = prefs.getString('token')!;
     final bool isPass = await withdrawRepository.addWithdraw(withdraw, token);
     if (!isPass) {
-
       Get.snackbar('ผิดพลาด', 'มีบางอย่างผิดพลาด',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
@@ -59,5 +59,15 @@ class WithDrawViewModel {
           backgroundColor: primaryColor,
           colorText: whiteColor);
     }
+  }
+
+  Future<List<Withdraw>> getWithdrawHistory(int teacherId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token')!;
+    final w = await fecthData('withdraw/teacher/$teacherId',
+        authorization: token);
+    final List<Withdraw> withdrawHistory =
+        List<Withdraw>.from(w.map((e) => Withdraw.fromJson(e)));
+    return withdrawHistory;
   }
 }
