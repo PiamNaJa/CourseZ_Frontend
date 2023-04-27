@@ -2,16 +2,16 @@ import 'video.dart';
 import 'subject.dart';
 
 class Course {
-  final int courseId;
-  final int subjectId;
-  final Subject? subject;
-  final List<Video> videos;
-  final int teacherId;
-  final String coursename;
-  final String picture;
-  final String description;
+  int courseId;
+  int subjectId;
+  Subject? subject;
+  List<Video> videos;
+  int teacherId;
+  String coursename;
+  String picture;
+  String description;
   double rating;
-  final int createdAt;
+  int createdAt;
 
   Course(
       {required this.courseId,

@@ -164,7 +164,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 Icons.add_box_outlined,
               ),
               title: const Text("สร้างคอร์ส"),
-              onTap: () {},
+              onTap: () {
+                Get.toNamed('/createcourse');
+              },
             ),
             ListTile(
               leading: const Icon(
