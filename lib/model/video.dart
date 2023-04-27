@@ -4,17 +4,17 @@ import 'reviewVideo.dart';
 import 'exercise.dart';
 
 class Video {
-  final int videoId;
-  final int courseId;
-  final String videoName;
-  final int price;
-  final String picture;
-  final String description;
-  final String url;
-  final String sheet;
-  final int createdAt;
-  final List<ReviewVideo> reviews;
-  final List<Exercise> exercises;
+  int videoId;
+  int courseId;
+  String videoName;
+  int price;
+  String picture;
+  String description;
+  String url;
+  String sheet;
+  int createdAt;
+  List<ReviewVideo> reviews;
+  List<Exercise> exercises;
 
   Video(
       {required this.videoId,

@@ -6,6 +6,7 @@ import 'package:coursez/screen/alltutorPage.dart';
 import 'package:coursez/screen/chatPage.dart';
 import 'package:coursez/screen/coursePage.dart';
 import 'package:coursez/screen/courseSubjectPage.dart';
+import 'package:coursez/screen/createVideoPage.dart';
 import 'package:coursez/screen/dashboardPage.dart';
 import 'package:coursez/screen/exercisePage.dart';
 import 'package:coursez/screen/exerciseResultPage.dart';
@@ -70,6 +71,7 @@ class Routes {
     GetPage(name: '/rewardbill', page: () => const RewardBillPage()),
     GetPage(name: '/dashboard', page: () => const DashBoardPage()),
     GetPage(name: '/alltutor', page: () => const AllTutorPage()),
+    GetPage(name: '/createvideo', page: () => const CreateVideoPage(),)
   ];
   static List<GetPage> get getRoutes => _getRoutes;
 }
