@@ -15,6 +15,8 @@ class TutorViewModel {
     return tutor;
   }
 
+  
+
   Future<User> loadTutorById(String teacherId) async {
     final t = await fecthData('user/teacher/$teacherId');
     return User.fromJson(t);
