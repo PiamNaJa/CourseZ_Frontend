@@ -1,6 +1,7 @@
 import 'package:coursez/screen/Reg.dart';
 import 'package:coursez/screen/Register2.dart';
 import 'package:coursez/screen/addressPage.dart';
+import 'package:coursez/screen/alltutorPage.dart';
 import 'package:coursez/screen/chatPage.dart';
 import 'package:coursez/screen/coursePage.dart';
 import 'package:coursez/screen/courseSubjectPage.dart';
@@ -29,7 +30,10 @@ import '../../screen/rewardStatusPage.dart';
 class Routes {
   static final List<GetPage> _getRoutes = [
     GetPage(name: '/login', page: () => const LoginPage()),
-    GetPage(name: '/home',page: () => const MyHomePage(),),
+    GetPage(
+      name: '/home',
+      page: () => const MyHomePage(),
+    ),
     GetPage(name: '/register', page: () => const RegisterPage()),
     GetPage(name: '/register2', page: () => const RegisterPage2()),
     GetPage(name: '/first', page: () => const FirstPage()),
@@ -55,7 +59,7 @@ class Routes {
     GetPage(name: '/post/:post_id', page: () => const PostdetailPage()),
     GetPage(name: '/reward', page: () => RewardPage()),
     GetPage(name: '/address', page: () => AddressPage()),
-    GetPage(name: '/withdraw', page: () =>  const WithdrawPage()),
+    GetPage(name: '/withdraw', page: () => const WithdrawPage()),
     GetPage(name: '/withdrawForm', page: () => const WithdrawForm()),
     GetPage(name: '/myreward', page: () => const MyRewardPage()),
     GetPage(
@@ -63,6 +67,7 @@ class Routes {
         page: () => const RewardStatusPage()),
     GetPage(name: '/rewardbill', page: () => const RewardBillPage()),
     GetPage(name: '/dashboard', page: () => const DashBoardPage()),
+    GetPage(name: '/alltutor', page: () => const AllTutorPage()),
   ];
   static List<GetPage> get getRoutes => _getRoutes;
 }

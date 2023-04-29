@@ -1,8 +1,8 @@
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/controllers/level_controller.dart';
-import 'package:coursez/controllers/refresh_controller.dart';
 import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/view_model/tutor_view_model.dart';
+import 'package:coursez/widgets/button/button.dart';
 import 'package:coursez/widgets/button/textbutton.dart';
 import 'package:coursez/widgets/listView/listTileTutor.dart';
 import 'package:coursez/widgets/listView/listViewForCourse.dart';
@@ -207,13 +207,27 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: 10,
                   ),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Heading20px(text: 'ติวเตอร์ของเรา'),
                       const SizedBox(
                         height: 12,
                       ),
-                      ListTileTutor()
+                      ListTileTutor(),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Bt(
+                                text: "ดูติวเตอร์ทั้งหมด",
+                                color: primaryColor,
+                                onPressed: (() {
+                                  Get.toNamed('/alltutor');
+                                })),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ],
