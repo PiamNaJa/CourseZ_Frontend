@@ -251,37 +251,6 @@ class _CreatecourseState extends State<Createcourse> {
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 15),
-                                    child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: InkWell(
-                                          onTap: () {
-                                            Get.back();
-                                            postController.subjectid = 0;
-                                            postController.classLevel = 0;
-                                            postController.classLevelName =
-                                                'เลือกระดับชั้น';
-                                            postController.subjectTitle = '';
-                                          },
-                                          child: Container(
-                                              width: screenWidth / 4,
-                                              padding: const EdgeInsets.all(8),
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: primaryColor),
-                                                borderRadius:
-                                                    const BorderRadius.all(
-                                                        Radius.circular(10)),
-                                              ),
-                                              child: const Center(
-                                                  child: Body14px(
-                                                      text: 'ทั้งหมด'))),
-                                        )),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
                                   FutureBuilder(
                                     future: levelViewModel.loadLevel(0),
                                     builder: (context, snapshot) {
