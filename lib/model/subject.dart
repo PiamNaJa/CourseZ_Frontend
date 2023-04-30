@@ -1,8 +1,8 @@
 class Subject{
-  final int subjectId;
-  final String subjectTitle;
-  final int classLevel;
-  final String subjectPicture;
+  int subjectId;
+  String subjectTitle;
+  int classLevel;
+  String subjectPicture;
 
   Subject({
     required this.subjectId,
