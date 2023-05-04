@@ -139,7 +139,10 @@ class _VideoPageState extends State<VideoPage> {
             if (int.parse(teacherId) == authController.teacherId) ...[
               IconButton(
                 icon: const Icon(Icons.edit, color: tertiaryDarkColor),
-                onPressed: () {},
+                onPressed: () {
+                  // flickManager.flickControlManager!.pause();
+                  
+                },
               ),
               IconButton(
                 icon: const Icon(Icons.delete, color: Colors.red),
@@ -214,30 +217,36 @@ class _VideoPageState extends State<VideoPage> {
                 flickVideoWithControls: flickVideoWithControls,
                 flickVideoWithControlsFullscreen: flickVideoWithControls),
           ),
-          Container(
-            padding:
-                const EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 10),
-            decoration: const BoxDecoration(
-              color: whiteColor,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Title16px(text: 'รายละเอียด'),
-                ExpandText(
-                    text: video.description,
-                    style: const TextStyle(
-                      fontFamily: 'Athiti',
-                      fontSize: 14,
-                    ),
-                    maxLines: 2),
-                Body12px(
-                  text:
-                      'เผยแพร่เมื่อ ${videoViewModel.formatVideoDate(video.createdAt)}',
-                  color: greyColor,
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.only(
+                      left: 15, right: 15, bottom: 15, top: 10),
+                  decoration: const BoxDecoration(
+                    color: whiteColor,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Title16px(text: 'รายละเอียด'),
+                      ExpandText(
+                          text: video.description,
+                          style: const TextStyle(
+                            fontFamily: 'Athiti',
+                            fontSize: 14,
+                          ),
+                          maxLines: 2),
+                      Body12px(
+                        text:
+                            'เผยแพร่เมื่อ ${videoViewModel.formatVideoDate(video.createdAt)}',
+                        color: greyColor,
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           SizedBox(
             height: 70,
@@ -270,40 +279,6 @@ class _VideoPageState extends State<VideoPage> {
                     ))
               ],
             ),
-          ),
-          Container(
-              color: whiteColor,
-              padding: const EdgeInsets.fromLTRB(15, 0, 15, 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Title16px(text: 'Smart Focus'),
-                      Switch(
-                          value: isFocus,
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          activeColor: primaryColor,
-                          onChanged: (bool value) {
-                            setState(() {
-                              isFocus = value;
-                            });
-                          })
-                    ],
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: const Text(
-                      'เทคโนโลยีที่จะช่วยคุณให้การเรียนของคุณมีประสิทธิภาพที่ดีขึ้น ด้วยระบบ AI ตรวจจับพฤติกรรมระหว่างเรียน',
-                      style: TextStyle(fontFamily: 'Athiti', fontSize: 10),
-                    ),
-                  )
-                ],
-              )),
-          const SizedBox(
-            height: 15,
           ),
           Container(
             padding: const EdgeInsets.all(15),

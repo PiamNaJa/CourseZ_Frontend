@@ -364,7 +364,25 @@ class _CoursePageState extends State<CoursePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Heading20px(text: "บทเรียน"),
+                        Row(
+                          children: [
+                            const Heading20px(text: "บทเรียน"),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            IconButton(
+                                onPressed: (() {
+                                  print(courseData.courseId.toString());
+                                  Get.toNamed('/createvideo', parameters: {
+                                    'courseId': courseData.courseId.toString()
+                                  });
+                                }),
+                                icon: const Icon(
+                                  Icons.add_box_rounded,
+                                  color: primaryColor,
+                                ))
+                          ],
+                        ),
                         if (sumVideoPrice != 0)
                           Bt(
                             text: "ซื้อทั้งหมด $sumVideoPrice บาท",
@@ -441,9 +459,8 @@ class _CoursePageState extends State<CoursePage> {
                                         Get.toNamed(
                                                 "/course/$courseId/video/${courseData.videos[index].videoId}",
                                                 parameters: {
-                                                  "video_name":
-                                                      courseData.videos[index]
-                                                          .videoName,
+                                              "video_name": courseData
+                                                  .videos[index].videoName,
                                               'teacher_id': courseData.teacherId
                                                   .toString(),
                                             })!

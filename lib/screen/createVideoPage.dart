@@ -1,12 +1,16 @@
 import 'dart:io';
+import 'package:coursez/model/course.dart';
 import 'package:coursez/model/video.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/utils/inputDecoration.dart';
+import 'package:coursez/view_model/course_view_model.dart';
+import 'package:coursez/view_model/video_view_model.dart';
 import 'package:coursez/widgets/button/button.dart';
 import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/body16.dart';
 import 'package:coursez/widgets/text/heading1_24px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
+import 'package:coursez/widgets/text/title16px.dart';
 import 'package:coursez/widgets/textField/Textformfield.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
@@ -23,10 +27,31 @@ class CreateVideoPage extends StatefulWidget {
 }
 
 class _CreateVideoPageState extends State<CreateVideoPage> {
+  final CourseViewModel courseViewModel = CourseViewModel();
+  final VideoViewModel videoViewModel = VideoViewModel();
+
+  final Map<String, dynamic> arguments = Get.arguments ??
+      {
+        "course": Course(
+            courseId: 0,
+            coursename: '',
+            createdAt: 0,
+            description: '',
+            picture: '',
+            subject: null,
+            subjectId: 0,
+            teacherId: 0,
+            videos: []),
+        "file": File('')
+      };
+  final String? id = Get.parameters['courseId'];
+  late Course course = arguments['course'];
+  late File courseImage = arguments['file'];
+
   List<Video> videos = List.filled(
       1,
       Video(
-          courseId: 1,
+          courseId: 0,
           createdAt: 11111,
           description: '',
           exercises: [],
@@ -40,7 +65,6 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
       growable: true);
 
   final int videoLength = 1;
-
   List<File?> coverImage = List.filled(1, null, growable: true);
   List<File?> videoFile = List.filled(1, null, growable: true);
   List<File?> pdfFile = List.filled(1, null, growable: true);
@@ -51,10 +75,36 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
   final _formKey = GlobalKey<FormState>();
 
   onSubmit() {
-    // if (_formKey.currentState!.validate()) {
-    //   _formKey.currentState!.save();
-    //   print(videos);
-    // }
+    for (var i = 0; i < videos.length; i++) {
+      if (coverImage[i] == null) {
+        Get.snackbar('ผิดพลาด', 'กรุณาเลือกภาพหน้าปกวิดีโอที่ ${i + 1}',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: whiteColor);
+        return;
+      }
+      if (videoFile[i] == null) {
+        Get.snackbar('ผิดพลาด', 'กรุณาเลือกไฟล์วิดีโอที่ ${i + 1}',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: whiteColor);
+        return;
+      }
+    }
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      if (id!.isEmpty) {
+        debugPrint('เพิ่มคอร์ส');
+        courseViewModel.createCourse(
+            courseImage, course, coverImage, videos, videoFile, pdfFile);
+      } else {
+        debugPrint('เพิ่มวิด๊โอ');
+        videoViewModel.createVideo(
+            int.parse(id!), coverImage, videos, videoFile, pdfFile);
+      }
+
+      print(videos);
+    }
   }
 
   Future pickImage() async {
@@ -73,12 +123,15 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
 
   Future selectVideoFile() async {
     try {
-      final result = await FilePicker.platform.pickFiles(type: FileType.video);
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['mp4', 'mov', 'avi', 'flv', 'wmv', 'mkv', 'webm'],
+      );
 
       if (result == null) return;
 
       final String? fileType = result.files.single.extension;
-      final file = File(result.files.single.path!);
+      final file = result.files.single;
 
       if (fileType == 'mp4' ||
           fileType == 'mov' ||
@@ -109,7 +162,7 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
       if (result == null) return;
 
       final String? fileType = result.files.single.extension;
-      final file = File(result.files.single.path!);
+      final file = result.files.single;
 
       if (fileType != 'pdf') {
         Get.snackbar('ผิดพลาด', 'กรุณาเลือกไฟล์ PDF',
@@ -149,31 +202,28 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
                   for (var i = 0; i < videos.length; i++) videoForm(i)
                 ],
               )),
-          Padding(
-            padding: const EdgeInsets.only(right: 20, bottom: 10),
-            child: Bt(
-              text: "เพิ่มวิดีโอ",
-              color: primaryColor,
-              onPressed: () => setState(() {
-                videos.add(Video(
-                    courseId: 1,
-                    createdAt: 11111,
-                    description: '',
-                    exercises: [],
-                    picture: '',
-                    price: 0,
-                    reviews: [],
-                    sheet: '',
-                    url: '',
-                    videoId: 1,
-                    videoName: ''));
-                coverImage.add(null);
-                videoFile.add(null);
-                pdfFile.add(null);
-                _platformVideoFile.add(null);
-                _platformPdfFile.add(null);
-              }),
-            ),
+          Bt(
+            text: "เพิ่มวิดีโอ",
+            color: primaryColor,
+            onPressed: () => setState(() {
+              videos.add(Video(
+                  courseId: 0,
+                  createdAt: 11111,
+                  description: '',
+                  exercises: [],
+                  picture: '',
+                  price: 0,
+                  reviews: [],
+                  sheet: '',
+                  url: '',
+                  videoId: 1,
+                  videoName: ''));
+              coverImage.add(null);
+              videoFile.add(null);
+              pdfFile.add(null);
+              _platformVideoFile.add(null);
+              _platformPdfFile.add(null);
+            }),
           ),
         ],
       )),
@@ -191,7 +241,39 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
             Bt(
               text: "ยืนยัน",
               color: primaryColor,
-              onPressed: onSubmit,
+              onPressed: (() {
+                showDialog(
+                    context: context,
+                    builder: ((context) {
+                      return AlertDialog(
+                        title: const Heading20px(
+                            text: 'ยืนยันการสร้างคอร์สและวิดีโอ'),
+                        content: const Body16px(
+                            text: 'กรุณาตรวจสอบข้อมูลให้ถูกต้อง'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Get.back();
+                            },
+                            child: const Body16px(
+                              text: 'ยกเลิก',
+                              color: Colors.red,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Get.back();
+                              onSubmit();
+                            },
+                            child: const Title16px(
+                              text: 'ยืนยัน',
+                              color: primaryColor,
+                            ),
+                          ),
+                        ],
+                      );
+                    }));
+              }),
             ),
           ],
         ),
@@ -322,12 +404,12 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
                     border: Border.all(color: greyColor.withOpacity(0.5)),
                   ),
                   child: ListTile(
-                    leading: const Icon(Icons.video_collection_outlined),
+                    leading:
+                        const Icon(Icons.video_collection_outlined, size: 40),
                     title: Body14px(text: _platformVideoFile[index]!.name),
                     subtitle: Body14px(
-                        text: (_platformVideoFile[index]!.size * 0.000001)
-                            .toPrecision(2)
-                            .toString()),
+                        text:
+                            '${(_platformVideoFile[index]!.size * 0.000001).toPrecision(2)} MB'),
                     trailing: IconButton(
                       icon: const Icon(
                         Icons.delete,
@@ -450,9 +532,9 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
                     leading: const Icon(Icons.video_collection_outlined),
                     title: Body14px(text: _platformPdfFile[index]!.name),
                     subtitle: Body14px(
-                        text: (_platformPdfFile[index]!.size * 0.000001)
-                            .toPrecision(2)
-                            .toString()),
+                        text: (_platformPdfFile[index]!.size * 0.000001 > 1
+                            ? '${(_platformPdfFile[index]!.size * 0.000001).toPrecision(2)} MB'
+                            : '${(_platformPdfFile[index]!.size * 0.001).toPrecision(2)} KB')),
                     trailing: IconButton(
                       icon: const Icon(
                         Icons.delete,
@@ -537,9 +619,12 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
               Expanded(
                 child: CustomTextForm(
                   title: 'ราคา',
-                  initialValue:
-                      (videos.length > 1) ? null : videos[0].price.toString(),
+                  keyboardType: TextInputType.number,
+                  initialValue: '0',
                   onChanged: (String value) {
+                    if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                      return;
+                    }
                     videos[index].price = int.parse(value);
                   },
                   validator: (String? value) {
