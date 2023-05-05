@@ -1,13 +1,20 @@
+import 'dart:io';
+
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/controllers/refresh_controller.dart';
 import 'package:coursez/model/course.dart';
 import 'package:coursez/repository/course_repository.dart';
+import 'package:coursez/view_model/video_view_model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:coursez/repository/payment.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/utils/fetchData.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
+
+import '../model/video.dart';
 
 class CourseViewModel {
   final CourseRepository _courseRepository = CourseRepository();
@@ -218,5 +225,59 @@ class CourseViewModel {
     final bool isLike =
         await fecthData('course/$courseId/islike', authorization: token!);
     return isLike;
+  }
+
+  Future<void> createCourse(
+      File courseImage,
+      Course course,
+      List<File?> coverImage,
+      List<Video> videos,
+      List<File?> videoFile,
+      List<File?> pdfFile) async {
+    final VideoViewModel videoViewModel = VideoViewModel();
+    final CourseRepository courseRepository = CourseRepository();
+    final uuid = const Uuid().v4();
+    final Reference ref = FirebaseStorage.instance.ref().child("/Course_$uuid");
+    await ref.putFile(courseImage);
+    final String courseImageURL = await ref.getDownloadURL();
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final int courseId =
+        await courseRepository.createCourse(course, courseImageURL, token!);
+    if (courseId == -1) {
+      Get.snackbar('ผิดพลาด', 'มีบางอย่างผิดพลาด',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: whiteColor);
+      return;
+    }
+  }
+
+  Future<void> updatecourse(
+    File? courseImage,
+    Course course,
+  ) async {
+    final CourseRepository courseRepository = CourseRepository();
+    final uuid = const Uuid().v4();
+    if (courseImage != null) {
+      final Reference ref =
+          FirebaseStorage.instance.ref().child("/Course_$uuid");
+      await ref.putFile(courseImage);
+      final String courseImageURL = await ref.getDownloadURL();
+      course.picture = courseImageURL;
+    }
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final bool isPass = await courseRepository.updatecourse(course, token!);
+    if (!isPass) {
+      Get.snackbar('ผิดพลาด', 'มีบางอย่างผิดพลาด',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: whiteColor);
+      return;
+    }
+    RefreshController refreshController = Get.find();
+    refreshController.toggleRefresh();
+    Get.back();
   }
 }

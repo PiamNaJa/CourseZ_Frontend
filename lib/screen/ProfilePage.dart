@@ -711,14 +711,17 @@ class _ProfilePageState extends State<ProfilePage> {
     return GridView(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 16 / 14.5,
+        //childAspectRatio: 16 / 14.5,
       ),
       children: data
           .map((e) => InkWell(
                 onTap: () {
                   Get.toNamed(
                     '/course/${e.courseId}',
-                  );
+                  )!
+                      .then((value) => setState(
+                            () {},
+                          ));
                 },
                 child: Container(
                   width: 160,

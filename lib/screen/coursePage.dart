@@ -1,4 +1,5 @@
 import 'package:coursez/controllers/auth_controller.dart';
+import 'package:coursez/controllers/post_controller.dart';
 import 'package:coursez/controllers/refresh_controller.dart';
 import 'package:coursez/model/course.dart';
 import 'package:coursez/model/user.dart';
@@ -27,6 +28,7 @@ class CoursePage extends StatefulWidget {
 }
 
 class _CoursePageState extends State<CoursePage> {
+  PostController postController = Get.find<PostController>();
   final Icon fav = const Icon(Icons.favorite_border);
   final String courseId = Get.parameters['course_id']!;
   final AuthController authController = Get.find<AuthController>();
@@ -212,7 +214,13 @@ class _CoursePageState extends State<CoursePage> {
                                     Icons.edit,
                                     color: tertiaryDarkColor,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Get.toNamed("/editcourse",
+                                            arguments: courseData)!
+                                        .then((value) => setState(
+                                              () {},
+                                            ));
+                                  },
                                 ),
                             ],
                           ),
@@ -441,9 +449,8 @@ class _CoursePageState extends State<CoursePage> {
                                         Get.toNamed(
                                                 "/course/$courseId/video/${courseData.videos[index].videoId}",
                                                 parameters: {
-                                                  "video_name":
-                                                      courseData.videos[index]
-                                                          .videoName,
+                                              "video_name": courseData
+                                                  .videos[index].videoName,
                                               'teacher_id': courseData.teacherId
                                                   .toString(),
                                             })!

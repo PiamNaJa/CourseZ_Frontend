@@ -1,4 +1,5 @@
 import 'package:coursez/screen/CreateCourse.dart';
+import 'package:coursez/screen/EditCourse.dart';
 import 'package:coursez/screen/Reg.dart';
 import 'package:coursez/screen/Register2.dart';
 import 'package:coursez/screen/addressPage.dart';
@@ -42,6 +43,7 @@ class Routes {
     GetPage(name: '/expand', page: () => const ExpandPage()),
     GetPage(name: '/post', page: () => const PostPage()),
     GetPage(name: '/createcourse', page: () => const Createcourse()),
+    GetPage(name: '/editcourse', page: () => const EditCourse()),
     GetPage(name: '/coursesubject', page: () => CourseSubject()),
     GetPage(name: '/search', page: () => const SearchPage()),
     GetPage(name: '/course/:course_id', page: () => const CoursePage()),
