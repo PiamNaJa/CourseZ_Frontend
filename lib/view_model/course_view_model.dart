@@ -17,7 +17,7 @@ import 'package:uuid/uuid.dart';
 import '../model/video.dart';
 
 class CourseViewModel {
-  final CourseRepository _courseRepository = CourseRepository();
+  final CourseRepository courseRepository = CourseRepository();
   final AuthController authController = Get.find<AuthController>();
   Future<List<Course>> loadCourse(int level) async {
     final c = await fecthData('course');
@@ -120,7 +120,7 @@ class CourseViewModel {
   Future<void> deleteCourse(int courseId) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token')!;
-    final isPass = await _courseRepository.deleteCourse(courseId, token);
+    final isPass = await courseRepository.deleteCourse(courseId, token);
     if (!isPass) {
       Get.snackbar('ผิดพลาด', 'มีบางอย่างผิดพลาด',
           snackPosition: SnackPosition.BOTTOM,
@@ -209,7 +209,7 @@ class CourseViewModel {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     final bool isPass =
-        await _courseRepository.likeOrUnlikeCourse(courseId, token!);
+        await courseRepository.likeOrUnlikeCourse(courseId, token!);
 
     if (!isPass) {
       Get.snackbar('ผิดพลาด', 'มีบางอย่างผิดพลาด',
@@ -234,8 +234,6 @@ class CourseViewModel {
       List<Video> videos,
       List<File?> videoFile,
       List<File?> pdfFile) async {
-    final VideoViewModel videoViewModel = VideoViewModel();
-    final CourseRepository courseRepository = CourseRepository();
     final uuid = const Uuid().v4();
     final Reference ref = FirebaseStorage.instance.ref().child("/Course_$uuid");
     await ref.putFile(courseImage);
@@ -255,9 +253,9 @@ class CourseViewModel {
 
   Future<void> updatecourse(
     File? courseImage,
+    int subjectId,
     Course course,
   ) async {
-    final CourseRepository courseRepository = CourseRepository();
     final uuid = const Uuid().v4();
     if (courseImage != null) {
       final Reference ref =
@@ -268,7 +266,9 @@ class CourseViewModel {
     }
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    final bool isPass = await courseRepository.updatecourse(course, token!);
+    print(subjectId);
+    final bool isPass =
+        await courseRepository.updatecourse(course, subjectId, token!);
     if (!isPass) {
       Get.snackbar('ผิดพลาด', 'มีบางอย่างผิดพลาด',
           snackPosition: SnackPosition.BOTTOM,

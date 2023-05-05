@@ -55,16 +55,13 @@ class CourseRepository {
     return -1;
   }
 
-  Future<bool> updatecourse(Course course, String token) async {
-    final AuthController authController = Get.find<AuthController>();
+  Future<bool> updatecourse(Course course, int subjectId, String token) async {
     final url = '${Network.baseUrl}/api/course/${course.courseId}';
     final Map<String, dynamic> data = {
       "course_name": course.coursename,
       "picture": course.picture,
       "description": course.description,
-      "subject_title": course.subject!.subjectTitle,
-      "class_level": course.subject!.classLevel,
-      "teacher_id": authController.teacherId
+      "subject_id": subjectId,
     };
     final res = await http.put(Uri.parse(url),
         headers: {"Authorization": token, "Content-Type": "application/json"},

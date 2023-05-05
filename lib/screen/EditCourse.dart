@@ -2,30 +2,22 @@ import 'dart:io';
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/controllers/post_controller.dart';
 import 'package:coursez/controllers/refresh_controller.dart';
-import 'package:coursez/model/video.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/auth_view_model.dart';
 import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/view_model/level_view_model.dart';
-import 'package:coursez/view_model/post_view_model.dart';
 import 'package:coursez/view_model/profile_view_model.dart';
-import 'package:coursez/widgets/button/button.dart';
-import 'package:coursez/widgets/text/body12px.dart';
 import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/body16.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
-import 'package:coursez/widgets/textField/Textformfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:coursez/utils/inputDecoration.dart';
-import 'package:intl/intl.dart';
 import '../model/course.dart';
 import '../model/subject.dart';
-import '../model/user.dart';
-import '../widgets/rating/rating.dart';
 import '../widgets/text/title14px.dart';
 import '../widgets/text/title16px.dart';
 
@@ -37,8 +29,20 @@ class EditCourse extends StatefulWidget {
 }
 
 class _EditCourseState extends State<EditCourse> {
-  Course coursedata = Get.arguments;
-
+  final Course coursedata = Get.arguments;
+  final GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  final AuthViewModel authViewModel = AuthViewModel();
+  final CourseViewModel courseViewModel = CourseViewModel();
+  final ProfileViewModel profileViewModel = ProfileViewModel();
+  final LevelViewModel levelViewModel = LevelViewModel();
+  final AuthController authController = Get.find<AuthController>();
+  final RefreshController refreshController = Get.find<RefreshController>();
+  final PostController postController = Get.find<PostController>();
+  File? image;
+  final double screenWidth = Get.width;
+  int subjectId = 0;
+  String subjectTitle = "";
+  int classLevel = 0;
   Future<File?> pickImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -53,18 +57,6 @@ class _EditCourseState extends State<EditCourse> {
     }
   }
 
-  final GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  final AuthViewModel authViewModel = AuthViewModel();
-  final CourseViewModel courseViewModel = CourseViewModel();
-  final ProfileViewModel profileViewModel = ProfileViewModel();
-  final AuthController authController = Get.find<AuthController>();
-  final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
-  final RefreshController refreshController = Get.find<RefreshController>();
-  PostController postController = Get.find<PostController>();
-
-  File? image;
-  double screenWidth = Get.width;
-
   onSubmit() async {
     if (coursedata.subject!.classLevel == 0) {
       Get.snackbar("กรุณาเลือกระดับชั้น", "กรุณาเลือกระดับชั้น",
@@ -74,14 +66,20 @@ class _EditCourseState extends State<EditCourse> {
       return;
     }
 
-    courseViewModel.updatecourse(image, coursedata);
+    courseViewModel.updatecourse(image, subjectId, coursedata);
+  }
+
+  @override
+  void initState() {
+    subjectId = coursedata.subject!.subjectId;
+    subjectTitle = coursedata.subject!.subjectTitle;
+    classLevel = coursedata.subject!.classLevel;
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    LevelViewModel levelViewModel = LevelViewModel();
     return Scaffold(
-      key: _globalKey,
       backgroundColor: whiteColor,
       appBar: AppBar(
         elevation: 0.0,
@@ -220,39 +218,15 @@ class _EditCourseState extends State<EditCourse> {
                                                               onTap: () {
                                                                 Get.back();
                                                                 setState(() {
-                                                                  coursedata
-                                                                          .subject!
-                                                                          .classLevel =
-                                                                      subject
-                                                                          .classLevel;
-                                                                  coursedata
-                                                                          .subject!
-                                                                          .subjectTitle =
-                                                                      subject
-                                                                          .subjectTitle;
-                                                                  postController
-                                                                          .subjectid =
+                                                                  subjectId =
                                                                       subject
                                                                           .subjectId;
-                                                                  if (subject
-                                                                          .classLevel ==
-                                                                      7) {
-                                                                    postController
-                                                                            .classLevelName =
-                                                                        'มหาวิทยาลัย';
-                                                                  } else {
-                                                                    postController
-                                                                            .classLevelName =
-                                                                        'ม.${subject.classLevel}';
-                                                                  }
-                                                                  postController
-                                                                          .subjectTitle =
-                                                                      subject
-                                                                          .subjectTitle;
-                                                                  postController
-                                                                          .classLevel =
+                                                                  classLevel =
                                                                       subject
                                                                           .classLevel;
+                                                                  subjectTitle =
+                                                                      subject
+                                                                          .subjectTitle;
                                                                 });
                                                               },
                                                               child: Container(
@@ -289,8 +263,9 @@ class _EditCourseState extends State<EditCourse> {
                                             );
                                           } else {
                                             return const Center(
-                                              child:
-                                                  CircularProgressIndicator(),
+                                              child: CircularProgressIndicator(
+                                                color: primaryColor,
+                                              ),
                                             );
                                           }
                                         },
@@ -312,9 +287,12 @@ class _EditCourseState extends State<EditCourse> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Obx(() => Body16px(
-                                  text:
-                                      '${postController.classLevelName} ${postController.subjectTitle}')),
+                              Body16px(
+                                  text: subjectTitle.isEmpty
+                                      ? 'ระดับชั้น'
+                                      : classLevel != 7
+                                          ? ' ม.$classLevel $subjectTitle'
+                                          : ' มหาวิทยาลัย $subjectTitle'),
                               const Icon(Icons.arrow_drop_down_rounded)
                             ],
                           ),
