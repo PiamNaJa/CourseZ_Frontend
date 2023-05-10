@@ -44,6 +44,7 @@ class _VideoPageState extends State<VideoPage> {
   final String videoId = Get.parameters["video_id"]!;
   bool isDoneExercise = false;
   bool loadingTeacher = true;
+  late Video video;
   User teacher = User(
       email: '',
       fullName: '',
@@ -139,9 +140,9 @@ class _VideoPageState extends State<VideoPage> {
             if (int.parse(teacherId) == authController.teacherId) ...[
               IconButton(
                 icon: const Icon(Icons.edit, color: tertiaryDarkColor),
-                onPressed: () {
-                  // flickManager.flickControlManager!.pause();
-                  
+                onPressed: () async {
+                  await flickManager.flickControlManager!.pause();
+                  Get.toNamed('/editvideo', arguments: video);
                 },
               ),
               IconButton(
@@ -188,6 +189,7 @@ class _VideoPageState extends State<VideoPage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     _initVideo(snapshot.data!.url, snapshot.data!.videoName);
+                    video = snapshot.data!;
                     return videoDetail(snapshot.data!);
                   }
                   return const Center(child: CircularProgressIndicator());

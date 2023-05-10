@@ -100,6 +100,7 @@ class CourseViewModel {
   Future<Course> loadCourseById(int courseId) async {
     final c = await fecthData('course/$courseId');
     final course = Course.fromJson(c);
+    course.videos.sort((a, b) => a.videoId.compareTo(b.videoId));
 
     for (var i = 0; i < course.videos.length; i++) {
       double rating = 0;

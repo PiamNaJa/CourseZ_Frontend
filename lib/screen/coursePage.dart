@@ -203,7 +203,7 @@ class _CoursePageState extends State<CoursePage> {
                                   overflow: TextOverflow.visible,
                                 ),
                               ),
-                              if (courseData.teacherId ==
+                              if (authController.isLogin && courseData.teacherId ==
                                   authController.teacherId)
                                 IconButton(
                                   padding: const EdgeInsets.symmetric(
@@ -370,9 +370,10 @@ class _CoursePageState extends State<CoursePage> {
                             const SizedBox(
                               width: 5,
                             ),
+                            (authController.isLogin && courseData.teacherId ==
+                                    authController.teacherId)?
                             IconButton(
                                 onPressed: (() {
-                                  print(courseData.courseId.toString());
                                   Get.toNamed('/createvideo', parameters: {
                                     'courseId': courseData.courseId.toString()
                                   });
@@ -380,7 +381,7 @@ class _CoursePageState extends State<CoursePage> {
                                 icon: const Icon(
                                   Icons.add_box_rounded,
                                   color: primaryColor,
-                                ))
+                                )): Container(),
                           ],
                         ),
                         if (sumVideoPrice != 0)

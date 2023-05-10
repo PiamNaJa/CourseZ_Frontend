@@ -22,7 +22,9 @@ class VideoViewModel {
   final VideoRepository videoRepository = VideoRepository();
   Future<Video> loadVideoById(String courseid, String videoid) async {
     final v = await fecthData("course/$courseid/video/$videoid");
-
+    //sort review by createAt
+    final List<dynamic> reviews = v['reviews'];
+    reviews.sort((a, b) => b['created_at'].compareTo(a['created_at']));
     return Video.fromJson(v);
   }
 
@@ -182,8 +184,7 @@ class VideoViewModel {
       videos[i].sheet = pdfUrls[i];
     }
 
-    final isPass = await videoRepository.createVideo(
-        courseId, videos, token);
+    final isPass = await videoRepository.createVideo(courseId, videos, token);
 
     if (isPass == true) {
       Get.back();
@@ -194,6 +195,56 @@ class VideoViewModel {
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: whiteColor);
+    }
+  }
+
+  Future<void> updateVideo(
+      Video video, File? coverImage, File? videoFile, File? pdfFile) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String token = prefs.getString('token')!;
+    const uuid = Uuid();
+
+    String coverImageUrl = '';
+    String videoUrl = '';
+    String pdfUrl = '';
+
+    if (coverImage != null) {
+      final coverImageref = FirebaseStorage.instance
+          .ref()
+          .child('Course_${video.courseId}/Video_${uuid.v4()}');
+
+      await coverImageref.putFile(coverImage);
+      coverImageUrl = await coverImageref.getDownloadURL();
+      video.picture = coverImageUrl;
+    }
+    if (videoFile != null) {
+      final videoFileref = FirebaseStorage.instance
+          .ref()
+          .child('Course_${video.courseId}/Video_${uuid.v4()}');
+
+      await videoFileref.putFile(videoFile);
+      videoUrl = await videoFileref.getDownloadURL();
+      video.url = videoUrl;
+    }
+    if (pdfFile != null) {
+      final pdfFileref = FirebaseStorage.instance
+          .ref()
+          .child('Course_${video.courseId}/Video_${uuid.v4()}');
+
+      await pdfFileref.putFile(pdfFile);
+      pdfUrl = await pdfFileref.getDownloadURL();
+      video.sheet = pdfUrl;
+    }
+
+    final isPass = await videoRepository.updateVideo(video, token);
+
+    if (!isPass) {
+      Get.snackbar('ผิดพลาด', 'มีบางอย่างผิดพลาด',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: whiteColor);
+    } else {
+      Get.back();
     }
   }
 }
