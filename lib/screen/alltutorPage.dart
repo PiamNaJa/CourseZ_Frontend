@@ -60,9 +60,9 @@ class AllTutorPage extends StatelessWidget {
 
   Widget listTile(Tutor item) {
     return InkWell(
-      // onTap: () {
-      //   Get.toNamed('')
-      // },
+      onTap: () {
+        Get.toNamed('/teacher/${item.teacherId}');
+      },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(

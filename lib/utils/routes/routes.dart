@@ -20,6 +20,7 @@ import 'package:coursez/screen/rewardBillPage.dart';
 import 'package:coursez/screen/rewardPage.dart';
 import 'package:coursez/screen/videoPage.dart';
 import 'package:coursez/screen/searchPage.dart';
+import 'package:coursez/screen/visit.dart';
 import 'package:coursez/screen/withdrawPage.dart';
 import 'package:coursez/screen/withdrawFormPage.dart';
 import 'package:coursez/screen/myRewardPage.dart';
@@ -44,6 +45,7 @@ class Routes {
     GetPage(name: '/createcourse', page: () => const Createcourse()),
     GetPage(name: '/coursesubject', page: () => CourseSubject()),
     GetPage(name: '/search', page: () => const SearchPage()),
+    GetPage(name: '/teacher/:teacher_id', page: () => const VisitPage()),
     GetPage(name: '/course/:course_id', page: () => const CoursePage()),
     GetPage(name: '/chat/:chatroom_id', page: () => const ChatPage()),
     GetPage(

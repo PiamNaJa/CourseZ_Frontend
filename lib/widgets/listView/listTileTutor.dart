@@ -6,6 +6,7 @@ import 'package:coursez/widgets/text/body12px.dart';
 import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/title14px.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ListTileTutor extends StatelessWidget {
   ListTileTutor({super.key});
@@ -41,9 +42,9 @@ class ListTileTutor extends StatelessWidget {
 
 Widget listTile(Tutor item) {
   return InkWell(
-    // onTap: () {
-    //   Get.toNamed('')
-    // },
+    onTap: () {
+      Get.toNamed('/teacher/${item.teacherId}');
+    },
     child: Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
