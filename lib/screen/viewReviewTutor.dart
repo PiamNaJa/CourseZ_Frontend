@@ -22,7 +22,7 @@ class ViewReviewTutorPage extends StatefulWidget {
 
 class _ViewReviewTutorPageState extends State<ViewReviewTutorPage> {
   String? teacherId = Get.parameters["teacher_id"];
-  final tutor = Get.arguments;
+  final user = Get.arguments;
   TutorViewModel tutorViewModel = TutorViewModel();
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class _ViewReviewTutorPageState extends State<ViewReviewTutorPage> {
         appBar: AppBar(
           elevation: 0.0,
           titleSpacing: 0,
-          title: Heading20px(text: tutor.nickname),
+          title: Heading20px(text: user.nickName),
           backgroundColor: whiteColor,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios, color: primaryColor),

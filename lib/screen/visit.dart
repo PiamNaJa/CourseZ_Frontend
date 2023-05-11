@@ -55,7 +55,6 @@ class _VisitPageState extends State<VisitPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -217,7 +216,9 @@ class _VisitPageState extends State<VisitPage> {
                   color: tertiaryColor,
                   onPressed: (() {
                     if (authController.isLogin) {
-                      Get.toNamed('');
+                      Get.toNamed(
+                          '/teacher/${user.userTeacher!.teacherId}/view/review',
+                          arguments: user);
                     } else {
                       showDialog(
                           context: context,
