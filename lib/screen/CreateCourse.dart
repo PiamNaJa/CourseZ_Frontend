@@ -76,7 +76,7 @@ class _CreatecourseState extends State<Createcourse> {
     }
     if (formkey.currentState!.validate()) {
       formkey.currentState!.save();
-      Get.toNamed('/createvideo', arguments: arguments);
+      Get.toNamed('/createvideo', arguments: arguments, parameters: {});
     }
   }
 

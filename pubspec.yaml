@@ -68,6 +68,8 @@ dependencies:
   fl_chart: ^0.61.0
   web_socket_channel: ^2.3.0
   chat_bubbles: ^1.4.1
+  file_picker: ^5.2.9
+  video_thumbnail: ^0.5.3
 
 flutter_icons:
   android: true
