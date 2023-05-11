@@ -1,27 +1,15 @@
 import 'package:coursez/widgets/alert/alert.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'dart:io';
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/controllers/refresh_controller.dart';
-import 'package:coursez/model/video.dart';
 import 'package:coursez/utils/color.dart';
 import 'package:coursez/view_model/auth_view_model.dart';
 import 'package:coursez/view_model/course_view_model.dart';
 import 'package:coursez/view_model/post_view_model.dart';
-import 'package:coursez/view_model/profile_view_model.dart';
 import 'package:coursez/widgets/button/button.dart';
-import 'package:coursez/widgets/text/body12px.dart';
 import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/heading2_20px.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_launcher_icons/xml_templates.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:coursez/utils/inputDecoration.dart';
-import 'package:intl/intl.dart';
 import '../model/course.dart';
 import '../model/user.dart';
 import '../view_model/chat_view_model.dart';
@@ -43,8 +31,8 @@ class _VisitPageState extends State<VisitPage> {
   final CourseViewModel courseViewModel = CourseViewModel();
   final TutorViewModel tutorViewModel = TutorViewModel();
   final AuthController authController = Get.find<AuthController>();
-  final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
   final RefreshController refreshController = Get.find<RefreshController>();
+  final ChatViewModel chatViewModel = ChatViewModel();
 
   Widget notLoginUI() {
     return Center(
@@ -67,19 +55,6 @@ class _VisitPageState extends State<VisitPage> {
     );
   }
 
-  User users = User(
-      email: '',
-      password: '',
-      fullName: '',
-      nickName: '',
-      role: '',
-      picture: '',
-      point: 0,
-      likeCourses: [],
-      likeVideos: [],
-      paidVideos: [],
-      videoHistory: [],
-      courseHistory: []);
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +71,6 @@ class _VisitPageState extends State<VisitPage> {
           },
         ),
       ),
-      key: _globalKey,
       body: FutureBuilder(
         future: tutorViewModel.loadTutorById(Get.parameters["teacher_id"]!),
         builder: (context, AsyncSnapshot snapshot) {
@@ -116,10 +90,6 @@ class _VisitPageState extends State<VisitPage> {
   Widget showprofile(User user) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [],
-        ),
         Container(
           decoration: const BoxDecoration(
             color: Colors.transparent,
@@ -264,14 +234,16 @@ class _VisitPageState extends State<VisitPage> {
                   color: primaryColor,
                   onPressed: (() {
                     if (authController.isLogin) {
-                      final ChatViewModel chatViewModel = ChatViewModel();
-                      chatViewModel.newInbox(user.userId!);
+                      chatViewModel.newInbox(user.userId!).then((inboxid) {
+                        Get.toNamed('/chat/$inboxid', arguments: user);
+                      });
                     } else {
                       showDialog(
                           context: context,
                           builder: ((context) {
                             return const AlertLogin(
-                              body: "กรุณาเข้าสู้ระบบก่อนรีวิว",
+                              body:
+                                  "กรุณาเข้าสู้ระบบก่อนที่จะคุยกับติวเตอร์ของเรา",
                               action: "เช้าสู้ระบบ",
                             );
                           }));
@@ -294,7 +266,7 @@ class _VisitPageState extends State<VisitPage> {
 
   Widget courseprofile(List<Course> data) {
     if (data.isEmpty) {
-      return Center(
+      return const Center(
           child: Title16px(
         text: 'ติวเตอร์ขี้เกียจสอนเลยไม่มีคอร์ส',
         color: greyColor,
