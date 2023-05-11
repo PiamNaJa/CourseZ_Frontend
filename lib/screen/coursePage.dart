@@ -28,7 +28,7 @@ class CoursePage extends StatefulWidget {
 }
 
 class _CoursePageState extends State<CoursePage> {
-  PostController postController = Get.find<PostController>();
+  final PostController postController = Get.find<PostController>();
   final Icon fav = const Icon(Icons.favorite_border);
   final String courseId = Get.parameters['course_id']!;
   final AuthController authController = Get.find<AuthController>();
