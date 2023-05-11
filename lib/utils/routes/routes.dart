@@ -23,9 +23,12 @@ import 'package:coursez/screen/rewardBillPage.dart';
 import 'package:coursez/screen/rewardPage.dart';
 import 'package:coursez/screen/videoPage.dart';
 import 'package:coursez/screen/searchPage.dart';
+import 'package:coursez/screen/visit.dart';
 import 'package:coursez/screen/withdrawPage.dart';
 import 'package:coursez/screen/withdrawFormPage.dart';
 import 'package:coursez/screen/myRewardPage.dart';
+import 'package:coursez/screen/viewReviewTutor.dart';
+import 'package:coursez/screen/reviewTutorPage.dart';
 import 'package:get/get.dart';
 
 import '../../screen/postdetailPage.dart';
@@ -48,6 +51,7 @@ class Routes {
     GetPage(name: '/editcourse', page: () => const EditCourse()),
     GetPage(name: '/coursesubject', page: () => CourseSubject()),
     GetPage(name: '/search', page: () => const SearchPage()),
+    GetPage(name: '/teacher/:teacher_id', page: () => const VisitPage()),
     GetPage(name: '/course/:course_id', page: () => const CoursePage()),
     GetPage(name: '/chat/:chatroom_id', page: () => const ChatPage()),
     GetPage(
@@ -73,6 +77,12 @@ class Routes {
         page: () => const RewardStatusPage()),
     GetPage(name: '/rewardbill', page: () => const RewardBillPage()),
     GetPage(name: '/dashboard', page: () => const DashBoardPage()),
+    GetPage(
+        name: '/teacher/:teacher_id/view/review',
+        page: () => ViewReviewTutorPage()),
+    GetPage(
+        name: '/teacher/:teacher_id/review',
+        page: () => const ReviewTutorPage()),
     GetPage(name: '/alltutor', page: () => const AllTutorPage()),
     GetPage(name: '/createvideo', page: () => const CreateVideoPage(),),
     GetPage(name: '/editvideo', page:() => const EditVideoPage(),)

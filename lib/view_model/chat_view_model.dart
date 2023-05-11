@@ -45,7 +45,7 @@ class ChatViewModel {
     }
   }
 
-  Future<void> newInbox(int user2ID) async {
+  Future<String> newInbox(int user2ID) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String token = prefs.getString('token')!;
     final res = await chatRepo.newInbox(user2ID, token);
@@ -57,5 +57,6 @@ class ChatViewModel {
           backgroundColor: Colors.red,
           snackPosition: SnackPosition.TOP);
     }
+    return res.body;
   }
 }

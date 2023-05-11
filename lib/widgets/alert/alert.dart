@@ -15,7 +15,7 @@ class AlertLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Heading24px(text: 'เกิดข้อผิดพลาด'),
+      title: const Heading24px(text: 'กรุณาเข้าสู่ระบบ'),
       content: Container(
           height: MediaQuery.of(context).size.height * 0.05,
           alignment: Alignment.center,

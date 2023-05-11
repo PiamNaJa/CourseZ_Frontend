@@ -98,7 +98,9 @@ class _ExpandPageState extends State<ExpandPage> {
 
 Widget _tutor(Tutor item) {
   return GestureDetector(
-    onTap: () {},
+    onTap: () {
+      Get.toNamed('/teacher/${item.teacherId}');
+    },
     child: Container(
         height: MediaQuery.of(Get.context!).size.height * 0.15,
         decoration: BoxDecoration(

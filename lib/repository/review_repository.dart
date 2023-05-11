@@ -19,4 +19,20 @@ class ReviewRepository {
     }
     return false;
   }
+
+  Future<bool> createReviewTutor(
+      String tracherId, double rating, String comment, String token) async {
+    final url = '${Network.baseUrl}/api/teacher/$tracherId/review';
+    final Map<String, dynamic> data = {
+      "rating": rating,
+      "comment": comment,
+    };
+    final res = await http.post(Uri.parse(url),
+        headers: {"Authorization": token, "Content-Type": "application/json"},
+        body: json.encode(data));
+    if (res.statusCode == 201) {
+      return true;
+    }
+    return false;
+  }
 }
