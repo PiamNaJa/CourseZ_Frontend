@@ -718,7 +718,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 onTap: () {
                   Get.toNamed(
                     '/course/${e.courseId}',
-                  );
+                  )!
+                      .then((value) => setState(
+                            () {},
+                          ));
                 },
                 child: Container(
                   width: 160,
