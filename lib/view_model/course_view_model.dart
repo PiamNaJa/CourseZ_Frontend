@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:coursez/controllers/auth_controller.dart';
 import 'package:coursez/controllers/refresh_controller.dart';
 import 'package:coursez/model/course.dart';
+import 'package:coursez/model/video.dart';
 import 'package:coursez/repository/course_repository.dart';
 import 'package:coursez/view_model/video_view_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -101,6 +102,7 @@ class CourseViewModel {
   Future<Course> loadCourseById(int courseId) async {
     final c = await fecthData('course/$courseId');
     final course = Course.fromJson(c);
+    course.videos.sort((a, b) => a.videoId.compareTo(b.videoId));
 
     for (var i = 0; i < course.videos.length; i++) {
       double rating = 0;

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:coursez/controllers/refresh_controller.dart';
 import 'package:coursez/model/user.dart';
 import 'package:coursez/model/userTeacher.dart';
@@ -6,9 +8,11 @@ import 'package:coursez/repository/history_repository.dart';
 import 'package:coursez/repository/video_repository.dart';
 import 'package:coursez/utils/fetchData.dart';
 import 'package:coursez/view_model/date_view_model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 import '../repository/review_repository.dart';
 import '../utils/color.dart';
 
@@ -18,7 +22,9 @@ class VideoViewModel {
   final VideoRepository videoRepository = VideoRepository();
   Future<Video> loadVideoById(String courseid, String videoid) async {
     final v = await fecthData("course/$courseid/video/$videoid");
-
+    //sort review by createAt
+    final List<dynamic> reviews = v['reviews'];
+    reviews.sort((a, b) => b['created_at'].compareTo(a['created_at']));
     return Video.fromJson(v);
   }
 
@@ -139,6 +145,106 @@ class VideoViewModel {
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: whiteColor);
+    }
+  }
+
+  Future<void> createVideo(int courseId, List<File?> coverImage,
+      List<Video> videos, List<File?> videoFile, List<File?> pdfFile) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String token = prefs.getString('token')!;
+
+    const uuid = Uuid();
+    final List<String> coverImageUrls = [];
+    final List<String> videoUrls = [];
+    final List<String> pdfUrls = [];
+    for (var i = 0; i < videos.length; i++) {
+      final coverImageref = FirebaseStorage.instance
+          .ref()
+          .child('Course_$courseId/Video_${uuid.v4()}');
+
+      await coverImageref.putFile(coverImage[i]!);
+      coverImageUrls.add(await coverImageref.getDownloadURL());
+
+      final videoFileref = FirebaseStorage.instance
+          .ref()
+          .child('Course_$courseId/Video_${uuid.v4()}');
+
+      await videoFileref.putFile(videoFile[i]!);
+      videoUrls.add(await videoFileref.getDownloadURL());
+
+      final pdfFileref = FirebaseStorage.instance
+          .ref()
+          .child('Course_$courseId/Video_${uuid.v4()}');
+
+      await pdfFileref.putFile(pdfFile[i]!);
+      pdfUrls.add(await pdfFileref.getDownloadURL());
+
+      videos[i].picture = coverImageUrls[i];
+      videos[i].url = videoUrls[i];
+      videos[i].sheet = pdfUrls[i];
+    }
+
+    final isPass = await videoRepository.createVideo(courseId, videos, token);
+
+    if (isPass == true) {
+      Get.back();
+      Get.back();
+      Get.back();
+    } else {
+      Get.snackbar('ผิดพลาด', 'มีบางอย่างผิดพลาด',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: whiteColor);
+    }
+  }
+
+  Future<void> updateVideo(
+      Video video, File? coverImage, File? videoFile, File? pdfFile) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String token = prefs.getString('token')!;
+    const uuid = Uuid();
+
+    String coverImageUrl = '';
+    String videoUrl = '';
+    String pdfUrl = '';
+
+    if (coverImage != null) {
+      final coverImageref = FirebaseStorage.instance
+          .ref()
+          .child('Course_${video.courseId}/Video_${uuid.v4()}');
+
+      await coverImageref.putFile(coverImage);
+      coverImageUrl = await coverImageref.getDownloadURL();
+      video.picture = coverImageUrl;
+    }
+    if (videoFile != null) {
+      final videoFileref = FirebaseStorage.instance
+          .ref()
+          .child('Course_${video.courseId}/Video_${uuid.v4()}');
+
+      await videoFileref.putFile(videoFile);
+      videoUrl = await videoFileref.getDownloadURL();
+      video.url = videoUrl;
+    }
+    if (pdfFile != null) {
+      final pdfFileref = FirebaseStorage.instance
+          .ref()
+          .child('Course_${video.courseId}/Video_${uuid.v4()}');
+
+      await pdfFileref.putFile(pdfFile);
+      pdfUrl = await pdfFileref.getDownloadURL();
+      video.sheet = pdfUrl;
+    }
+
+    final isPass = await videoRepository.updateVideo(video, token);
+
+    if (!isPass) {
+      Get.snackbar('ผิดพลาด', 'มีบางอย่างผิดพลาด',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: whiteColor);
+    } else {
+      Get.back();
     }
   }
 }
