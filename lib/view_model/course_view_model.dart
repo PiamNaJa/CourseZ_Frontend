@@ -236,6 +236,7 @@ class CourseViewModel {
       List<Video> videos,
       List<File?> videoFile,
       List<File?> pdfFile) async {
+    VideoViewModel videoViewModel = VideoViewModel();
     final uuid = const Uuid().v4();
     final Reference ref = FirebaseStorage.instance.ref().child("/Course_$uuid");
     await ref.putFile(courseImage);
@@ -251,6 +252,8 @@ class CourseViewModel {
           colorText: whiteColor);
       return;
     }
+    videoViewModel.createVideo(
+        courseId, coverImage, videos, videoFile, pdfFile);
   }
 
   Future<void> updatecourse(

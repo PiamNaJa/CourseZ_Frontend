@@ -44,7 +44,7 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
             videos: []),
         "file": File('')
       };
-  final String? id = Get.parameters['courseId'];
+  final String? id = Get.parameters['courseId']?? '-1';
   late Course course = arguments['course'];
   late File courseImage = arguments['file'];
 
@@ -93,12 +93,12 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
     }
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      if (id!.isEmpty) {
+      if (id == '-1') {
         debugPrint('เพิ่มคอร์ส');
         courseViewModel.createCourse(
             courseImage, course, coverImage, videos, videoFile, pdfFile);
       } else {
-        debugPrint('เพิ่มวิด๊โอ');
+        debugPrint('เพิ่มวิดีโอ');
         videoViewModel.createVideo(
             int.parse(id!), coverImage, videos, videoFile, pdfFile);
       }

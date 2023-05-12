@@ -37,13 +37,13 @@ class VideoRepository {
         return false;
       }
     }
+    debugPrint('video created');
     return true;
   }
 
-  Future updateVideo(
-      Video video,
-      String token) async {
-    final url = '${Network.baseUrl}/api/course/${video.courseId}/video/${video.videoId}/';
+  Future updateVideo(Video video, String token) async {
+    final url =
+        '${Network.baseUrl}/api/course/${video.courseId}/video/${video.videoId}/';
     final Map data = {
       "video_name": video.videoName,
       "description": video.description,
@@ -56,7 +56,7 @@ class VideoRepository {
         headers: {"Content-Type": "application/json", "Authorization": token},
         body: json.encode(data));
 
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       return true;
     }
     debugPrint(response.body);

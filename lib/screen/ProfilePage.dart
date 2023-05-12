@@ -660,7 +660,7 @@ class _ProfilePageState extends State<ProfilePage> {
               tabs: [
                 if (authController.teacherId != -1)
                   const Tab(text: "คอร์สของฉัน"),
-                const Tab(text: "ประวัติ"),
+                const Tab(text: "ประวัติเข้าชมคอร์ส"),
                 const Tab(text: "คอร์สที่ถูกใจ"),
                 const Tab(text: "วิดีโอที่ซื้อแล้ว"),
               ]),

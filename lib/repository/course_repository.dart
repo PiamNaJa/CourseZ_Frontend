@@ -49,7 +49,9 @@ class CourseRepository {
         headers: {"Authorization": token, "Content-Type": "application/json"},
         body: json.encode(data));
     if (res.statusCode == 201) {
-      return json.decode(res.body)["course_id"];
+      final Course course1 = Course.fromJson(json.decode(res.body));
+      debugPrint(course1.courseId.toString());
+      return course1.courseId;
     }
     debugPrint(res.body);
     return -1;
