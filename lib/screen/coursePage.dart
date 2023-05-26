@@ -1,4 +1,6 @@
 import 'package:coursez/controllers/auth_controller.dart';
+import 'package:coursez/controllers/post_controller.dart';
+import 'package:coursez/controllers/refresh_controller.dart';
 import 'package:coursez/model/course.dart';
 import 'package:coursez/model/user.dart';
 import 'package:coursez/utils/color.dart';
@@ -26,10 +28,11 @@ class CoursePage extends StatefulWidget {
 }
 
 class _CoursePageState extends State<CoursePage> {
+  final PostController postController = Get.find<PostController>();
   final Icon fav = const Icon(Icons.favorite_border);
   final String courseId = Get.parameters['course_id']!;
-  late Future<Course> data;
-  final AuthController authController = Get.find();
+  final AuthController authController = Get.find<AuthController>();
+  final RefreshController refreshController = Get.find<RefreshController>();
   final CourseViewModel courseViewModel = CourseViewModel();
   final TutorViewModel tutorViewModel = TutorViewModel();
   List paidVideo = [];
@@ -52,8 +55,6 @@ class _CoursePageState extends State<CoursePage> {
 
   @override
   void initState() {
-    data = courseViewModel.loadCourseById(int.parse(courseId));
-
     if (authController.isLogin) {
       courseViewModel.getPaidVideo().then((value) => setState(
             () => paidVideo.addAll(value),
@@ -79,7 +80,7 @@ class _CoursePageState extends State<CoursePage> {
                 width: size.width,
                 height: size.height,
                 child: FutureBuilder(
-                  future: data,
+                  future: courseViewModel.loadCourseById(int.parse(courseId)),
                   builder: ((context, snapshot) {
                     if (snapshot.hasData) {
                       if (!isFetchTeacher) {
@@ -204,7 +205,7 @@ class _CoursePageState extends State<CoursePage> {
                                   overflow: TextOverflow.visible,
                                 ),
                               ),
-                              if (courseData.teacherId ==
+                              if (authController.isLogin && courseData.teacherId ==
                                   authController.teacherId)
                                 IconButton(
                                   padding: const EdgeInsets.symmetric(
@@ -213,7 +214,13 @@ class _CoursePageState extends State<CoursePage> {
                                     Icons.edit,
                                     color: tertiaryDarkColor,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Get.toNamed("/editcourse",
+                                            arguments: courseData)!
+                                        .then((value) => setState(
+                                              () {},
+                                            ));
+                                  },
                                 ),
                             ],
                           ),
@@ -365,7 +372,26 @@ class _CoursePageState extends State<CoursePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Heading20px(text: "บทเรียน"),
+                        Row(
+                          children: [
+                            const Heading20px(text: "บทเรียน"),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            (authController.isLogin && courseData.teacherId ==
+                                    authController.teacherId)?
+                            IconButton(
+                                onPressed: (() {
+                                  Get.toNamed('/createvideo', parameters: {
+                                    'courseId': courseData.courseId.toString()
+                                  });
+                                }),
+                                icon: const Icon(
+                                  Icons.add_box_rounded,
+                                  color: primaryColor,
+                                )): Container(),
+                          ],
+                        ),
                         if (sumVideoPrice != 0)
                           Bt(
                             text: "ซื้อทั้งหมด $sumVideoPrice บาท",
@@ -440,12 +466,25 @@ class _CoursePageState extends State<CoursePage> {
                                           courseData.videos[index].price == 0 ||
                                           isPaid) {
                                         Get.toNamed(
-                                            "/course/$courseId/video/${courseData.videos[index].videoId}",
-                                            arguments: courseData.videos[index],
-                                            parameters: {
+                                                "/course/$courseId/video/${courseData.videos[index].videoId}",
+                                                parameters: {
+                                              "video_name": courseData
+                                                  .videos[index].videoName,
                                               'teacher_id': courseData.teacherId
                                                   .toString(),
-                                            });
+                                            })!
+                                            .then((value) {
+                                          if (courseData.videos.length != 1) {
+                                            setState(
+                                              () {},
+                                            );
+                                          }
+                                          if (value != null &&
+                                              value == true &&
+                                              courseData.videos.length == 1) {
+                                            Get.back();
+                                          }
+                                        });
                                       } else {
                                         await courseViewModel.buyVideo(
                                             courseData.videos[index].price,

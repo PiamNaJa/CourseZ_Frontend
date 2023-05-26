@@ -31,19 +31,20 @@ class VideoPage extends StatefulWidget {
 }
 
 class _VideoPageState extends State<VideoPage> {
-  VideoViewModel videoViewModel = VideoViewModel();
-  AuthController authController = Get.find<AuthController>();
+  final VideoViewModel videoViewModel = VideoViewModel();
+  final AuthController authController = Get.find<AuthController>();
   bool isFocus = false;
   double timeToDoQuiz = 0;
   final isExpanded = true;
   bool isInitVideo = false;
   late FlickManager flickManager;
-  String videoName = '';
-  String teacherId = Get.parameters["teacher_id"] ?? '6';
-  String courseId = Get.parameters["course_id"] ?? '9';
-  String videoId = Get.parameters["video_id"] ?? '25';
+  final String videoName = Get.parameters["video_name"]!;
+  final String teacherId = Get.parameters["teacher_id"]!;
+  final String courseId = Get.parameters["course_id"]!;
+  final String videoId = Get.parameters["video_id"]!;
   bool isDoneExercise = false;
   bool loadingTeacher = true;
+  late Video video;
   User teacher = User(
       email: '',
       fullName: '',
@@ -83,7 +84,6 @@ class _VideoPageState extends State<VideoPage> {
               .value.duration.inSeconds *
           0.9;
     });
-    videoName = videoName;
   }
 
   @override
@@ -136,6 +136,51 @@ class _VideoPageState extends State<VideoPage> {
               Get.back();
             },
           ),
+          actions: [
+            if (int.parse(teacherId) == authController.teacherId) ...[
+              IconButton(
+                icon: const Icon(Icons.edit, color: tertiaryDarkColor),
+                onPressed: () async {
+                  await flickManager.flickControlManager!.pause();
+                  Get.toNamed('/editvideo', arguments: video);
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                onPressed: () {
+                  flickManager.flickControlManager!.pause();
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Heading20px(
+                            text: "ยืนยันการวิดีโอนี้",
+                          ),
+                          content: const Body14px(
+                              text: "หากคุณลบจะไม่สามารถกู้คืนได้"),
+                          actions: [
+                            TextButton(
+                              child: const Body14px(text: "ยกเลิก"),
+                              onPressed: () {
+                                Get.back();
+                              },
+                            ),
+                            TextButton(
+                              child: const Body14px(
+                                text: "ยืนยัน",
+                                color: Colors.red,
+                              ),
+                              onPressed: () {
+                                videoViewModel.deleteVideo(courseId, videoId);
+                              },
+                            ),
+                          ],
+                        );
+                      });
+                },
+              ),
+            ]
+          ],
         ),
         body: loadingTeacher || !isInitVideo
             ? const Center(child: CircularProgressIndicator())
@@ -144,6 +189,7 @@ class _VideoPageState extends State<VideoPage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     _initVideo(snapshot.data!.url, snapshot.data!.videoName);
+                    video = snapshot.data!;
                     return videoDetail(snapshot.data!);
                   }
                   return const Center(child: CircularProgressIndicator());
@@ -173,30 +219,36 @@ class _VideoPageState extends State<VideoPage> {
                 flickVideoWithControls: flickVideoWithControls,
                 flickVideoWithControlsFullscreen: flickVideoWithControls),
           ),
-          Container(
-            padding:
-                const EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 10),
-            decoration: const BoxDecoration(
-              color: whiteColor,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Title16px(text: 'รายละเอียด'),
-                ExpandText(
-                    text: video.description,
-                    style: const TextStyle(
-                      fontFamily: 'Athiti',
-                      fontSize: 14,
-                    ),
-                    maxLines: 2),
-                Body12px(
-                  text:
-                      'เผยแพร่เมื่อ ${videoViewModel.formatVideoDate(video.createdAt)}',
-                  color: greyColor,
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.only(
+                      left: 15, right: 15, bottom: 15, top: 10),
+                  decoration: const BoxDecoration(
+                    color: whiteColor,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Title16px(text: 'รายละเอียด'),
+                      ExpandText(
+                          text: video.description,
+                          style: const TextStyle(
+                            fontFamily: 'Athiti',
+                            fontSize: 14,
+                          ),
+                          maxLines: 2),
+                      Body12px(
+                        text:
+                            'เผยแพร่เมื่อ ${videoViewModel.formatVideoDate(video.createdAt)}',
+                        color: greyColor,
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           SizedBox(
             height: 70,
@@ -229,40 +281,6 @@ class _VideoPageState extends State<VideoPage> {
                     ))
               ],
             ),
-          ),
-          Container(
-              color: whiteColor,
-              padding: const EdgeInsets.fromLTRB(15, 0, 15, 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Title16px(text: 'Smart Focus'),
-                      Switch(
-                          value: isFocus,
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          activeColor: primaryColor,
-                          onChanged: (bool value) {
-                            setState(() {
-                              isFocus = value;
-                            });
-                          })
-                    ],
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: const Text(
-                      'เทคโนโลยีที่จะช่วยคุณให้การเรียนของคุณมีประสิทธิภาพที่ดีขึ้น ด้วยระบบ AI ตรวจจับพฤติกรรมระหว่างเรียน',
-                      style: TextStyle(fontFamily: 'Athiti', fontSize: 10),
-                    ),
-                  )
-                ],
-              )),
-          const SizedBox(
-            height: 15,
           ),
           Container(
             padding: const EdgeInsets.all(15),
@@ -444,7 +462,6 @@ class _VideoPageState extends State<VideoPage> {
                                     text: 'ยังไม่มีคะแนน',
                                     color: tertiaryColor,
                                   )),
-                        
                       ],
                     ),
                   ),

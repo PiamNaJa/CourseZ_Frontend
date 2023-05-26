@@ -6,6 +6,7 @@ import 'package:coursez/widgets/text/body12px.dart';
 import 'package:coursez/widgets/text/body14px.dart';
 import 'package:coursez/widgets/text/title14px.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ListTileTutor extends StatelessWidget {
   ListTileTutor({super.key});
@@ -17,15 +18,17 @@ class ListTileTutor extends StatelessWidget {
       future: tutorViewModel.loadTutor(0),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          final tutorlist = snapshot.data!;
+          tutorlist.shuffle();
           return ListView.separated(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
-            itemCount: snapshot.data!.length,
+            itemCount: tutorlist.length > 5 ? 5 : tutorlist.length,
             separatorBuilder: (context, _) => const SizedBox(
               height: 20,
             ),
-            itemBuilder: (context, index) => listTile(snapshot.data![index]),
+            itemBuilder: (context, index) => listTile(tutorlist[index]),
           );
         } else {
           return const CircularProgressIndicator(
@@ -39,9 +42,9 @@ class ListTileTutor extends StatelessWidget {
 
 Widget listTile(Tutor item) {
   return InkWell(
-    // onTap: () {
-    //   Get.toNamed('')
-    // },
+    onTap: () {
+      Get.toNamed('/teacher/${item.teacherId}');
+    },
     child: Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
@@ -63,16 +66,20 @@ Widget listTile(Tutor item) {
         title: Title14px(
           text: '${item.nickname} (${item.fullname})',
         ),
-        subtitle: (item.rating != 0)?
-        Row(
-          children: [
-            RatingStar(rating: item.rating, size: 15),
-            const SizedBox(
-              width: 5,
-            ),
-            Body14px(text: item.rating.toStringAsPrecision(2)),
-          ],
-        ): const Body12px(text: 'ยังไม่มีคะแนน', color: greyColor,),
+        subtitle: (item.rating != 0)
+            ? Row(
+                children: [
+                  RatingStar(rating: item.rating, size: 15),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Body14px(text: item.rating.toStringAsPrecision(2)),
+                ],
+              )
+            : const Body12px(
+                text: 'ยังไม่มีคะแนน',
+                color: greyColor,
+              ),
         trailing: const Icon(Icons.keyboard_arrow_right),
       ),
     ),

@@ -42,6 +42,13 @@ class PostViewModel {
     return posts;
   }
 
+  Future<List<Post>> loadPostByUserId(int userid) async {
+    final p = await fecthData('post');
+    final List<Post> posts = List.from(p.map((e) => Post.fromJson(e)).toList());
+    return posts.where((element) => element.userid == userid).toList();
+  }
+
+
   String formatPostDate(int createdAt) {
     DateViewModel dateViewModel = DateViewModel();
     String timeago = dateViewModel.formatDate(createdAt);

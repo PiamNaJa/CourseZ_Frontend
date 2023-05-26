@@ -164,7 +164,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 Icons.add_box_outlined,
               ),
               title: const Text("สร้างคอร์ส"),
-              onTap: () {},
+              onTap: () {
+                Get.toNamed('/createcourse');
+              },
             ),
             ListTile(
               leading: const Icon(
@@ -658,7 +660,7 @@ class _ProfilePageState extends State<ProfilePage> {
               tabs: [
                 if (authController.teacherId != -1)
                   const Tab(text: "คอร์สของฉัน"),
-                const Tab(text: "ประวัติ"),
+                const Tab(text: "ประวัติเข้าชมคอร์ส"),
                 const Tab(text: "คอร์สที่ถูกใจ"),
                 const Tab(text: "วิดีโอที่ซื้อแล้ว"),
               ]),
@@ -716,7 +718,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 onTap: () {
                   Get.toNamed(
                     '/course/${e.courseId}',
-                  );
+                  )!
+                      .then((value) => setState(
+                            () {},
+                          ));
                 },
                 child: Container(
                   width: 160,
@@ -810,8 +815,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   await courseViewModel.loadCourseById(data[index].courseId);
               Get.toNamed(
                   '/course/${data[index].courseId}/video/${data[index].videoId}',
-                  arguments: data[index],
-                  parameters: {'teacher_id': courseid.teacherId.toString()});
+                  parameters: {
+                    "video_name": data[index].videoName,
+                    'teacher_id': courseid.teacherId.toString()
+                  });
             },
             leading: ClipOval(
               child: Image.network(

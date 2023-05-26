@@ -7,6 +7,7 @@ import 'package:coursez/widgets/text/title16px.dart';
 import 'package:flutter/rendering.dart';
 import 'package:coursez/widgets/rating/rating.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../utils/color.dart';
 
@@ -61,7 +62,9 @@ Widget buildCard(Tutor item) {
   return LayoutBuilder(
       builder: (BuildContext context, Constraints constraints) {
     return GestureDetector(
-        onTap: () {},
+        onTap: () {
+          Get.toNamed('/teacher/${item.teacherId}');
+        },
         child: Stack(
           alignment: AlignmentDirectional.bottomCenter,
           children: [
